@@ -1,0 +1,218 @@
+<div id="components" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="baseLink">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+
+                <div fxLayout="column" fxLayoutAlign="start start"
+                    [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h2" *ngIf="action ==='edit'">
+                        {{user.firstName}} {{user.lastName}}
+                    </div>
+                    <div class="subtitle secondary-text" *ngIf="action ==='edit'">
+                        <span>{{user.username}}</span>
+                    </div>
+                    <div class="h2" *ngIf="action ==='add'">
+                        {{ 'APP.USER.ADD_TITLE' | translate }}
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <!-- CONTENT FROM -->
+            <form id="contentForm" [formGroup]="form">
+
+                <!-- PROFILES -->
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Profil</mat-label>
+                    <mat-select name="profile" formControlName="profile" [compareWith]="compareById" required>
+                        <ngx-mat-select-search [placeholderLabel]="'Rechercher'"
+                            [noEntriesFoundLabel]="'Aucune donnée correspondante'" #item></ngx-mat-select-search>
+                        <mat-option *ngFor="let element of userResolver.kvProfiles | keyValueFilter:item.value"
+                            [value]="element.value">
+                            {{ element.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- USERNAME -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Nom d'utilisateur</mat-label>
+                    <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+                    <input name="username" formControlName="username" matInput required>
+
+                    <mat-error *ngIf="!form.controls['username'].valid && form.controls['username'].dirty &&
+          form.controls['username'].errors['maxlength']">
+                        Le nombre de caractère doit être plus petit que {{ maxLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['username'].valid && form.controls['username'].dirty &&
+          form.controls['username'].errors['minlength']">
+                        Le nombre de caractère doit être plus grand que {{ minLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['username'].valid && form.controls['username'].dirty &&
+          form.controls['username'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>
+
+                <div class="column-2-item">
+                    <!-- FIRST NAME -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Prénom</mat-label>
+                        <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+                        <input name="firstName" formControlName="firstName" matInput required>
+
+                        <mat-error *ngIf="!form.controls['firstName'].valid && form.controls['firstName'].dirty &&
+          form.controls['firstName'].errors['maxlength']">
+                            Le nombre de caractère doit être plus petit que {{ maxLength }}
+                        </mat-error>
+                        <mat-error *ngIf="!form.controls['firstName'].valid && form.controls['firstName'].dirty &&
+          form.controls['firstName'].errors['minlength']">
+                            Le nombre de caractère doit être plus grand que {{ minLength }}
+                        </mat-error>
+                        <mat-error *ngIf="!form.controls['firstName'].valid && form.controls['firstName'].dirty &&
+          form.controls['firstName'].errors['required']">
+                            Le champ est requis
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- LAST NAME -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Nom</mat-label>
+                        <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+                        <input name="lastName" formControlName="lastName" matInput required>
+
+                        <mat-error *ngIf="!form.controls['lastName'].valid && form.controls['lastName'].dirty &&
+          form.controls['lastName'].errors['maxlength']">
+                            Le nombre de caractère doit être plus petit que {{ maxLength }}
+                        </mat-error>
+                        <mat-error *ngIf="!form.controls['lastName'].valid && form.controls['lastName'].dirty &&
+          form.controls['lastName'].errors['minlength']">
+                            Le nombre de caractère doit être plus grand que {{ minLength }}
+                        </mat-error>
+                        <mat-error *ngIf="!form.controls['lastName'].valid && form.controls['lastName'].dirty &&
+          form.controls['lastName'].errors['required']">
+                            Le champ est requis
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="column-2-item">
+                    <!-- PASSWORD -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Mot de passe</mat-label>
+                        <input matInput [type]="hp ? 'password' : 'text'" formControlName="password">
+                        <mat-icon matTooltip="{{!hp ? 'Cacher' : 'Afficher'}}" matSuffix (click)="hp = !hp">
+                            {{!hp ? 'visibility' : 'visibility_off'}}</mat-icon>
+                        <mat-error *ngIf="!form.controls['password'].valid && form.controls['password'].dirty &&
+          form.controls['password'].errors['maxlength']">
+                            Le nombre de caractère doit être plus petit que {{ maxLength }}
+                        </mat-error>
+                        <mat-error *ngIf="!form.controls['password'].valid && form.controls['password'].dirty &&
+          form.controls['password'].errors['minlength']">
+                            Le nombre de caractère doit être plus grand que {{ minLength }}
+                        </mat-error>
+                        <mat-error *ngIf="action !== 'edit' && !form.controls['password'].valid && form.controls['password'].dirty &&
+          form.controls['password'].errors['required']">
+                            Le mot de passe est requis
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- PASSWORD CONFIRMATION -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Confirmation du mot de passe</mat-label>
+                        <mat-icon matTooltip="{{!hcp ? 'Cacher' : 'Afficher'}}" matSuffix (click)="hcp = !hcp">
+                            {{!hcp ? 'visibility' : 'visibility_off'}}</mat-icon>
+                        <input [type]="hcp ? 'password' : 'text'" name="passwordConfirm"
+                            formControlName="passwordConfirm" matInput>
+
+                        <mat-error *ngIf="!form.controls['passwordConfirm'].valid && form.controls['passwordConfirm'].dirty &&
+          form.controls['passwordConfirm'].errors['maxlength']">
+                            Le nombre de caractère doit être plus petit que {{ maxLength }}
+                        </mat-error>
+                        <mat-error *ngIf="!form.controls['passwordConfirm'].valid && form.controls['passwordConfirm'].dirty &&
+          form.controls['passwordConfirm'].errors['minlength']">
+                            Le nombre de caractère doit être plus grand que {{ minLength }}
+                        </mat-error>
+                        <mat-error *ngIf="!form.controls['passwordConfirm'].valid && form.controls['passwordConfirm'].dirty &&
+          form.controls['passwordConfirm'].errors['matchOther']">
+                            Les mots de passe de correspondent pas
+                        </mat-error>
+                        <mat-error *ngIf="!form.controls['passwordConfirm'].valid && form.controls['passwordConfirm'].dirty &&
+          form.controls['passwordConfirm'].errors['required']">
+                            Le champ est requis
+                        </mat-error>
+                        <mat-error *ngIf="action !== 'edit' && !form.controls['passwordConfirm'].valid && form.controls['passwordConfirm'].dirty &&
+          form.controls['passwordConfirm'].errors['required']">
+                            Le champ est requis
+                        </mat-error>
+
+                    </mat-form-field>
+                </div>
+
+                <div class="column-2-item">
+                    <!-- PHONE -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Téléphone</mat-label>
+                        <mat-icon matSuffix class="secondary-text">phone</mat-icon>
+                        <input formControlName="phone" matInput>
+                        <mat-error *ngIf="!form.controls['phone'].valid && form.controls['phone'].dirty &&
+          form.controls['phone'].errors['required']">
+                            Le champ est requis
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- EMAIL -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Email</mat-label>
+                        <mat-icon matSuffix class="secondary-text">email</mat-icon>
+                        <input name="email" formControlName="email" matInput type="email">
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Adresse</mat-label>
+                    <mat-icon matSuffix class="secondary-text">home</mat-icon>
+                    <input name="address" matInput>
+                </mat-form-field>
+
+                <div id="action-button-wrapper">
+                    <div class="button-item" *ngIf="action === 'add' || !action">
+                        <button mat-raised-button class="add" matTooltip="{{ 'APP.ADD_BTN' | translate }}"
+                            (click)="save()" [disabled]="!form.valid">
+                            {{ 'APP.ADD_BTN' | translate }} <i class="material-icons">check</i>
+                        </button>
+                    </div>
+
+                    <div class="button-item" *ngIf="action === 'edit'">
+                        <button mat-raised-button class="edit" matTooltip="{{ 'APP.UPDATE_BTN' | translate }}"
+                            (click)="update()" [disabled]="!form.valid">
+                            {{ 'APP.UPDATE_BTN' | translate }} <i class="material-icons">check</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

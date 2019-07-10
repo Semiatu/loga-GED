@@ -1,0 +1,248 @@
+@import "~src/@externals/fuse/@fuse/scss/fuse";
+
+#components {
+
+  $add_btn_bg_color: #ffff;
+  $add_btn_fg_color: #383838;
+
+  $save_btn_bg_color: #0B60A9;
+  $save_btn_fg_color: #ffff;
+
+  $refresh_btn_bg_color: $add_btn_fg_color;
+  $refresh_btn_fg_color: $add_btn_bg_color;
+
+  .top-bg {
+
+    @include media-breakpoint('xs') {
+      height: 224px;
+    }
+  }
+
+  .header {
+    .subtitle {
+      margin: 6px 0 0 0;
+    }
+  }
+
+  >.center {
+
+    >form-header {
+      display   : flex;
+      height    : 136px;
+      min-height: 136px;
+      max-height: 136px;
+    }
+
+    >.header {
+
+      .search-wrapper {
+        width        : 100%;
+        max-width    : 480px;
+        border-radius: 28px;
+        overflow     : hidden;
+        @include mat-elevation(1);
+
+        @include media-breakpoint('xs') {
+          width: 100%;
+        }
+
+        .search {
+          width      : 100%;
+          height     : 48px;
+          line-height: 48px;
+          padding    : 0 18px;
+
+          input {
+            width     : 100%;
+            height    : 48px;
+            min-height: 48px;
+            max-height: 48px;
+            padding   : 0 16px;
+            border    : none;
+            outline   : none;
+          }
+        }
+      }
+
+      @include media-breakpoint('xs') {
+        padding   : 8px 0;
+        height    : 160px !important;
+        min-height: 160px !important;
+        max-height: 160px !important;
+      }
+    }
+
+    >.content-card {
+      >.expansion-search-panel {
+        padding-bottom: 5px;
+        margin-bottom : 5px;
+      }
+
+      display        : flex;
+      flex-direction : row;
+      flex           : 1 0 auto;
+      justify-content: center;
+      justify-items  : center;
+      padding-top    : 64px;
+
+      >form {
+        width         : 70%;
+        display       : flex;
+        flex-direction: column;
+        align-items   : center;
+
+        >mat-form-field {
+          width: 100%;
+        }
+
+        >.column-2-item {
+          display        : flex;
+          flex-direction : row;
+          width          : 100%;
+          justify-content: space-between;
+
+          >mat-form-field {
+            width: 49.5%;
+          }
+        }
+
+        >#action-button-wrapper {
+          display: flex;
+          width  : 100%;
+
+          >.button-item {
+            width         : 100%;
+            padding-bottom: 10px;
+
+            >button {
+              width: 100%;
+            }
+
+            .add,
+            .edit {
+              color           : $save_btn_fg_color;
+              background-color: $save_btn_bg_color;
+              padding         : 10px;
+              font-size       : 15px;
+              text-transform  : uppercase;
+
+              .material-icons {
+                color: $save_btn_fg_color
+              }
+            }
+
+            .add:disabled,
+            .add[disabled],
+            .edit:disabled,
+            .edit[disabled] {
+              opacity: 0.8;
+            }
+
+            .cancel {
+              color           : $refresh_btn_fg_color;
+              background-color: $refresh_btn_bg_color;
+
+              .material-icons {
+                color: $refresh_btn_fg_color;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    >.action-button-panel {
+      padding: 5px 5px 5px 0px;
+
+      .add-btn {
+        color           : $add_btn_fg_color;
+        background-color: $add_btn_bg_color;
+
+        .material-icons {
+          color: $add_btn_fg_color;
+        }
+      }
+
+      .btn-refresh {
+        color           : $refresh_btn_fg_color;
+        background-color: $refresh_btn_bg_color;
+
+        .material-icons {
+          color: $refresh_btn_fg_color;
+        }
+      }
+
+    }
+  }
+}
+
+.divCheckBox {
+  width  : 100%;
+  padding: 5px 0 25px;
+}
+
+.mat-tab-group,
+.mat-tab-body-wrapper,
+.tab-content {
+  flex     : 1 1 auto;
+  max-width: 100%;
+}
+
+.components-table {
+  flex                      : 1 1 auto;
+  border-bottom             : 1px solid rgba(0, 0, 0, .12);
+  overflow                  : auto;
+  -webkit-overflow-scrolling: touch;
+
+  .mat-header-row {
+    min-height: 64px;
+  }
+
+  .component {
+    position: relative;
+    cursor  : pointer;
+    height  : 84px;
+  }
+
+  .mat-cell {
+    min-width  : 0;
+    display    : flex;
+    align-items: center;
+  }
+
+  .mat-column-id {
+    flex: 0 1 84px;
+  }
+
+  .mat-column-image {
+    flex: 0 1 84px;
+
+    .product-image {
+      width : 52px;
+      height: 52px;
+      border: 1px solid rgba(0, 0, 0, .12);
+    }
+  }
+
+  .mat-column-buttons {
+    flex: 0 1 80px;
+  }
+
+  .quantity-indicator {
+    display       : inline-block;
+    vertical-align: middle;
+    width         : 8px;
+    height        : 8px;
+    border-radius : 4px;
+    margin-right  : 8px;
+
+    &+span {
+      display       : inline-block;
+      vertical-align: middle;
+    }
+  }
+
+  .active-icon {
+    border-radius: 50%;
+  }
+}

@@ -1,0 +1,67 @@
+export const LEFTMENU_ROLES = {};
+
+export const APP_NAVIGATION_MAP = {
+  'Tableau de bord': 'dashboard',
+  'Reporting': 'reporting',
+  'Ventes': 'sale',
+  'Retour d\'article': 'returned',
+  'Taxes': 'tax',
+  'Promotions': 'promotion',
+  'Catalogues produit': 'catalog-product',
+  'Catalogues service': 'catalog-service',
+  // 'Catalogues article': 'catalog-article',
+  'Factures du fournisseur': 'provider-invoice',
+  'Factures du client': 'client-invoice',
+  'Encaissements': 'encasement',
+  'Reglements': 'reglement',
+  'Mes ventes': 'sale-box',
+  'Journal des encaissements': 'encasement-registry',
+  'Journal de vente': 'sale-registry',
+  'Caisse courante': 'encasement-box',
+  'Clients': 'client',
+  'Devis client': 'client-devis',
+  'Fournisseurs': 'provider',
+  'Commandes': 'command',
+  'Produits fournisseur': 'pp',
+  'Produits': 'product',
+  'Packs': 'pack',
+  'Receptions de produit': 'product-delivery',
+  'Prestations': 'service',
+  'Articles': 'article',
+  'Inventaires de produit': 'inventory',
+  'Categories de produit': 'product-category',
+  'Marques': 'marque',
+  'Dépenses': 'depense',
+  'Categories de dépense': 'expense-category',
+  'Commissions': 'commission',
+  'Commissionnaires': 'commission-agent',
+  'Entrepôts': 'warehouse',
+  'Rayons': 'section',
+  'SAV': 'sav',
+  'Structures de financement': 'financing-structure',
+  'Bon livraison client': 'client-delivery-certificate',
+  'Bon livraison fournisseur': 'provider-delivery-certificate',
+  'Commandes client': 'client-order',
+  'Zones commerciales': 'commercial-area',
+  'Livraisons client': 'client-delivery',
+  'Livraisons fournisseur': 'provider-delivery',
+  'Paramètre champs': 'param-dict',
+  'Demande achat': 'purchase-order',
+  'Garantie': 'warranty',
+  'Produit critique': 'critical-product',
+  'Decision': 'decision',
+  'Exportation': 'exportation',
+  // 'Decision Table': 'dt',
+};
+
+export const PERMISSION_NAVIGATION_MAP = {
+  'Utilisateurs': 'users',
+  'Profiles': 'profiles',
+  'Log': 'log',
+};
+
+
+export const NAVIGATION_MAP = {
+  ...APP_NAVIGATION_MAP,
+  ...PERMISSION_NAVIGATION_MAP
+};

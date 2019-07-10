@@ -1,0 +1,176 @@
+<ngx-loading [show]="loading | async"></ngx-loading>
+
+<div id="components" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+            fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    {{ icon }}
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    {{ 'APP.LOG.TITLE' | translate }}
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="{{ 'APP.LOG.SEARCH_TITLE' | translate }}">
+                </div>
+            </div>
+            <!-- / SEARCH -->
+
+            <!-- ADD AND REFRESH BUTTON -->
+            <button mat-raised-button [routerLink]="join(baseLink, 'new')" matTooltip="{{ 'APP.REFRESH_BTN' | translate }}"
+                class="fuse-white mt-24 mt-md-0">
+                <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">refresh</i>&nbsp;
+                <span style="text-transform: uppercase">{{ 'APP.REFRESH_BTN' | translate }}</span>
+            </button>
+            <!-- / ADD AND REFRESH BUTTON -->
+
+        </div>
+        <!-- / HEADER -->
+
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <div class="expansion-search-panel">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Recherche
+                        </mat-panel-title>
+                        <mat-panel-description>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <mat-grid-list cols="2" rowHeight="85px" gutterSize="10px">
+
+                        <mat-grid-tile>
+
+                            <!-- Users -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>Utilisateur</mat-label>
+                                <mat-select name="user" [compareWith]="compareById" [(ngModel)]="criteria.user"
+                                    (selectionChange)="search(0)">
+                                    <ngx-mat-select-search [placeholderLabel]="'Rechercher'"
+                                        [noEntriesFoundLabel]="'Aucune donnée correspondante'" #item>
+                                    </ngx-mat-select-search>
+                                    <mat-option
+                                        *ngFor="let element of logResolver.kvUsersIn | keyValueFilter:item.value"
+                                        [value]="element.value">
+                                        {{ element.label }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        </mat-grid-tile>
+
+                        <mat-grid-tile>
+                            <!-- Actions -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>Action</mat-label>
+                                <mat-select name="action" [compareWith]="compareById" [(ngModel)]="criteria.action"
+                                    (selectionChange)="search(0)">
+                                    <ngx-mat-select-search [placeholderLabel]="'Rechercher'"
+                                        [noEntriesFoundLabel]="'Aucune donnée correspondante'" #item>
+                                    </ngx-mat-select-search>
+                                    <mat-option *ngFor="let element of actions | keyValueFilter:item.value"
+                                        [value]="element.value">
+                                        {{ element.label }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                    </mat-grid-list>
+                    <br>
+                    <mat-grid-list cols="2" rowHeight="85px" gutterSize="10px">
+                        <mat-grid-tile>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Du</mat-label>
+                                <input matInput [(ngModel)]="criteria.begin" [matDatepicker]="picker1" placeholder="Du"
+                                    (currentPeriodClicked)="search(0)" (dateInput)="search(0)" (dateChange)="search(0)">
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Au</mat-label>
+                                <input matInput [(ngModel)]="criteria.end" [matDatepicker]="picker" placeholder="Au"
+                                    (currentPeriodClicked)="search(0)" (dateInput)="search(0)" (dateChange)="search(0)">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+
+                </mat-expansion-panel>
+            </div>
+
+            <mat-table class="components-table" #table [dataSource]="dataSource" matSort
+                [@animateStagger]="{value:'50'}" fusePerfectScrollbar>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+                    <mat-cell *matCellDef="let component">
+                        <p class="text-truncate">{{ component.id }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Created By Column -->
+                <ng-container matColumnDef="createdBy">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Créé par</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.createdBy }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Action</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.action }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="description">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
+                    <mat-cell *matCellDef="let component">
+                        <p class="text-truncate">
+                            {{ component.description }}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+                <mat-row *matRowDef="let component; columns: displayedColumns;" class="component" matRipple
+                    [routerLink]="">
+                </mat-row>
+            </mat-table>
+
+            <mat-paginator #paginator [length]="totalElements" (page)="page($event)" [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+            </mat-paginator>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

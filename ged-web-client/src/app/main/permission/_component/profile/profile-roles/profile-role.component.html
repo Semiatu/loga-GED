@@ -1,0 +1,64 @@
+<ngx-loading [show]="loading | async"></ngx-loading>
+
+<div id="components" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="baseLink">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+
+                <div fxLayout="column" fxLayoutAlign="start start"
+                    [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h2">
+                        {{ 'APP.PROFILE_ROLE.TITLE' | translate }} {{profile.name}}
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <div class="content">
+
+                <p-pickList [source]="rolesSource" [target]="rolesTarget" sourceHeader="Tous les droits"
+                    targetHeader="Droits du profile" [responsive]="true" [sourceStyle]="{'height':'300px'}"
+                    [targetStyle]="{'height':'300px'}" filterBy="name" dragdrop="true"
+                    sourceFilterPlaceholder="Rechercher" targetFilterPlaceholder="Rechercher">
+                    <ng-template pTemplate="item" let-role>
+                        <div>
+                            <div style="font-size:14px;margin:10px 5px 0 0">{{ role.name }}</div>
+                        </div>
+                    </ng-template>
+                </p-pickList>
+
+            </div>
+
+            <div id="action-button-wrapper">
+                <div class="button-item">
+                    <button mat-raised-button class="add" matTooltip="{{ 'APP.UPDATE_BTN' | translate }}"
+                        (click)="save()">
+                        {{ 'APP.UPDATE_BTN' | translate }} <i class="material-icons">check</i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

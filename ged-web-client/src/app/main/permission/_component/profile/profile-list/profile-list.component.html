@@ -1,0 +1,182 @@
+<ngx-loading [show]="loading | async"></ngx-loading>
+
+<div id="components" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+            fxLayoutAlign.gt-sm="space-between center">
+
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    {{ icon }}
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    {{ 'APP.PROFILE.TITLE' | translate }}
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="{{ 'APP.PROFILE.SEARCH_TITLE' | translate }}">
+                </div>
+            </div>
+            <!-- / SEARCH -->
+
+            <!-- ADD AND REFRESH BUTTON -->
+            <button mat-raised-button [routerLink]="join(baseLink, 'new')" matTooltip="{{ 'APP.ADD_BTN' | translate }}"
+                class="add-product-button fuse-white mt-24 mt-md-0">
+                <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">add</i>&nbsp;
+                <span style="text-transform: uppercase">{{ 'APP.ADD_BTN' | translate }}</span>
+            </button>
+            <!-- / ADD AND REFRESH BUTTON -->
+
+
+        </div>
+        <!-- / HEADER -->
+
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <div class="expansion-search-panel">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Recherche
+                        </mat-panel-title>
+                        <mat-panel-description>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <mat-grid-list cols="1" rowHeight="85px" gutterSize="10px">
+
+                        <mat-grid-tile>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Nom</mat-label>
+                                <input matInput [(ngModel)]="criteria.name" placeholder="Nom" (input)="search(0)">
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                    </mat-grid-list>
+                    <br>
+                    <mat-grid-list cols="2" rowHeight="85px" gutterSize="10px">
+                        <mat-grid-tile>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Du</mat-label>
+                                <input matInput [(ngModel)]="criteria.beginDate" [matDatepicker]="picker1"
+                                    placeholder="Du" (currentPeriodClicked)="search(0)" (dateInput)="search(0)"
+                                    (dateChange)="search(0)">
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Au</mat-label>
+                                <input matInput [(ngModel)]="criteria.endDate" [matDatepicker]="picker" placeholder="Au"
+                                    (currentPeriodClicked)="search(0)" (dateInput)="search(0)" (dateChange)="search(0)">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+
+                </mat-expansion-panel>
+            </div>
+
+            <mat-table class="components-table" #table [dataSource]="dataSource" matSort
+                [@animateStagger]="{value:'50'}" fusePerfectScrollbar>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+                    <mat-cell *matCellDef="let component">
+                        <p class="text-truncate">{{ component.id }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- CreatedBy Column -->
+                <ng-container matColumnDef="createdBy">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Créer par</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.createdBy }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Nom</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.name }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="description">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
+                    <mat-cell *matCellDef="let component">
+                        <p class="text-truncate">
+                            {{ component.description }}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Buttons Column -->
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                    <mat-cell *matCellDef="let component">
+                        <div fxFlex="row" fxLayoutAlign="end center">
+
+                            <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More"
+                                (click)="$event.stopPropagation();">
+                                <mat-icon class="secondary-text">more_vert</mat-icon>
+                            </button>
+
+                            <mat-menu #moreMenu="matMenu">
+                                <button [routerLink]="target(baseLink, component.id)" mat-menu-item aria-label="edit"
+                                    (click)="gotoEditComponent(component)">
+                                    <mat-icon>edit</mat-icon>
+                                    <span>Modifier</span>
+                                </button>
+
+                                <button mat-menu-item aria-label="role" [routerLink]="baseLink + '/' + component.id + '/roles'">
+                                    <mat-icon>vpn_key</mat-icon>
+                                    <span>Droits</span>
+                                </button>
+
+                                <button mat-menu-item aria-label="remove" (click)="delete(component)">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>{{ 'APP.DELETE_BTN' | translate }}</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+                <mat-row *matRowDef="let component; columns: displayedColumns;" class="component" matRipple
+                    [routerLink]="target(baseLink, component.id)">
+                </mat-row>
+            </mat-table>
+
+            <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+            </mat-paginator>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

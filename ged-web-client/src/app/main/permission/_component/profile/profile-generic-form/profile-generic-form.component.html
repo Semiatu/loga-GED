@@ -1,0 +1,91 @@
+<div id="components" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="baseLink">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+
+                <div fxLayout="column" fxLayoutAlign="start start"
+                    [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h2" *ngIf="action ==='edit'">
+                        {{profile.name}}
+                    </div>
+                    <div class="h2" *ngIf="action ==='add'">
+                        {{ 'APP.PROFILE.ADD_TITLE' | translate }}
+                    </div>
+
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+        </div>
+        <!-- / HEADER -->
+
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <!-- CONTENT FROM -->
+
+            <form id="contentForm" [formGroup]="form">
+
+                <!-- NAME -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Nom</mat-label>
+                    <input name="name" formControlName="name" matInput required>
+
+                    <mat-error *ngIf="!form.controls['name'].valid && form.controls['name'].dirty &&
+          form.controls['name'].errors['maxlength']">
+                        Le nombre de caractère doit être plus petit que {{ maxLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['name'].valid && form.controls['name'].dirty &&
+          form.controls['name'].errors['minlength']">
+                        Le nombre de caractère doit être plus grand que {{ minLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['name'].valid && form.controls['name'].dirty &&
+          form.controls['name'].errors['required']">
+                        Le nom est requis
+                    </mat-error>
+
+                </mat-form-field>
+
+                <!-- DESCRIPTION -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput name="description" formControlName="description" id="" rows="2"></textarea>
+                </mat-form-field>
+
+                <div id="action-button-wrapper">
+                    <div class="button-item" *ngIf="action === 'add' || !action">
+                        <button mat-raised-button class="add" matTooltip="{{ 'APP.ADD_BTN' | translate }}"
+                            (click)="save()" [disabled]="!form.valid">
+                            {{ 'APP.ADD_BTN' | translate }} <i class="material-icons">check</i>
+                        </button>
+                    </div>
+
+                    <div class="button-item" *ngIf="action === 'edit'">
+                        <button mat-raised-button class="edit" matTooltip="{{ 'APP.UPDATE_BTN' | translate }}"
+                            (click)="update()" [disabled]="!form.valid">
+                            {{ 'APP.UPDATE_BTN' | translate }} <i class="material-icons">check</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

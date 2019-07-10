@@ -1,0 +1,47 @@
+$add_btn_bg_color: #ffff;
+$add_btn_fg_color: #383838;
+
+$save_btn_bg_color: #0B60A9;
+$save_btn_fg_color: #ffff;
+
+$refresh_btn_bg_color: $add_btn_fg_color;
+$refresh_btn_fg_color: $add_btn_bg_color;
+
+%ci-base {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+%c1i {
+    @extend %ci-base;
+
+    > mat-form-field {
+        width: 100%;
+    }
+}
+
+%c2i {
+    @extend %ci-base;
+
+    > mat-form-field {
+        width: 49.5%;
+    }
+}
+
+%c3i {
+    @extend %ci-base;
+
+    > mat-form-field {
+        width: 32.83%;
+    }
+}
+
+%c4i {
+    @extend %ci-base;
+
+    > mat-form-field {
+        width: 24.5%;
+    }
+}
