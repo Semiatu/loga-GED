@@ -1,0 +1,155 @@
+<div id="components" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+             fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    {{ icon }}
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    {{ 'APP.DOSSIER.TITLE' | translate }}
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="{{ 'APP.DOSSIER.SEARCH_TITLE' | translate }}">
+                </div>
+            </div>
+            <!-- / SEARCH -->
+
+            <!-- ADD AND REFRESH BUTTON -->
+            <button mat-raised-button [routerLink]="join(baseLink, 'new')"
+                    matTooltip="{{ 'APP.DOSSIER.ADD_TITLE' | translate }}"
+                    class="add-product-button fuse-white mt-24 mt-md-0">
+                <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">add</i>&nbsp;
+                <span style="text-transform: uppercase">{{ 'APP.DOSSIER.ADD_TITLE' | translate }}</span>
+            </button>
+
+        </div>
+        <!-- / HEADER -->
+
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <mat-table class="components-table" #table [dataSource]="dataSource" matSort
+                       [@animateStagger]="{value:'50'}" fusePerfectScrollbar>
+
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+                    <mat-cell *matCellDef="let component">
+                        <p class="text-truncate">{{ component.id }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- CreatedBy Column -->
+                <ng-container matColumnDef="createdBy">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Créer par</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.createdBy }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- createdDate Column -->
+                <ng-container matColumnDef="createdDate">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Date création</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.createdDate | date: 'dd/MM/yyyy'}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- lastModifiedBy Column -->
+                <ng-container matColumnDef="lastModifiedBy">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Modifier par</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.lastModifiedBy }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- lastModifiedDate Column -->
+                <ng-container matColumnDef="lastModifiedDate">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Date Modification</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.lastModifiedDate | date: 'dd/MM/yyyy' }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- nom Column -->
+                <ng-container matColumnDef="nom">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Nom</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.nom }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- taille Column -->
+                <ng-container matColumnDef="taille">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Taille</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.taille }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Buttons Column -->
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                    <mat-cell *matCellDef="let component">
+                        <div fxFlex="row" fxLayoutAlign="end center">
+
+                            <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More"
+                                    (click)="$event.stopPropagation();">
+                                <mat-icon class="secondary-text">more_vert</mat-icon>
+                            </button>
+
+                            <mat-menu #moreMenu="matMenu">
+                                <button [routerLink]="target(baseLink, component.id)" mat-menu-item aria-label="edit"
+                                        (click)="gotoEditComponent(component)">
+                                    <mat-icon>edit</mat-icon>
+                                    <span>{{ 'APP.UPDATE_BTN' | translate }}</span>
+                                </button>
+
+                                <button mat-menu-item aria-label="remove" (click)="delete(component)">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>{{ 'APP.DELETE_BTN' | translate }}</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+                <mat-row *matRowDef="let component; columns: displayedColumns;"
+                         [routerLink]="baseLink+ '/' + component.id+ '/display'" class="component"
+                         matRipple>
+                </mat-row>
+
+            </mat-table>
+
+            <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                           [pageSizeOptions]="[5, 10, 25, 100]">
+            </mat-paginator>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

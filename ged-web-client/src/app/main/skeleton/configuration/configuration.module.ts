@@ -65,6 +65,14 @@ import { DummyFormResolver } from './_resolver/dummy/dummy.form.resolver';
 import { FuseSharedModule } from 'src/@externals/fuse/@fuse/shared.module';
 import { CustomSharedModule } from 'src/@externals/loga/custom.shared.module';
 import { DummyDisplayResolver } from './_resolver/dummy/dummy.display.resolver';
+import { DossierListComponent } from './_component/dossier/dossier-list/dossier-list.component';
+import { DocumentListComponent } from './_component/document/document-list/document-list.component';
+import { DossierGenericFormComponent } from './_component/dossier/dossier-generic-form/dossier-generic-form.component';
+import { DossierFormComponent } from './_component/dossier/dossier-form/dossier-form.component';
+import { DossierDisplayFormComponent } from './_component/dossier/dossier-display-form/dossier-display-form.component';
+import { DocumentDisplayFormComponent } from './_component/document/document-display-form/document-display-form.component';
+import { DocumentFormComponent } from './_component/document/document-form/document-form.component';
+import { DocumentGenericFormComponent } from './_component/document/document-generic-form/document-generic-form.component';
 
 
 
@@ -72,10 +80,18 @@ import { DummyDisplayResolver } from './_resolver/dummy/dummy.display.resolver';
 
 
   declarations: [
-    DummyListComponent,
-    DummyFormComponent,
-    DummyGenericFormComponent,
-    DummyDisplayFormComponent,
+      DummyListComponent,
+      DummyFormComponent,
+      DummyGenericFormComponent,
+      DummyDisplayFormComponent,
+      DossierListComponent,
+      DossierFormComponent,
+      DossierGenericFormComponent,
+      DossierDisplayFormComponent,
+      DocumentListComponent,
+      DocumentDisplayFormComponent,
+      DocumentFormComponent,
+      DocumentGenericFormComponent,
   ],
 
   imports: [

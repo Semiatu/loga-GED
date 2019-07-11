@@ -7,18 +7,34 @@ import { DummyListResolver } from './_resolver/dummy/dummy.list.resolver';
 import { DummyFormResolver } from './_resolver/dummy/dummy.form.resolver';
 import { DummyDisplayFormComponent } from './_component/dummy/dummy-display-form/dummy-display-form.component';
 import { DummyDisplayResolver } from './_resolver/dummy/dummy.display.resolver';
+import {DossierListComponent} from "./_component/dossier/dossier-list/dossier-list.component";
+import {DossierFormResolver, DossierListResolver} from "./_resolver";
+import {DossierFormComponent} from "./_component/dossier/dossier-form/dossier-form.component";
+import {DossierDisplayFormComponent} from "./_component/dossier/dossier-display-form/dossier-display-form.component";
+import {DossierDisplayResolver} from "./_resolver/dossier/dossier.display.resolver";
 
 const configurationRoutes: Routes = [
   { path: '', redirectTo: '/dummies', pathMatch: 'full' },
-  {
-    path: 'dummies',
-    children: [
-      { path: '', component: DummyListComponent, resolve: { data: DummyListResolver } },
-      { path: ':id', component: DummyFormComponent, resolve: { data: DummyFormResolver } },
-      {path: ':id/display', component: DummyDisplayFormComponent, resolve: {data: DummyDisplayResolver}},
-      { path: 'new', component: DummyFormComponent, resolve: { data: DummyFormResolver } }
-    ]
-  },
+
+
+    {
+        path: 'dummies',
+        children: [
+            {path: '', component: DummyListComponent, resolve: {data: DummyListResolver}},
+            {path: ':id', component: DummyFormComponent, resolve: {data: DummyFormResolver}},
+            {path: ':id/display', component: DummyDisplayFormComponent, resolve: {data: DummyDisplayResolver}},
+            {path: 'new', component: DummyFormComponent, resolve: {data: DummyFormResolver}}
+        ]
+    },
+    {
+        path: 'dossiers',
+        children: [
+            { path: '', component: DossierListComponent, resolve: { data: DossierListResolver } },
+            {path: ':id', component: DossierFormComponent, resolve: {data: DossierFormResolver}},
+            {path: ':id/display', component: DossierDisplayFormComponent, resolve: {data: DossierDisplayResolver}},
+            {path: 'new', component: DossierFormComponent, resolve: {data: DossierFormResolver}}
+        ]
+    },
 ];
 
 @NgModule({

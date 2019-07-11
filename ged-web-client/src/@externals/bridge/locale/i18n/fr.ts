@@ -50,6 +50,13 @@ export const locale = {
         'EDIT_TITLE': 'Editer la maquette',
         'LIST_TITLE': 'Liste des maquettes',
       },
+        'DOSSIER': {
+            'TITLE': 'Dossier',
+            'SEARCH_TITLE': 'Chercher un dossier',
+            'ADD_TITLE': 'Nouveau dossier',
+            'EDIT_TITLE': 'Editer le dossier',
+            'LIST_TITLE': 'Liste des dossiers',
+        },
     },
 
     'login': {

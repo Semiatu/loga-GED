@@ -19,7 +19,7 @@ import java.util.List;
 public class Dossier extends AbstractEntity {
 
     @Column(name = "nom")
-    private Long nom;
+    private String nom;
 
     @Column(name = "taille")
     private Long taille;

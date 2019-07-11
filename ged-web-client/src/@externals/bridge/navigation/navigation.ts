@@ -53,7 +53,16 @@ export const navigation: ExtendedFuseNavigation[] = [
         icon: 'extension',
         url: Paths.configurationPath('dummies'),
         role: 'squeleton'
-      }
+      },
+        {
+            id: 'Dossiers',
+            title: 'Dossier',
+            translate: 'Dossier',
+            type: 'item',
+            icon: 'folder',
+            url: Paths.configurationPath('dossiers'),
+            role: 'squeleton'
+        },
     ]
   }
 ];
