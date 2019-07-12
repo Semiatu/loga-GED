@@ -1,0 +1,84 @@
+@import "../../../../../../../@externals/fuse/@fuse/scss/fuse";
+@import "../../../../../../component-table";
+@import "../../../../../../column-n";
+
+document-display-form{
+    @import '../../../../../component-generic';
+
+    mat-form-field {
+        width: 100%;
+    }
+
+    .pb-16 {
+        padding: 16px;
+    }
+
+    .dd {
+        font-size: 15px;
+        font-weight: bold;
+        color: #0B60A9;
+    }
+
+    form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+
+        > mat-form-field {
+            width: 100%;
+        }
+
+        .column-1-item {
+            @extend %c1i
+        }
+
+        .column-2-item {
+            @extend %c2i
+        }
+
+        .column-3-item {
+            @extend %c3i
+        }
+
+        .column-4-item {
+            @extend %c4i
+        }
+
+        > #action-button-wrapper {
+            display: flex;
+            width: 100%;
+
+            > .button-item {
+                width: 100%;
+                padding-bottom: 10px;
+
+                > button {
+                    width: 100%;
+                }
+
+                .add, .edit {
+                    color: $save_btn_fg_color;
+                    background-color: $save_btn_bg_color;
+                    padding: 10px;
+                    font-size: 15px;
+                    text-transform: uppercase;
+
+                    .material-icons {
+                        color: $save_btn_fg_color
+                    }
+                }
+
+                .cancel {
+                    color: $refresh_btn_fg_color;
+                    background-color: $refresh_btn_bg_color;
+
+                    .material-icons {
+                        color: $refresh_btn_fg_color;
+                    }
+                }
+            }
+        }
+    }
+}

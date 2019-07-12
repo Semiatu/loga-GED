@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import {ActivatedRoute, ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DocumentService } from 'src/app/main/skeleton/configuration/_service';
 import { AbstractListResolver } from 'src/@externals/loga/_abstract';
@@ -20,7 +20,7 @@ export class DocumentListResolver extends AbstractListResolver implements Resolv
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
         return new Promise((resolve, reject) => {
             Promise.all([
-                this.getDocuments(),
+                this.getDocuments( route.params.id),
             ]).then(
                 () => {
                     resolve();
@@ -30,9 +30,9 @@ export class DocumentListResolver extends AbstractListResolver implements Resolv
         });
     }
 
-    protected getDocuments(): Promise<any> {
+    protected getDocuments(idDossier): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.documentService.findAllPage(0, 10)
+            this.documentService.findByDossier(idDossier, 0, 10)
                 .subscribe(response => {
                     this.documents = Helpers.getOthers(response);
                     this.total = Helpers.getTotalElements(response);

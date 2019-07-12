@@ -29,6 +29,12 @@ export class DocumentService extends AbstractService<Document, number> {
             .pipe(catchError(this.handleError));
     }
 
+    public findByDossier(idDossier, page: number, size?: number) {
+        size = (size === undefined) ? 2 : size;
+        return this.httpClient.get<Document[]>(encodeURI(this.apiUrl + this.address()+ '/dossier/' + idDossier + '?size=' + size + '&page=' + page), this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
+
 
 
 }

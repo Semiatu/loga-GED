@@ -1,3 +1,124 @@
-<p>
-  document-display-form works!
-</p>
+<!-- gere les apparemces -->
+<div fusePerfectScrollbar id="components" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="baseLink">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+
+                <div fxLayout="column" fxLayoutAlign="start start"
+                     [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="subtitle secondary-text">
+                        <span class="logo-text h1">{{ componentName }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADD AND REFRESH BUTTON -->
+            <div>
+                <button [routerLink]="documentEditLink" class="add-product-button fuse-white mt-24 mt-md-0"
+                        mat-raised-button matTooltip="{{ 'MODIFIER' }}">
+                    <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">edit</i>&nbsp;
+                    <span style="text-transform: uppercase">{{ 'modifier' | translate }}</span>
+                </button>
+                &nbsp;
+                <button (click)="delete()" class="add-product-button fuse-white mt-24 mt-md-0" mat-raised-button
+                        matTooltip="{{ 'SUPPRIMER' }}">
+                    <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">delete</i>&nbsp;
+                    <span style="text-transform: uppercase">{{ 'supprimer' | translate }}</span>
+                </button>
+                &nbsp;
+            </div>
+            <!-- / APP TITLE -->
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <!-- CONTENT FROM -->
+            <div class="content">
+                <div class="tab-content" fusePerfectScrollbar>
+
+                    <div class="pb-16" fxLayout="row" fxLayoutAlign="start center">
+                        <mat-icon class="m-0 mr-16 secondary-text">account_box</mat-icon>
+                        <div class="h2 secondary-text">Information</div>
+                    </div>
+
+                    <div class="card">
+                        <mat-card>
+                            <!-- nom -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>Nom</mat-label>
+                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                <input name="nom" [value]="document?.nom" matInput readonly>
+                            </mat-form-field>
+
+                            <!-- description -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>Description</mat-label>
+                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                <input name="description" [value]="document?.description" matInput readonly>
+                            </mat-form-field>
+
+                            <!-- taille -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>Taille</mat-label>
+                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                <input name="taille" [value]="document?.taille" matInput readonly>
+                            </mat-form-field>
+
+                            <!-- auteur -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>Auteur</mat-label>
+                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                <input name="auteur" [value]="document?.auteur" matInput readonly>
+                            </mat-form-field>
+
+                            <!-- format -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>Format</mat-label>
+                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                <input name="format" [value]="document?.format" matInput readonly>
+                            </mat-form-field>
+
+                            <!-- version -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>Version</mat-label>
+                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                <input name="version" [value]="document?.version" matInput readonly>
+                            </mat-form-field>
+
+                            <!-- url -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>url</mat-label>
+                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                <input name="url" [value]="document?.url" matInput readonly>
+                            </mat-form-field>
+
+                        </mat-card>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+            <!-- / CONTENT CARD -->
+        </div>
+    </div>
+    <!-- / CENTER -->
+
+</div>

@@ -1,3 +1,6 @@
-<p>
-  document-form works!
-</p>
+<document-generic-form
+                    [document]="document"
+                    [action]="action"
+                    (save)="save($event)"
+                    (update)="update($event)">
+</document-generic-form>

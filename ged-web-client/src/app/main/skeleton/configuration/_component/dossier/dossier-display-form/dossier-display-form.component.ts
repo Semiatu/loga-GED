@@ -87,7 +87,7 @@ export class DossierDisplayFormComponent extends GenericPersistenceComponent<Dos
                     if (response) {
                         this._service.delete(component.id).subscribe(value => {
                                 this._service.findAllPage(0, this.row).subscribe(data => {
-                                    this.navigateToList(values['APP.SUCCESS'], values['APP.DELETE'], Paths.configurationPath('dummies'));
+                                    this.navigateToList(values['APP.SUCCESS'], values['APP.DELETE'], Paths.configurationPath('dossiers'));
                                     this.hideLoading();
                                 });
                             }, error => {

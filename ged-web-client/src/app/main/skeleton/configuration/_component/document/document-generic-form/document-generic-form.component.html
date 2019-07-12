@@ -1,3 +1,195 @@
-<p>
-  document-generic-form works!
-</p>
+<div id="components" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="join(baseLink , join('dossier', dossierId))">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+
+                <div fxLayout="column" fxLayoutAlign="start start"
+                     [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h2" *ngIf="action ==='edit'">
+                        {{document.nom}}
+                    </div>
+                    <div class="h2" *ngIf="action ==='add'">
+                        {{ 'APP.DOCUMENT.ADD_TITLE' | translate }}
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <!-- CONTENT FROM -->
+            <form id="contentForm" [formGroup]="form">
+
+                <!-- PROFILES -->
+
+                <!-- NOM -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Nom</mat-label>
+                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                    <input name="nom" formControlName="nom" matInput required>
+                    <mat-error *ngIf="!form.controls['nom'].valid && form.controls['nom'].dirty &&
+          form.controls['nom'].errors['maxlength']">
+                        Le nombre de caractère doit être plus petit que {{ maxLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['nom'].valid && form.controls['nom'].dirty &&
+          form.controls['nom'].errors['minlength']">
+                        Le nombre de caractère doit être plus grand que {{ minLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['nom'].valid && form.controls['nom'].dirty &&
+          form.controls['nom'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- description -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Description</mat-label>
+                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                    <input name="description" formControlName="description" matInput required>
+                    <mat-error *ngIf="!form.controls['description'].valid && form.controls['description'].dirty &&
+          form.controls['description'].errors['maxlength']">
+                        Le nombre de caractère doit être plus petit que {{ maxLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['description'].valid && form.controls['description'].dirty &&
+          form.controls['description'].errors['minlength']">
+                        Le nombre de caractère doit être plus grand que {{ minLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['description'].valid && form.controls['description'].dirty &&
+          form.controls['description'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Taille -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Taille</mat-label>
+                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                    <input type="number" name="taille" formControlName="taille" matInput required>
+                    <mat-error *ngIf="!form.controls['taille'].valid && form.controls['taille'].dirty &&
+          form.controls['taille'].errors['maxlength']">
+                        Le nombre de caractère doit être plus petit que {{ maxLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['taille'].valid && form.controls['taille'].dirty &&
+          form.controls['taille'].errors['minlength']">
+                        Le nombre de caractère doit être plus grand que {{ minLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['taille'].valid && form.controls['taille'].dirty &&
+          form.controls['taille'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- auteur -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Auteur</mat-label>
+                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                    <input name="auteur" formControlName="auteur" matInput required>
+                    <mat-error *ngIf="!form.controls['auteur'].valid && form.controls['auteur'].dirty &&
+          form.controls['auteur'].errors['maxlength']">
+                        Le prenombre de caractère doit être plus petit que {{ maxLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['auteur'].valid && form.controls['auteur'].dirty &&
+          form.controls['auteur'].errors['minlength']">
+                        Le nombre de caractère doit être plus grand que {{ minLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['auteur'].valid && form.controls['auteur'].dirty &&
+          form.controls['auteur'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- format -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Format</mat-label>
+                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                    <input name="format" formControlName="format" matInput required>
+                    <mat-error *ngIf="!form.controls['format'].valid && form.controls['format'].dirty &&
+          form.controls['format'].errors['maxlength']">
+                        Le prenombre de caractère doit être plus petit que {{ maxLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['format'].valid && form.controls['format'].dirty &&
+          form.controls['format'].errors['minlength']">
+                        Le nombre de caractère doit être plus grand que {{ minLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['format'].valid && form.controls['format'].dirty &&
+          form.controls['format'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- version -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Version</mat-label>
+                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                    <input name="version" formControlName="version" matInput required>
+                    <mat-error *ngIf="!form.controls['version'].valid && form.controls['version'].dirty &&
+          form.controls['version'].errors['maxlength']">
+                        Le prenombre de caractère doit être plus petit que {{ maxLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['version'].valid && form.controls['version'].dirty &&
+          form.controls['version'].errors['minlength']">
+                        Le nombre de caractère doit être plus grand que {{ minLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['version'].valid && form.controls['version'].dirty &&
+          form.controls['version'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- url -->
+                <mat-form-field appearance="outline">
+                    <mat-label>url</mat-label>
+                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                    <input name="url" formControlName="url" matInput required>
+                    <mat-error *ngIf="!form.controls['url'].valid && form.controls['url'].dirty &&
+          form.controls['url'].errors['maxlength']">
+                        Le prenombre de caractère doit être plus petit que {{ maxLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['url'].valid && form.controls['url'].dirty &&
+          form.controls['url'].errors['minlength']">
+                        Le nombre de caractère doit être plus grand que {{ minLength }}
+                    </mat-error>
+                    <mat-error *ngIf="!form.controls['url'].valid && form.controls['url'].dirty &&
+          form.controls['url'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>
+
+                <div id="action-button-wrapper">
+                    <div class="button-item" *ngIf="action === 'add' || !action">
+                        <button mat-raised-button class="add" matTooltip="{{ 'APP.ADD_BTN' | translate }}"
+                                (click)="_save()" [disabled]="!form.valid">
+                            {{ 'APP.ADD_BTN' | translate }} <i class="material-icons">check</i>
+                        </button>
+                    </div>
+
+                    <div class="button-item" *ngIf="action === 'edit'">
+                        <button mat-raised-button class="edit" matTooltip="{{ 'APP.UPDATE_BTN' | translate }}"
+                                (click)="_update()" [disabled]="!form.valid">
+                            {{ 'APP.UPDATE_BTN' | translate }} <i class="material-icons">check</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

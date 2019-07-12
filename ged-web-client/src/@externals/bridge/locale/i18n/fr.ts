@@ -57,6 +57,14 @@ export const locale = {
             'EDIT_TITLE': 'Editer le dossier',
             'LIST_TITLE': 'Liste des dossiers',
         },
+        'DOCUMENT': {
+            'TITLE': 'Document',
+            'TITLES': 'Documents',
+            'SEARCH_TITLE': 'Chercher un document',
+            'ADD_TITLE': 'Nouveau document',
+            'EDIT_TITLE': 'Editer le document',
+            'LIST_TITLE': 'Liste des documents',
+        },
     },
 
     'login': {

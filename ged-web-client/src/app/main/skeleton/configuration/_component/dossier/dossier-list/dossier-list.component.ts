@@ -30,6 +30,7 @@ export class DossierListComponent extends GenericListComponent<Dossier, DossierS
     icon = 'folder';
     criteria: DossierCriteria = new DossierCriteria();
     baseLink = Paths.configurationPath('dossiers');
+    documentLink = Paths.configurationPath('documents');
     displayLink = this.baseLink + '/display';
 
     private _unsubscribeAll: Subject<any>;

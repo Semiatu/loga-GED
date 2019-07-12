@@ -1,4 +1,5 @@
 import {Entity} from 'src/@externals/loga/_abstract';
+import {Dossier} from "./dossier";
 
 export class Document extends Entity<Document> {
 
@@ -9,6 +10,7 @@ export class Document extends Entity<Document> {
     public format: string;
     public version: string;
     public url: string;
+    public dossier: Dossier;
 
     constructor() {
         super();

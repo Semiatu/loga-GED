@@ -119,6 +119,12 @@
                             </button>
 
                             <mat-menu #moreMenu="matMenu">
+
+                                <button [routerLink]= "join(documentLink, join('dossier', component.id))" mat-menu-item aria-label="edit">
+                                    <mat-icon>description</mat-icon>
+                                    <span>{{ 'APP.DOCUMENT.TITLES' | translate }}</span>
+                                </button>
+
                                 <button [routerLink]="target(baseLink, component.id)" mat-menu-item aria-label="edit"
                                         (click)="gotoEditComponent(component)">
                                     <mat-icon>edit</mat-icon>

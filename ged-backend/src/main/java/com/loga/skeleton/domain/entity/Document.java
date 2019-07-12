@@ -40,9 +40,6 @@ public class Document extends AbstractEntity {
     @JoinColumn(name = "categorie")
     private Categorie categorie;
 
-    @OneToMany(mappedBy = "document")
-    private List<Revision> revisions;
-
     @ManyToOne
     @JoinColumn(name = "etat")
     private Etat etat;
@@ -55,14 +52,9 @@ public class Document extends AbstractEntity {
     @JoinColumn(name = "type")
     private TypeDocument typeDocument;
 
-    @OneToMany(mappedBy = "document")
-    private List<Raccourci> raccourcis;
 
     @ManyToOne
     private Dossier dossier;
-
-    @OneToMany(mappedBy = "document")
-    private List<Privilege> privileges;
 
 
 

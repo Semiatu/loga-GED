@@ -1,5 +1,6 @@
 package com.loga.skeleton.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.loga.bebase.entity.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class Dossier extends AbstractEntity {
     @ManyToOne
     private Dossier dossier;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "dossier")
     private List<Document> documents;
 
