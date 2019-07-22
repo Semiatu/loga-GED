@@ -14,6 +14,9 @@ import {debounceTime, distinctUntilChanged, takeUntil} from "rxjs/operators";
 import {Helpers} from "../../../../../../../@externals/loga/_utility";
 import {DossierDatasource} from "../../../_datasource";
 import {fuseAnimations} from "../../../../../../../@externals/fuse/@fuse/animations";
+import {ActivatedRoute} from "@angular/router";
+import {DocumentDisplayResolver} from "../../../_resolver/document/document.display.resolver";
+import {DossierDisplayResolver} from "../../../_resolver/dossier/dossier.display.resolver";
 
 @Component({
     selector: 'dossier-list',
@@ -24,7 +27,7 @@ import {fuseAnimations} from "../../../../../../../@externals/fuse/@fuse/animati
 })
 export class DossierListComponent extends GenericListComponent<Dossier, DossierService> implements OnInit, OnDestroy {
 
-    displayedColumns = ['id', 'createdBy', 'createdDate', 'lastModifiedBy', 'lastModifiedDate', 'nom', 'taille', 'actions'];
+    displayedColumns = ['id', 'nom', 'taille', 'createdDate', 'lastModifiedDate', 'actions'];
 
     conf: ConfigurationModule
     icon = 'folder';
@@ -32,6 +35,9 @@ export class DossierListComponent extends GenericListComponent<Dossier, DossierS
     baseLink = Paths.configurationPath('dossiers');
     documentLink = Paths.configurationPath('documents');
     displayLink = this.baseLink + '/display';
+    dossierID : string;
+    dossier: Dossier;
+    dossierEditLink: any;
 
     private _unsubscribeAll: Subject<any>;
 
@@ -41,12 +47,18 @@ export class DossierListComponent extends GenericListComponent<Dossier, DossierS
         protected _translateService: TranslateService,
         protected _service: DossierService,
         private dossierResolver: DossierListResolver,
+        protected clientResolver:  DossierDisplayResolver,
+        private activatedRoute: ActivatedRoute,
     ) {
         super(_notificationService, _dialogService, _translateService, _service);
         this._unsubscribeAll = new Subject();
     }
 
     ngOnInit(): void {
+        this.dossierID = this.activatedRoute.snapshot.params['idDossier'];
+        this.dossier= this.clientResolver.dossier;
+        this.dossierEditLink = '/' + Paths.configurationPath('dossiers/' + this. dossier.id);
+
         this.initData();
         fromEvent(this.filter.nativeElement, 'keyup')
             .pipe(takeUntil(this._unsubscribeAll), debounceTime(150), distinctUntilChanged())

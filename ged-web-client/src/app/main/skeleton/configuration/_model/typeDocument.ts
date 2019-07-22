@@ -1,12 +1,8 @@
 import {Entity} from 'src/@externals/loga/_abstract';
 
-export class Dossier extends Entity<Dossier> {
+export class TypeDocument extends Entity<TypeDocument> {
 
     public nom: string;
-    public taille: number;
-    public  dossierParent: Dossier;
-
-
 
     constructor() {
         super();

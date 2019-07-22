@@ -9,12 +9,6 @@ export class DocumentDatasource extends AbstractDatasource<Document> {
             case 'id':
                 [propertyA, propertyB] = [a.id, b.id];
                 break;
-            case 'createdBy':
-                [propertyA, propertyB] = [a.createdBy, b.createdBy];
-                break;
-            case 'lastModifiedBy':
-                [propertyA, propertyB] = [a.lastModifiedBy, b.lastModifiedBy];
-                break;
             case 'nom':
                 [propertyA, propertyB] = [a.nom, b.nom];
                 break;
@@ -35,6 +29,12 @@ export class DocumentDatasource extends AbstractDatasource<Document> {
                 break;
             case 'url':
                 [propertyA, propertyB] = [a.url, b.url];
+                break;
+            case 'createdBy':
+                [propertyA, propertyB] = [a.createdBy, b.createdBy];
+                break;
+            case 'lastModifiedBy':
+                [propertyA, propertyB] = [a.lastModifiedBy, b.lastModifiedBy];
                 break;
         }
         return { propertyA: propertyA, propertyB: propertyB };

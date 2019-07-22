@@ -5,6 +5,7 @@ import {DossierCriteria} from "../_criteria";
 import {Observable} from "rxjs";
 import {HttpEvent} from "@angular/common/http";
 import {catchError} from "rxjs/operators";
+import {ContenuDossierWrapper} from "../wrapper/contenu-dossier-wrapper";
 
 
 @Injectable({
@@ -26,6 +27,12 @@ export class DossierService extends AbstractService<Dossier, number> {
         const url = this.apiUrl + this.address() + '/search?size=' + size + '&page=' + page;
         return this.httpClient
             .post<Dossier[]>(url, JSON.stringify(criteria), this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
+
+    // nous permet de communique avec le backEnd pour avoir le contenu d'un dossier
+    getContent(idDossier){
+        return this.httpClient.get<ContenuDossierWrapper>(encodeURI(this.apiUrl + this.address() + '/get-content/' + idDossier), this.baseOption)
             .pipe(catchError(this.handleError));
     }
 

@@ -13,7 +13,7 @@
             <!-- APP TITLE -->
             <div fxLayout="row" fxLayoutAlign="start center">
 
-                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="baseLink">
+                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="getContentLink()">
                     <mat-icon>arrow_back</mat-icon>
                 </button>
 
@@ -45,14 +45,6 @@
                     <mat-icon matSuffix class="secondary-text">label</mat-icon>
                     <input name="nom" formControlName="nom" matInput required>
                     <mat-error *ngIf="!form.controls['nom'].valid && form.controls['nom'].dirty &&
-          form.controls['nom'].errors['maxlength']">
-                        Le nombre de caractère doit être plus petit que {{ maxLength }}
-                    </mat-error>
-                    <mat-error *ngIf="!form.controls['nom'].valid && form.controls['nom'].dirty &&
-          form.controls['nom'].errors['minlength']">
-                        Le nombre de caractère doit être plus grand que {{ minLength }}
-                    </mat-error>
-                    <mat-error *ngIf="!form.controls['nom'].valid && form.controls['nom'].dirty &&
           form.controls['nom'].errors['required']">
                         Le champ est requis
                     </mat-error>
@@ -63,19 +55,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Taille</mat-label>
                     <mat-icon matSuffix class="secondary-text">label</mat-icon>
-                    <input type="number" name="taille" formControlName="taille" matInput required>
-                    <mat-error *ngIf="!form.controls['taille'].valid && form.controls['taille'].dirty &&
-          form.controls['taille'].errors['maxlength']">
-                        Le prenombre de caractère doit être plus petit que {{ maxLength }}
-                    </mat-error>
-                    <mat-error *ngIf="!form.controls['taille'].valid && form.controls['taille'].dirty &&
-          form.controls['taille'].errors['minlength']">
-                        Le nombre de caractère doit être plus grand que {{ minLength }}
-                    </mat-error>
-                    <mat-error *ngIf="!form.controls['taille'].valid && form.controls['taille'].dirty &&
-          form.controls['taille'].errors['required']">
-                        Le champ est requis
-                    </mat-error>
+                    <input type="number" name="taille" formControlName="taille" matInput>
                 </mat-form-field>
 
 

@@ -20,8 +20,8 @@ public class Langue extends AbstractEntity {
     @Column(name = "nom")
     private String nom;
 
-   @OneToMany(mappedBy = "langue")
+  /* @OneToMany(mappedBy = "langue")
     private List<Document> documents;
-
+*/
 
 }

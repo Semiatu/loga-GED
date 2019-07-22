@@ -45,7 +45,7 @@ export const navigation: ExtendedFuseNavigation[] = [
     type: 'group',
     icon: 'apps',
     children: [
-      {
+      /*{
         id: 'Dummies',
         title: 'Dummy',
         translate: 'Dummy',
@@ -53,14 +53,14 @@ export const navigation: ExtendedFuseNavigation[] = [
         icon: 'extension',
         url: Paths.configurationPath('dummies'),
         role: 'squeleton'
-      },
+      },*/
         {
             id: 'Dossiers',
             title: 'Dossier',
             translate: 'Dossier',
             type: 'item',
             icon: 'folder',
-            url: Paths.configurationPath('dossiers'),
+            url: Paths.join(Paths.configurationPath('dossiers'), 'content/0'),
             role: 'squeleton'
         },
         /* {

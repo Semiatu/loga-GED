@@ -36,7 +36,7 @@ import {
     MatToolbarModule,
     MatAutocompleteModule,
     MatCheckboxModule,
-    MatCardModule
+    MatCardModule, MatProgressBarModule
 } from '@angular/material';
 // OTHERS
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
@@ -73,7 +73,7 @@ import {DossierDisplayFormComponent} from './_component/dossier/dossier-display-
 import {DocumentDisplayFormComponent} from './_component/document/document-display-form/document-display-form.component';
 import {DocumentFormComponent} from './_component/document/document-form/document-form.component';
 import {DocumentGenericFormComponent} from './_component/document/document-generic-form/document-generic-form.component';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { ContentListComponent } from './_component/dossier/content-list/content-list.component';
 
 
 @NgModule({
@@ -92,6 +92,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         DocumentDisplayFormComponent,
         DocumentFormComponent,
         DocumentGenericFormComponent,
+        ContentListComponent,
     ],
 
     imports: [
@@ -143,6 +144,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         MatToolbarModule,
         NgxMatSelectSearchModule,
         CustomSharedModule,
+        MatProgressBarModule,
     ],
 
     providers: [

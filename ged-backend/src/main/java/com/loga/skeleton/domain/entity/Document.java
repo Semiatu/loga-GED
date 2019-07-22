@@ -52,10 +52,11 @@ public class Document extends AbstractEntity {
     @JoinColumn(name = "type")
     private TypeDocument typeDocument;
 
-
     @ManyToOne
     private Dossier dossier;
 
-
+   /* @OneToMany(mappedBy = "document", fetch =FetchType.EAGER)
+    private List<Privilege> privileges;
+*/
 
 }

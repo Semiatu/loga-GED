@@ -20,7 +20,7 @@ public class TypeDocument extends AbstractEntity {
     @Column(name = "nom")
     private String nom;
 
-    @OneToMany(mappedBy = "typeDocument")
+   /* @OneToMany(mappedBy = "typeDocument")
     private List<Document> documents;
-
+*/
 }

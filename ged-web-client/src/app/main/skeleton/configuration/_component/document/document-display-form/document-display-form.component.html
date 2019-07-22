@@ -14,7 +14,7 @@
             <!-- APP TITLE -->
             <div fxLayout="row" fxLayoutAlign="start center">
 
-                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="baseLink">
+                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="getParentLInk()">
                     <mat-icon>arrow_back</mat-icon>
                 </button>
 
@@ -28,12 +28,20 @@
 
             <!-- ADD AND REFRESH BUTTON -->
             <div>
-                <button [routerLink]="documentEditLink" class="add-product-button fuse-white mt-24 mt-md-0"
+                <a [href]="document.url" target="_blank" style="margin-right: 10px">
+                    <button class="add-product-button fuse-white mt-24 mt-md-0"
+                            mat-raised-button matTooltip="{{ 'Telecharger' }}">
+                        <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">cloud_download</i>&nbsp;
+                        <span style="text-transform: uppercase" class="pr-20">{{ 'DOWNLOAD' | translate }}</span>
+                    </button>
+                </a>
+
+                <button style="margin-right: 10px" [routerLink]="documentEditLink" class="add-product-button fuse-white mt-24 mt-md-0"
                         mat-raised-button matTooltip="{{ 'MODIFIER' }}">
                     <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">edit</i>&nbsp;
                     <span style="text-transform: uppercase">{{ 'modifier' | translate }}</span>
                 </button>
-                &nbsp;
+
                 <button (click)="delete()" class="add-product-button fuse-white mt-24 mt-md-0" mat-raised-button
                         matTooltip="{{ 'SUPPRIMER' }}">
                     <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">delete</i>&nbsp;

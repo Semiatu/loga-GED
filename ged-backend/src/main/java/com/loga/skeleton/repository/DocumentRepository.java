@@ -9,5 +9,8 @@ import java.util.List;
 
 public interface DocumentRepository extends AbstractRepository<Document, Long> {
 
-    List<Document> findByDossier (Dossier dossier, Pageable pageable);
+    List<Document> findByDossier(Dossier dossier, Pageable pageable);
+    List<Document> findByDossier(Dossier dossier);
+
+    List<Document> findByDossierIsNull();
 }

@@ -25,18 +25,18 @@ public class Dossier extends AbstractEntity {
     @Column(name = "taille")
     private Long taille;
 
-    @OneToMany(mappedBy = "dossier")
-    private List<Raccourci> raccourcis;
-
     @ManyToOne
-    private Dossier dossier;
+    private Dossier dossierParent;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "dossier")
-    private List<Document> documents;
+   /* @OneToMany(mappedBy = "dossier")
+    private List<Raccourci> raccourcis;*/
 
+   /* @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "dossier")
+    private List<Document> documents;*/
+
+    /*@OneToMany(mappedBy = "dossier")
     private List<Privilege> privileges;
-
+*/
 
 }

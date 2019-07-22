@@ -20,7 +20,7 @@ public class Etat extends AbstractEntity {
     @Column(name = "libelle")
     private String libelle;
 
-    @OneToMany(mappedBy = "etat")
-    private List<Document> documents;
+    /*@OneToMany(mappedBy = "etat")
+    private List<Document> documents;*/
 
 }

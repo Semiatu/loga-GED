@@ -30,9 +30,9 @@ public class DocumentController extends AbstractController<Document, Long , Docu
                 .addCondition(toCondition(criteria.getSearsh(), getAliasTable(Document.class) + ".dossier", TypeEgalite.CONTIENT));
         return page(rechercheModel.getRequete(), pageable, Document.class);
     }
-    @GetMapping("/dossier/{idDossier}")
-    public List<Document> findByDossier(@PathVariable Long idDossier, Pageable pageable){
-        return this.abstractService.getDocumentByDossier(idDossier, pageable);
+    @GetMapping("dossier/{dossierId}")
+    public List<Document> getDoument(@PathVariable Long dossierId, Pageable pageable){
+        return abstractService.getDocumentByDossier(dossierId, pageable);
     }
 
 }

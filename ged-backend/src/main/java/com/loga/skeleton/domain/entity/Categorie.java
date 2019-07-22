@@ -20,7 +20,7 @@ public class Categorie extends AbstractEntity {
     @Column(name = "nom")
     private String nom;
 
-    @OneToMany(mappedBy = "categorie")
-    private List<Document> documents;
+    /*@OneToMany(mappedBy = "categorie")
+    private List<Document> documents;*/
 
 }

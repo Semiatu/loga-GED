@@ -1,6 +1,7 @@
 package com.loga.skeleton.service;
 
 import com.loga.bebase.service.AbstractLongService;
+import com.loga.bebase.wrapper.ResponseWrapper;
 import com.loga.skeleton.domain.entity.Document;
 import com.loga.skeleton.domain.entity.Dossier;
 import com.loga.skeleton.repository.DocumentRepository;
@@ -17,24 +18,31 @@ import java.util.Optional;
 @Service
 public class DocumentService extends AbstractLongService<Document, DocumentRepository> {
 
-    @Autowired
-    private DossierRepository dossierRepository;
+   @Autowired
+   TypeDocumentService typeDocumentService;
+   @Autowired
+   DossierRepository dossierRepository;
 
     public DocumentService(DocumentRepository documentRepository) {
 
         super(documentRepository);
     }
-
     public List<Document> getDocumentByDossier(Long idDossier, Pageable pageable){
-        Optional<Dossier> optionalDossier = this.dossierRepository.findById(idDossier);
-
-        if (optionalDossier.isPresent()) {
+        Optional<Dossier> optionalDossier = dossierRepository.findById(idDossier);
+        if (optionalDossier.isPresent()){
             Dossier dossier = optionalDossier.get();
-            return this.repositoryManager.findByDossier(dossier, pageable);
-        } else {
-            return new ArrayList<>();
+            return repositoryManager.findByDossier(dossier, pageable);
+        }else{
+            return  new ArrayList<>();
         }
-
     }
 
+    // recuperer le nom du typeDoc si existe sinon creer
+    @Override
+    public ResponseWrapper<Document> save(Document document) {
+        if (document.getTypeDocument()== null || document.getTypeDocument().getNom() == null)
+            return ResponseWrapper.of("erreurrrrrrrrrrrrrrrrrrrrrr!");
+        document.setTypeDocument(this.typeDocumentService.getTypeDocumentByNom(document.getTypeDocument()));
+        return super.save(document);
+    }
 }

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {GenericListComponent} from "../../../../../../../@externals/loga/_abstract";
-import {Document} from "../../../_model";
+import {Document, Dossier} from "../../../_model";
 import {DocumentService} from "../../../_service";
 import {ConfigurationModule} from "../../../configuration.module";
 import {DocumentCriteria} from "../../../_criteria";
@@ -14,7 +14,7 @@ import {debounceTime, distinctUntilChanged, takeUntil} from "rxjs/operators";
 import {Helpers} from "../../../../../../../@externals/loga/_utility";
 import {DocumentDatasource} from "../../../_datasource";
 import {fuseAnimations} from "../../../../../../../@externals/fuse/@fuse/animations";
-import {ActivatedRoute, ActivatedRouteSnapshot} from "@angular/router";
+import {ActivatedRoute, ActivatedRouteSnapshot, NavigationExtras, Router} from "@angular/router";
 
 @Component({
     selector: 'document-list',
@@ -25,7 +25,7 @@ import {ActivatedRoute, ActivatedRouteSnapshot} from "@angular/router";
 })
 export class DocumentListComponent extends GenericListComponent<Document, DocumentService> implements OnInit, OnDestroy {
 
-    displayedColumns = ['id', 'createdBy', 'createdDate', 'lastModifiedBy', 'lastModifiedDate', 'nom', 'description', 'taille', 'auteur', 'format', 'version', 'url' ,'actions'];
+    displayedColumns = ['id', 'nom','taille', 'typeDocument' ,'auteur', 'version','lastModifiedDate', 'actions'];
 
     conf: ConfigurationModule
     icon = 'description';
@@ -33,6 +33,7 @@ export class DocumentListComponent extends GenericListComponent<Document, Docume
     baseLink = Paths.configurationPath('documents');
     displayLink = this.baseLink + '/display';
     dossierID: string;
+    file = File = null;
 
     private _unsubscribeAll: Subject<any>;
 
@@ -42,7 +43,8 @@ export class DocumentListComponent extends GenericListComponent<Document, Docume
         protected _translateService: TranslateService,
         protected _service: DocumentService,
         private documentResolver: DocumentListResolver,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        public router: Router
     ) {
         super(_notificationService, _dialogService, _translateService, _service);
         this._unsubscribeAll = new Subject();
@@ -84,7 +86,7 @@ export class DocumentListComponent extends GenericListComponent<Document, Docume
 
     delete(component): void {
         this.showLoading();
-        this._translateService.get(['APP.DELETE_CONFIRM', 'APP.SUCCESS', 'APP.DELETE'], { value: 'cet element' })
+        this._translateService.get(['APP.DELETE_CONFIRM', 'APP.SUCCESS', 'APP.DELETE'], {value: 'cet element'})
             .subscribe(values => {
                 const matDialogRef = this._dialogService.openConfirmDialog(values['APP.DELETE_CONFIRM']);
                 matDialogRef.afterClosed().subscribe(response => {
@@ -111,4 +113,18 @@ export class DocumentListComponent extends GenericListComponent<Document, Docume
         this.initialDataSource = this.dataSource;
     }
 
+    //selectionner un fichier
+    getFileDetails(event) {
+        this.file = event.target.files[0];
+        sessionStorage.setItem('fileToUpload', JSON.stringify(this.file));
+        const  navigationExtras: NavigationExtras = { state : { file: this.file }};
+        this.router.navigateByUrl(this.baseLink + '/new/' + this.dossierID, navigationExtras);
+
+    }
+
+    getIdDossier() {
+        return this.dossierID ? this.dossierID + '/' : '/' ;
+    }
+
 }
+

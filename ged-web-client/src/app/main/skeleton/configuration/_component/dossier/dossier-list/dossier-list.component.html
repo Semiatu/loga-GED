@@ -33,8 +33,7 @@
             <!-- / SEARCH -->
 
             <!-- ADD AND REFRESH BUTTON -->
-            <button mat-raised-button [routerLink]="join(baseLink, 'new')"
-                    matTooltip="{{ 'APP.DOSSIER.ADD_TITLE' | translate }}"
+            <button mat-raised-button [routerLink]="join(baseLink, 'new')" matTooltip="{{ 'APP.DOSSIER.ADD_TITLE' | translate }}"
                     class="add-product-button fuse-white mt-24 mt-md-0">
                 <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">add</i>&nbsp;
                 <span style="text-transform: uppercase">{{ 'APP.DOSSIER.ADD_TITLE' | translate }}</span>
@@ -59,27 +58,11 @@
                     </mat-cell>
                 </ng-container>
 
-                <!-- CreatedBy Column -->
-                <ng-container matColumnDef="createdBy">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Créer par</mat-header-cell>
-                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
-                        <p class="text-truncate">{{ component.createdBy }}</p>
-                    </mat-cell>
-                </ng-container>
-
                 <!-- createdDate Column -->
                 <ng-container matColumnDef="createdDate">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Date création</mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
                         <p class="text-truncate">{{ component.createdDate | date: 'dd/MM/yyyy'}}</p>
-                    </mat-cell>
-                </ng-container>
-
-                <!-- lastModifiedBy Column -->
-                <ng-container matColumnDef="lastModifiedBy">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Modifier par</mat-header-cell>
-                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
-                        <p class="text-truncate">{{ component.lastModifiedBy }}</p>
                     </mat-cell>
                 </ng-container>
 
@@ -95,6 +78,7 @@
                 <ng-container matColumnDef="nom">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Nom</mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <mat-icon>folder</mat-icon>
                         <p class="text-truncate">{{ component.nom }}</p>
                     </mat-cell>
                 </ng-container>
@@ -141,10 +125,10 @@
                     </mat-cell>
                 </ng-container>
 
-                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" style="height: 15px"></mat-header-row>
 
                 <mat-row *matRowDef="let component; columns: displayedColumns;"
-                         [routerLink]="baseLink+ '/' + component.id+ '/display'" class="component"
+                         [routerLink]="baseLink+ '/' + component.id+ '/display'" class="component" style="height: 15px"
                          matRipple>
                 </mat-row>
 

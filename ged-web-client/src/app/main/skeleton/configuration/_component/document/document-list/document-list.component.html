@@ -32,17 +32,17 @@
             </div>
             <!-- / SEARCH -->
 
-            <!-- ADD AND REFRESH BUTTON -->
-            <button mat-raised-button [routerLink]="join(baseLink, join('new', dossierID))"
+            <!-- Select bouton-->
+            <button mat-raised-button (click)="fileInput.click()"
                     matTooltip="{{ 'APP.DOCUMENT.ADD_TITLE' | translate }}"
                     class="add-product-button fuse-white mt-24 mt-md-0">
-                <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">add</i>&nbsp;
+                <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">cloud_upload</i>&nbsp;
                 <span style="text-transform: uppercase">{{ 'APP.DOCUMENT.ADD_TITLE' | translate }}</span>
             </button>
+            <input hidden id="file" type="file" name = "file"  #fileInput accept="image/*,.pdf,.doc" [multiple]="true" (change)="getFileDetails($event)">
 
         </div>
         <!-- / HEADER -->
-
 
         <!-- CONTENT CARD -->
         <div class="content-card">
@@ -52,58 +52,34 @@
 
 
                 <!-- ID Column -->
-                <ng-container matColumnDef="id">
+                <ng-container matColumnDef="id" >
                     <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
                     <mat-cell *matCellDef="let component">
                         <p class="text-truncate">{{ component.id }}</p>
                     </mat-cell>
                 </ng-container>
 
-                <!-- CreatedBy Column -->
-                <ng-container matColumnDef="createdBy">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Créer par</mat-header-cell>
-                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
-                        <p class="text-truncate">{{ component.createdBy }}</p>
-                    </mat-cell>
-                </ng-container>
-
-                <!-- createdDate Column -->
+              <!--  &lt;!&ndash; createdDate Column &ndash;&gt;
                 <ng-container matColumnDef="createdDate">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Date création</mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
                         <p class="text-truncate">{{ component.createdDate | date: 'dd/MM/yyyy'}}</p>
                     </mat-cell>
-                </ng-container>
+                </ng-container>-->
 
-                <!-- lastModifiedBy Column -->
+               <!-- &lt;!&ndash; lastModifiedBy Column &ndash;&gt;
                 <ng-container matColumnDef="lastModifiedBy">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Modifier par</mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
                         <p class="text-truncate">{{ component.lastModifiedBy }}</p>
                     </mat-cell>
-                </ng-container>
-
-                <!-- lastModifiedDate Column -->
-                <ng-container matColumnDef="lastModifiedDate">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Date Modification</mat-header-cell>
-                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
-                        <p class="text-truncate">{{ component.lastModifiedDate | date: 'dd/MM/yyyy' }}</p>
-                    </mat-cell>
-                </ng-container>
+                </ng-container>-->
 
                 <!-- nom Column -->
                 <ng-container matColumnDef="nom">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Nom</mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
                         <p class="text-truncate">{{ component.nom }}</p>
-                    </mat-cell>
-                </ng-container>
-
-                <!-- description Column -->
-                <ng-container matColumnDef="description">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Description</mat-header-cell>
-                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
-                        <p class="text-truncate">{{ component.description }}</p>
                     </mat-cell>
                 </ng-container>
 
@@ -115,6 +91,14 @@
                     </mat-cell>
                 </ng-container>
 
+                <!-- type Column -->
+                <ng-container matColumnDef="typeDocument">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Type</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.typeDocument?.nom }}</p>
+                    </mat-cell>
+                </ng-container>
+
                 <!-- auteur Column -->
                 <ng-container matColumnDef="auteur">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Auteur</mat-header-cell>
@@ -123,14 +107,14 @@
                     </mat-cell>
                 </ng-container>
 
-                <!-- format Column -->
+              <!--  &lt;!&ndash; format Column &ndash;&gt;
                 <ng-container matColumnDef="format">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Format</mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
                         <p class="text-truncate">{{ component.format }}</p>
                     </mat-cell>
                 </ng-container>
-
+-->
                 <!-- version Column -->
                 <ng-container matColumnDef="version">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Version</mat-header-cell>
@@ -139,11 +123,35 @@
                     </mat-cell>
                 </ng-container>
 
-                <!-- url Column -->
+               <!-- &lt;!&ndash; url Column &ndash;&gt;
                 <ng-container matColumnDef="url">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>url</mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
                         <p class="text-truncate">{{ component.url }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                &lt;!&ndash; CreatedBy Column &ndash;&gt;
+                <ng-container matColumnDef="createdBy">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Créer par</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.createdBy }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                &lt;!&ndash; description Column &ndash;&gt;
+                <ng-container matColumnDef="description">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Description</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.description }}</p>
+                    </mat-cell>
+                </ng-container>-->
+
+                <!-- lastModifiedDate Column -->
+                <ng-container matColumnDef="lastModifiedDate">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Dernière Modification</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.lastModifiedDate | date: 'dd/MM/yyyy' }}</p>
                     </mat-cell>
                 </ng-container>
 
@@ -175,10 +183,10 @@
                     </mat-cell>
                 </ng-container>
 
-                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" style="height: 15px"></mat-header-row>
 
                 <mat-row *matRowDef="let component; columns: displayedColumns;"
-                         [routerLink]="baseLink+ '/' + component.id+ '/display'" class="component"
+                         [routerLink]="baseLink+ '/' + component.id + '/dossier/' + getIdDossier() + 'display'" class="component" style="height: 15px"
                          matRipple>
                 </mat-row>
 

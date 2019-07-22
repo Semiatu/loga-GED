@@ -17,7 +17,7 @@ export class RoleHelpers {
     }
     return Paths.login;
     */
-   return Paths.configurationPath('dummies');
+   return Paths.configurationPath('dossiers') + '/content/0';
   }
 
   public static checkRole(url: string) {
