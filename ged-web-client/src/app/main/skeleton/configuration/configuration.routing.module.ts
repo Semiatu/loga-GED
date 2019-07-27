@@ -23,6 +23,8 @@ import {DocumentFormComponent} from "./_component/document/document-form/documen
 import {DocumentDisplayFormComponent} from "./_component/document/document-display-form/document-display-form.component";
 import {DocumentDisplayResolver} from "./_resolver/document/document.display.resolver";
 import {ContentListComponent} from "./_component/dossier/content-list/content-list.component";
+import {RaccourciFormComponent} from "./_component/dossier/raccourci-form/raccourci-form.component";
+import {RaccourciFormResolver} from "./_resolver/dossier/raccourci.form.resolver";
 
 const configurationRoutes: Routes = [
   { path: '', redirectTo: '/dossiers/content/0', pathMatch: 'full' },
@@ -65,7 +67,13 @@ const configurationRoutes: Routes = [
             {path: 'new/:idDossier', component: DocumentFormComponent, resolve: {data: DocumentFormResolver}},
             {path: 'new', component: DocumentFormComponent, resolve: {data: DocumentFormResolver}},
             {path: 'content', component: ContentListComponent, resolve: {data: ContentListResolver}}
-
+        ]
+    },
+    {
+        path: 'raccourcis',
+        children: [
+            {path: ':id', component: RaccourciFormComponent, resolve: {data: RaccourciFormResolver}},
+            {path: 'new', component: RaccourciFormComponent, resolve: {data: RaccourciFormResolver}}
         ]
     },
 ];

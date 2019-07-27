@@ -36,6 +36,11 @@ export class DossierService extends AbstractService<Dossier, number> {
             .pipe(catchError(this.handleError));
     }
 
+    getTreeContent(idDossier){
+        return this.httpClient.get<any>(encodeURI(this.apiUrl + this.address() + '/get-tree-data/' + idDossier), this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
+
 
 
 }

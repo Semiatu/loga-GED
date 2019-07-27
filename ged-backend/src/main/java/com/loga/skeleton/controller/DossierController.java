@@ -6,6 +6,7 @@ import com.loga.skeleton.domain.criteria.DossierSearchCriteria;
 import com.loga.skeleton.domain.entity.Dossier;
 import com.loga.skeleton.service.DossierService;
 import com.loga.skeleton.wrapper.ContenuDossierWrapper;
+import com.loga.skeleton.wrapper.TreeDataWrapper;
 import ml.smk.common.util.recherche.AbstractRechercheModel;
 import ml.smk.common.util.recherche.RechercheSimpleModel;
 import ml.smk.common.util.recherche.TypeEgalite;
@@ -41,11 +42,16 @@ public class DossierController extends AbstractController<Dossier,Long, DossierS
     }
 
     @GetMapping("get-content/{idDossier}")
-    public ResponseEntity< ContenuDossierWrapper > getContent(@PathVariable Long idDossier) {
+    public ResponseEntity<ContenuDossierWrapper> getContent(@PathVariable Long idDossier) {
         if (!findAllSupport()) {
             return error();
         }
         return ok(abstractService.getContent(idDossier).getEntity());
+    }
+
+    @GetMapping("get-tree-data/{idDossier}")
+    public ResponseEntity<List<TreeDataWrapper>> getTreeData(@PathVariable Long idDossier) {
+        return ok(abstractService.getTreeData(idDossier).getEntity());
     }
 
 }

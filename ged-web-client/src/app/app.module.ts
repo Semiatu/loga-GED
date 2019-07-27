@@ -65,7 +65,6 @@ import {AngularFireDatabase} from "@angular/fire/database";
         BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
-        MatDialogModule,
 
 
         // Loading

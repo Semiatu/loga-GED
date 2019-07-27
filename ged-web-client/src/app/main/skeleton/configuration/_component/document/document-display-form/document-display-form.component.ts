@@ -72,6 +72,14 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
         return this.parentLink =Paths.configurationPath('dossiers')  + '/content/'  + this.dossierID;
     }
 
+    dowload(){
+        this._service.getReceipt(this.document.url).subscribe(value => {
+            console.log('ok');
+        },error1 => {
+            console.log(error1);
+        })
+    }
+
     private next(details: any[], page): any {
         if (!details) {
             return [];

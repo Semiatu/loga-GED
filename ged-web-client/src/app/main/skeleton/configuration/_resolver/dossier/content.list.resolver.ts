@@ -51,6 +51,10 @@ export class ContentListResolver extends AbstractListResolver implements Resolve
                     for (let wrapperKey in this.wrapper.documents) {
                         this.mapwrapper.push(this.wrapper.documents[wrapperKey])
                     }
+
+                    for (let wrapperKey in this.wrapper.raccourcis) {
+                        this.mapwrapper.push(this.wrapper.raccourcis[wrapperKey])
+                    }
                     this.dataSource.next([this.dossier, this.mapwrapper]);
                     resolve(response);
                 }, reject);

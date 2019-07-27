@@ -28,6 +28,8 @@ public class Dossier extends AbstractEntity {
     @ManyToOne
     private Dossier dossierParent;
 
+    private boolean leaf;
+
    /* @OneToMany(mappedBy = "dossier")
     private List<Raccourci> raccourcis;*/
 

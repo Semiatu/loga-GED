@@ -1,0 +1,88 @@
+<!--<div id="components" class="page-layout carded fullwidth inner-scroll">
+
+    &lt;!&ndash; TOP BACKGROUND &ndash;&gt;
+    <div class="top-bg accent"></div>
+    &lt;!&ndash; / TOP BACKGROUND &ndash;&gt;
+
+    &lt;!&ndash; CENTER &ndash;&gt;
+    <div class="center">
+
+        &lt;!&ndash; HEADER &ndash;&gt;
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            &lt;!&ndash; APP TITLE &ndash;&gt;
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <div fxLayout="column" fxLayoutAlign="start start"
+                     [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h2" *ngIf="action ==='edit'">
+                        {{raccourci.nom}}
+                    </div>
+                    <div class="h2" *ngIf="action ==='add'">
+                        {{ 'Raccourci' | translate }}
+                    </div>
+                </div>
+            </div>
+            &lt;!&ndash; / APP TITLE &ndash;&gt;
+
+        </div>
+        &lt;!&ndash; / HEADER &ndash;&gt;
+
+        &lt;!&ndash; CONTENT CARD &ndash;&gt;
+        <div class="content-card">
+            &lt;!&ndash; CONTENT FROM &ndash;&gt;
+            <form id="contentForm" [formGroup]="form">
+
+                &lt;!&ndash; PROFILES &ndash;&gt;
+               &lt;!&ndash; &lt;!&ndash; NOM &ndash;&gt;
+                <mat-form-field appearance="outline">
+                    <mat-label>Nom</mat-label>
+                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                    <input name="nom" formControlName="nom" matInput required>
+                    <mat-error *ngIf="!form.controls['nom'].valid && form.controls['nom'].dirty &&
+          form.controls['nom'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>
+
+                &lt;!&ndash; emplacement &ndash;&gt;
+                <mat-form-field appearance="outline">
+                    <mat-label>Emplacement</mat-label>
+                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                    <input name="emplacement" formControlName="emplacement" matInput required>
+                    <mat-error *ngIf="!form.controls['emplacement'].valid && form.controls['emplacement'].dirty &&
+          form.controls['emplacement'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>
+
+                &lt;!&ndash; cible &ndash;&gt;
+                <mat-form-field appearance="outline">
+                    <mat-label>Cible</mat-label>
+                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                    <input name="cible" formControlName="cible" matInput required>
+                    <mat-error *ngIf="!form.controls['cible'].valid && form.controls['cible'].dirty &&
+          form.controls['cible'].errors['required']">
+                        Le champ est requis
+                    </mat-error>
+                </mat-form-field>&ndash;&gt;
+                <div>
+
+                </div>
+            </form>
+
+        </div>
+        &lt;!&ndash; / CONTENT CARD &ndash;&gt;
+    </div>
+    &lt;!&ndash; / CENTER &ndash;&gt;
+</div>-->
+
+<div fxLayout="row" fxLayoutAlign="center none" >
+    <h1 mat-dialog-title layout-align="center">Creer un raccourci</h1>
+</div>
+<div mat-dialog-content>
+    <p-tree [value]="data"  [filter]="true" filterMode="strict" selectionMode="single" [(selection)]="selectedFile" (onNodeSelect)="nodeSelect($event)" (onNodeExpand)="loadNode($event)"></p-tree>
+</div>
+<div mat-dialog-actions>
+    <button mat-button style="width: 100%; background-color: dimgray; color: #F5F5F5;" mat-button (click)="onNoClick()">Fermer</button>
+</div>

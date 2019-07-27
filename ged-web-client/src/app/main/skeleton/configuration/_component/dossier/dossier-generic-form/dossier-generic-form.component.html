@@ -17,18 +17,17 @@
                     <mat-icon>arrow_back</mat-icon>
                 </button>
 
-                <div fxLayout="column" fxLayoutAlign="start start"
+                <div fxLayout="column" fxLayoutAlign="start center"
                      [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
                     <div class="h2" *ngIf="action ==='edit'">
                         {{dossier.nom}}
                     </div>
-                    <div class="h2" *ngIf="action ==='add'">
+                    <div class="h2" *ngIf="action ==='add'" fxLayoutAlign="start center">
                         {{ 'APP.DOSSIER.ADD_TITLE' | translate }}
                     </div>
                 </div>
-            </div>
+             </div>
             <!-- / APP TITLE -->
-
         </div>
         <!-- / HEADER -->
 
@@ -36,9 +35,6 @@
         <div class="content-card">
             <!-- CONTENT FROM -->
             <form id="contentForm" [formGroup]="form">
-
-                <!-- PROFILES -->
-
                 <!-- NOM -->
                 <mat-form-field appearance="outline">
                     <mat-label>Nom</mat-label>
@@ -50,14 +46,12 @@
                     </mat-error>
                 </mat-form-field>
 
-
-                <!-- Taille -->
+               <!-- &lt;!&ndash; Taille &ndash;&gt;
                 <mat-form-field appearance="outline">
                     <mat-label>Taille</mat-label>
                     <mat-icon matSuffix class="secondary-text">label</mat-icon>
                     <input type="number" name="taille" formControlName="taille" matInput>
-                </mat-form-field>
-
+                </mat-form-field>-->
 
                 <div id="action-button-wrapper">
                     <div class="button-item" *ngIf="action === 'add' || !action">

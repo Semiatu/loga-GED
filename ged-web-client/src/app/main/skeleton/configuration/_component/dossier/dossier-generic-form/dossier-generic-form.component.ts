@@ -6,7 +6,7 @@ import {Paths} from "../../../../../../../environments/paths";
 import {SnackBarService} from "../../../../../../../@externals/loga/snack-bar/snack.bar.service";
 import {TranslateService} from "@ngx-translate/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {FormBuilder, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DossierFormResolver} from "../../../_resolver";
 import {DossierDisplayResolver} from "../../../_resolver/dossier/dossier.display.resolver";
 
@@ -37,6 +37,7 @@ export class DossierGenericFormComponent extends GenericPersistenceComponent<Dos
     hp = true;
     contentId: any;
     contentLink : any;
+    form: FormGroup;
     baseLink = Paths.configurationPath('dossiers');
 
     constructor(
@@ -48,6 +49,7 @@ export class DossierGenericFormComponent extends GenericPersistenceComponent<Dos
         protected dossierResolver: DossierFormResolver,
         protected clientResolver:  DossierDisplayResolver,
         private activatedRoute: ActivatedRoute,
+        private formBuilder: FormBuilder,
     ) {
         super(_notificationService, null, _translateService, _service, _router);
     }
@@ -74,6 +76,8 @@ export class DossierGenericFormComponent extends GenericPersistenceComponent<Dos
         this.buildForm();
         this.setFormData(this.dossier);
         this.subscribe();
+
+
     }
 
     getContentLink() {

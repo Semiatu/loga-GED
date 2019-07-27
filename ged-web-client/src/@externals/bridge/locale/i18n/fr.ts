@@ -62,10 +62,10 @@ export const locale = {
             'CONTENT': 'Contenu',
         },
         'DOCUMENT': {
-            'TITLE': 'Document',
+            'TITLE': 'Documents',
             'TITLES': 'Documents',
             'SEARCH_TITLE': 'Chercher un document',
-            'ADD_TITLE': 'Selectionner un fichier',
+            'ADD_TITLE': 'Ajouter un fichier',
             'EDIT_TITLE': 'Editer le document',
             'LIST_TITLE': 'Liste des documents',
         },

@@ -8,7 +8,6 @@ import {TranslateService} from "@ngx-translate/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DossierFormResolver} from "../../../_resolver";
 import {Paths} from "../../../../../../../environments/paths";
-import {fuseAnimations} from "../../../../../../../@externals/fuse/@fuse/animations";
 
 @Component({
     selector: 'dossier-form',
@@ -43,6 +42,7 @@ export class DossierFormComponent extends GenericPersistenceComponent<Dossier, n
     }
 
     save(dossier: Dossier): void {
+        console.log('log form');
         console.log(dossier);
         this.addSub(
             this._service.save(dossier).subscribe(value => {

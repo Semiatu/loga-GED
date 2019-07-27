@@ -17,6 +17,10 @@ export class DocumentService extends AbstractService<Document, number> {
         return '/document';
     }
 
+    getReceipt(url): Observable<any> {
+        return this.httpClient.get(url, {responseType: 'blob'});
+    }
+
     search(criteria: DocumentCriteria, page: number, size: number): Observable<HttpEvent<Document[]>> {
         page = (page === undefined) ? 0 : page;
         size = (size === undefined) ? 0 : size;

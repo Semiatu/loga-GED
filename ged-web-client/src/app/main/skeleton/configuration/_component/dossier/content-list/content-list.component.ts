@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {fuseAnimations} from "../../../../../../../@externals/fuse/@fuse/animations";
 import {GenericListComponent} from "../../../../../../../@externals/loga/_abstract";
-import {Document, Dossier} from "../../../_model";
+import {Document, Dossier, Raccourci} from "../../../_model";
 import {DocumentService, DossierService} from "../../../_service";
 import {ConfigurationModule} from "../../../configuration.module";
 import {DossierCriteria} from "../../../_criteria";
@@ -12,10 +12,14 @@ import {DialogService} from "../../../../../../../@externals/loga/dialog/dialog.
 import {TranslateService} from "@ngx-translate/core";
 import {ContentListResolver, DossierListResolver} from "../../../_resolver";
 import {Helpers} from "../../../../../../../@externals/loga/_utility";
-import {MatTableDataSource} from "@angular/material";
+import {MatDialog, MatDialogRef, MatTableDataSource} from "@angular/material";
 import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 import {DossierDisplayResolver} from "../../../_resolver/dossier/dossier.display.resolver";
-import {ContenuDossierWrapper} from "../../../wrapper/contenu-dossier-wrapper";
+import {RaccourciGenericFormComponent} from "../raccourci-generic-form/raccourci-generic-form.component";
+import {RaccourciType} from "../../../_model/RaccourciType";
+import {RaccourciService} from "../../../_service/raccourci.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+
 
 @Component({
     selector: 'content-list',
@@ -30,7 +34,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
 
     public myDataSource = new MatTableDataSource<any>();
 
-    conf: ConfigurationModule
+    conf: ConfigurationModule;
     icon = 'folder';
     criteria: DossierCriteria = new DossierCriteria();
     baseLink = Paths.configurationPath('dossiers');
@@ -41,11 +45,17 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     file = File = null;
     dossierEditLink: any;
     dossierNewLink: any;
+    RaccourciFormLink: any;
     parentLink = Paths.configurationPath('dossiers');
     contentLink: any;
     subscription: Subscription;
-
     listsParent = [];
+    renomerRaccourci = false;
+    currentRaccourci = new Raccourci();
+    form: FormGroup;
+    sauvegardeNon: string;
+
+
     private _unsubscribeAll: Subject<any>;
 
 
@@ -53,12 +63,15 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         protected _notificationService: SnackBarService,
         protected _dialogService: DialogService,
         protected _translateService: TranslateService,
+        protected _raccourciService: RaccourciService,
         protected _service: DossierService,
         private contentListResolver: ContentListResolver,
         private documentService: DocumentService,
         private activatedRoute: ActivatedRoute,
         protected clientResolver: DossierDisplayResolver,
-        public router: Router
+        public router: Router,
+        public formBuilder: FormBuilder,
+        private dialog: MatDialog
     ) {
         super(_notificationService, _dialogService, _translateService, _service);
         this._unsubscribeAll = new Subject();
@@ -68,18 +81,14 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         this.dossierID = this.activatedRoute.snapshot.params['id'];
         this.dossier = this.clientResolver.dossier;
         this.dossierNewLink = Paths.configurationPath('dossiers') + '/new/' + this.dossierID;
+        this.RaccourciFormLink = Paths.configurationPath('raccourcis') + '/new/';
         this.initData();
         this.myDataSource.data = this.contentListResolver.mapwrapper;
         this.dossier = this.contentListResolver.dossier;
         console.log(this.contentListResolver.mapwrapper);
-
+        this.buildForm();
 
         this.subscription = this.router.events.subscribe((event) => {
-            /* console.log(this.router.routerState.root);
-             console.log(this.router.routerState.root.firstChild);
-             console.log(this.router.routerState.root.firstChild && this.router.routerState.root.firstChild.firstChild);
-             */
-
             if (this.activatedRoute.snapshot.params['id'] !== this.dossierID) {
                 this.dossierID = this.activatedRoute.snapshot.params['id'];
                 console.log(this.dossierID);
@@ -87,10 +96,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
                 this.parentLink = Paths.join(Paths.configurationPath('dossiers'), '/content/' + this.dossierID);
                 this.dossierNewLink = Paths.configurationPath('dossiers') + '/new/' + this.dossierID;
             }
-
-
         });
-
     }
 
     ngOnDestroy(): void {
@@ -116,17 +122,46 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         return this.dossierEditLink = Paths.configurationPath('documents') + '/' + id + '/parent/' + this.dossierID;
     }
 
+    showRenameDialog(component) {
+        this.sauvegardeNon = component.nom;
+        this.currentRaccourci = component;
+        this.renomerRaccourci = true;
+    }
+
+    updateRaccourci() {
+        this.renomerRaccourci = false;
+        this._raccourciService.update(this.currentRaccourci.id, this.currentRaccourci).toPromise().then(value => {
+            this._translateService.get(['APP.SUCCESS', 'APP.UPDATE']).subscribe(values => {
+                this._notificationService.open(values['APP.SUCCESS'], values['APP.UPDATE']);
+            });
+            this.getContenus(this.dossierID);
+        });
+
+    }
+
+
     refresh(): void {
         this.criteria = new DossierCriteria();
         this.dataSource = this.initialDataSource;
     }
 
     delete(component): void {
-        super.delete(component, 'cet element');
-        this.isDocument(component) ? this.deleteDocument(component, 'cet element') : this.deleteDossier(component, 'cet element');
-
+        console.log(this.isDocument(component))
+        console.log(this.isDossier(component))
+        console.log(this.isRaccourci(component))
+        this.showLoading();
+        this._translateService.get(['APP.DELETE_CONFIRM', 'APP.SUCCESS', 'APP.DELETE'], {value: 'cet element'})
+            .subscribe(values => {
+                const matDialogRef = this._dialogService.openConfirmDialog(values['APP.DELETE_CONFIRM']);
+                matDialogRef.afterClosed().subscribe(response => {
+                    if (response) {
+                        if (this.isDocument(component)) this.deleteDocument(component);
+                        if (this.isDossier(component)) this.deleteDossier(component);
+                        if (this.isRaccourci(component)) this.deleteRaccourci(component);
+                    }
+                });
+            });
     }
-
 
     // inscrire ma data source
     private initData(): void {
@@ -148,6 +183,14 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     // si url dans document alors document sinon dossier
     isDocument(object) {
         return object.hasOwnProperty('url');
+    }
+
+    isRaccourci(object) {
+        return object.hasOwnProperty('emplacement');
+    }
+
+    isDossier(object) {
+        return !this.isDocument(object) && !this.isRaccourci(object);
     }
 
     getParent() {
@@ -192,57 +235,55 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         console.log(this.listsParent)
     }
 
-
-    deleteDocument(component, paramValue?) {
-        this.showLoading();
-        this._translateService.get(['APP.DELETE_CONFIRM', 'APP.SUCCESS', 'APP.DELETE'], {value: paramValue})
-            .subscribe(values => {
-                const matDialogRef = this._dialogService.openConfirmDialog(values['APP.DELETE_CONFIRM']);
-                matDialogRef.afterClosed().subscribe(response => {
-                    if (response) {
-                        this.documentService.delete(component.id).subscribe(value => {
-                            this._service.findAllPage(0, this.row).subscribe(data => {
-                                this.reload(Helpers.getOthers(data));
-                                this.initialDataSource = this.dataSource;
-                                this._notificationService.open(values['APP.SUCCESS'], values['APP.DELETE']);
-                                this.hideLoading();
-                            });
-                        }, error => {
-                            this.showError(error);
-                        });
-                    }
-                });
-            });
+    closeRename() {
+        this.currentRaccourci.nom = this.sauvegardeNon;
+        this.renomerRaccourci = false;
     }
 
-    deleteDossier(component, paramValue?) {
-        this.showLoading();
-        this._translateService.get(['APP.DELETE_CONFIRM', 'APP.SUCCESS', 'APP.DELETE'], {value: paramValue})
-            .subscribe(values => {
-                const matDialogRef = this._dialogService.openConfirmDialog(values['APP.DELETE_CONFIRM']);
-                matDialogRef.afterClosed().subscribe(response => {
-                    if (response) {
-                        this._service.delete(component.id).subscribe(value => {
-                            this._service.findAllPage(0, this.row).subscribe(data => {
-                                this.reload(Helpers.getOthers(data));
-                                this.initialDataSource = this.dataSource;
-                                this._notificationService.open(values['APP.SUCCESS'], values['APP.DELETE']);
-                                this.hideLoading();
-                            });
-                        }, error => {
-                            this.showError(error);
-                        });
-                    }
-                });
-            });
+    // delete document
+    deleteDocument(component) {
+        this.documentService.delete(component.id).subscribe(value => {
+            this.getContenus(this.dossierID);
+        }, error => {
+            this.showError(error);
+        });
+    }
+
+    // delete dossier
+    deleteDossier(component) {
+        this._service.delete(component.id).subscribe(value => {
+            this.getContenus(this.dossierID);
+        }, error => {
+            this.showError(error);
+        });
+    }
+
+    // delete raccourci
+    deleteRaccourci(component) {
+        this._raccourciService.delete(component.id).subscribe(value => {
+            this.getContenus(this.dossierID);
+        }, error => {
+            this.showError(error);
+        });
     }
 
     getRoute(component) {
-        return this.isDocument(component) ? this.documentLink + '/' + component.id + '/dossier/' + this.dossierID + '/display' :
-            this.baseLink + '/content/' + component.id;
+        if (this.isDocument(component)) {
+            return this.documentLink + '/' + component.id + '/dossier/' + this.dossierID + '/display';
+        } else if (this.isDossier(component)) {
+            return this.baseLink + '/content/' + component.id;
+        }
+
+        if (component.dossier && component.dossier.id) {
+            return this.baseLink + '/content/' + component.dossier.id;
+        } else if (component.document && component.document.id) {
+            return this.documentLink + '/' + component.document.id + '/dossier/' + component.document.dossier.id + '/display';
+        }
+
     }
 
-    //selectionner un fichier
+
+//selectionner un fichier
     getFileDetails(event) {
         this.file = event.target.files[0];
         sessionStorage.setItem('fileToUpload', JSON.stringify(this.file));
@@ -251,8 +292,10 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
 
     }
 
-    // recuperer le contenu d'un dossier
-    protected getContenus(idDossier) {
+// recuperer le contenu d'un dossier
+    protected
+
+    getContenus(idDossier) {
         this._service.getContent(idDossier)
             .subscribe(response => {
                 const wrapper = Helpers.getOthers(response);
@@ -268,6 +311,10 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
                     mapwrapper.push(wrapper.documents[wrapperKey])
                 }
 
+                for (let wrapperKey in wrapper.raccourcis) {
+                    mapwrapper.push(wrapper.raccourcis[wrapperKey])
+                }
+
                 this.myDataSource.data = mapwrapper;
                 console.log(mapwrapper);
                 this.getParent();
@@ -280,7 +327,67 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         return Paths.configurationPath('dossiers') + '/content/0';
     }
 
+    openDialog()
+        :
+        void {
+        this._service.getTreeContent(0).subscribe(value => {
+            this.afficheDialog(value);
+        })
+    }
 
+    afficheDialog(data) {
+        const dialogRef = this.dialog.open(RaccourciGenericFormComponent, {
+            width: 'auto',
+            data: data
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+
+            console.log(result);
+            const raccourci = new Raccourci();
+
+            raccourci.emplacement = new Dossier();
+            raccourci.emplacement.id = Number(this.dossierID);
+            raccourci.nom = result.label + '-Raccourci';
+
+
+            if (result.icon === null) {
+                raccourci.type = RaccourciType.DOSSIER;
+                raccourci.dossier = new Dossier();
+                raccourci.dossier.id = Number(result.data);
+                this.saveSimpleRacourci(raccourci);
+
+            } else if (result.icon !== null && result.icon === 'fa fa-file-word-o') {
+
+                raccourci.type = RaccourciType.DOCUMENT;
+                raccourci.document = new Document();
+                raccourci.document.id = Number(result.data);
+                this.saveSimpleRacourci(raccourci);
+            } else {
+                this.saveSimpleRacourciOfRaccourci(raccourci, result.data);
+            }
+
+
+        });
+    }
+
+    saveSimpleRacourci(raccourci) {
+        this._raccourciService.save(raccourci).toPromise().then(value => {
+            this.getContenus(Number(this.dossierID));
+        });
+    }
+
+    saveSimpleRacourciOfRaccourci(raccourci, id) {
+        this._raccourciService.creerRaccourciPourRacourcisave(raccourci, id).toPromise().then(value => {
+            this.getContenus(Number(this.dossierID));
+        });
+    }
+
+    protected buildForm(): void {
+        this.form = this.formBuilder.group({
+            nom: [this.currentRaccourci.nom, [Validators.required]],
+        });
+    }
 }
 
 

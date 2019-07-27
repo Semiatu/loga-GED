@@ -1,6 +1,7 @@
 package com.loga.skeleton.domain.entity;
 
 import com.loga.bebase.entity.AbstractEntity;
+import com.loga.skeleton.domain.enumeration.RaccourciType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,11 +19,11 @@ public class Raccourci extends AbstractEntity {
     @Column(name = "nom")
     private String nom;
 
-    @Column(name = "description")
-    private String description;
+    @ManyToOne
+    private Dossier emplacement;
 
-    @Column(name = "dossierParent")
-    private String dossierParent;
+    @Column(name = "type")
+    private RaccourciType type;
 
     @ManyToOne
     private Document document;

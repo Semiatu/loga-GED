@@ -39,8 +39,8 @@
                 <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">cloud_upload</i>&nbsp;
                 <span style="text-transform: uppercase">{{ 'APP.DOCUMENT.ADD_TITLE' | translate }}</span>
             </button>
-            <input hidden id="file" type="file" name = "file"  #fileInput accept="image/*,.pdf,.doc" [multiple]="true" (change)="getFileDetails($event)">
-
+            <input hidden id="file" type="file"  name = "file"  #fileInput [multiple]="false" (change)="getFileDetails($event)"
+                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,text/comma-separated-values, text/csv, application/csv,.pdf,.docx,.doc,.xls,.xlsx">
         </div>
         <!-- / HEADER -->
 

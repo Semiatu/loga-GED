@@ -12,7 +12,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ConfigurationRoutingModule} from './configuration.routing.module';
 // PRIME NG
-import {PickListModule} from 'primeng/primeng';
+import {DialogModule, PickListModule, TreeModule} from 'primeng/primeng';
 import {ToastModule} from 'primeng/toast';
 // MATERIAL DESIGN
 import {MatInputModule} from '@angular/material/input';
@@ -74,10 +74,10 @@ import {DocumentDisplayFormComponent} from './_component/document/document-displ
 import {DocumentFormComponent} from './_component/document/document-form/document-form.component';
 import {DocumentGenericFormComponent} from './_component/document/document-generic-form/document-generic-form.component';
 import { ContentListComponent } from './_component/dossier/content-list/content-list.component';
-
+import { RaccourciFormComponent } from './_component/dossier/raccourci-form/raccourci-form.component';
+import { RaccourciGenericFormComponent } from './_component/dossier/raccourci-generic-form/raccourci-generic-form.component';
 
 @NgModule({
-
 
     declarations: [
         DummyListComponent,
@@ -93,6 +93,8 @@ import { ContentListComponent } from './_component/dossier/content-list/content-
         DocumentFormComponent,
         DocumentGenericFormComponent,
         ContentListComponent,
+        RaccourciFormComponent,
+        RaccourciGenericFormComponent,
     ],
 
     imports: [
@@ -145,6 +147,8 @@ import { ContentListComponent } from './_component/dossier/content-list/content-
         NgxMatSelectSearchModule,
         CustomSharedModule,
         MatProgressBarModule,
+        TreeModule,
+        DialogModule,
     ],
 
     providers: [
@@ -152,6 +156,7 @@ import { ContentListComponent } from './_component/dossier/content-list/content-
         DummyFormResolver,
         DummyDisplayResolver,
     ],
+    entryComponents: [RaccourciGenericFormComponent],
 
 
 })
