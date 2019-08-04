@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AbstractService} from 'src/@externals/loga/_abstract/abstract.service';
-import {Document} from 'src/app/main/skeleton/configuration/_model';
+import {Document, Raccourci} from 'src/app/main/skeleton/configuration/_model';
 import {DocumentCriteria} from "../_criteria";
 import {Observable} from "rxjs";
 import {HttpEvent} from "@angular/common/http";
@@ -36,6 +36,16 @@ export class DocumentService extends AbstractService<Document, number> {
     public findByDossier(idDossier, page: number, size?: number) {
         size = (size === undefined) ? 2 : size;
         return this.httpClient.get<Document[]>(encodeURI(this.apiUrl + this.address() + '/dossier/' + idDossier + '?size=' + size + '&page=' + page), this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
+
+    public addInCorbeille(id){
+        return this.httpClient.put<Document[]>(encodeURI(this.apiUrl + this.address() + '/add-corbeille/' + id), this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
+
+    public restaurer(id){
+        return this.httpClient.put<Raccourci[]>(encodeURI(this.apiUrl + this.address() + '/restaurer/' + id), this.baseOption)
             .pipe(catchError(this.handleError));
     }
 

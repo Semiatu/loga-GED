@@ -156,11 +156,12 @@ export class DocumentGenericFormComponent extends GenericPersistenceComponent<Do
     }
 
 
-  /*  _update(): void {
-        this.uploadService.updateFileStorage()
-    }*/
+   _save(): void {
+        this.saveIndb()
+    }
 
-    _save(): void {
+   // uploder et enregistrement du fichier
+  /*  _save(): void {
         console.log(this.document)
         this.showProgress = true;
         let uploadTask = this.uploadService.pushDocument(this.document);
@@ -183,11 +184,12 @@ export class DocumentGenericFormComponent extends GenericPersistenceComponent<Do
                 uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
                     this.document.url = downloadURL;
                     console.log('URL:' + this.document.url);
-                    // enregistrer dans la base de donner les informations
+
+                    // enregistrement du fichier dans la bdd
                     this.saveIndb();
                 });
             });
-    }
+    }*/
 
     updateIndb(): void {
         this.addSub(

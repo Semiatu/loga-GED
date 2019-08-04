@@ -26,13 +26,21 @@ public class DocumentController extends AbstractController<Document, Long , Docu
     public Page<Document> search(@RequestBody DocumentSearchCriteria criteria, Pageable pageable) {
         AbstractRechercheModel rechercheModel = RechercheSimpleModel
                 .of(Document.class)
-                .addCondition(toCondition(criteria.getSearsh(), getAliasTable(Document.class) + ".nom", TypeEgalite.CONTIENT))
-                .addCondition(toCondition(criteria.getSearsh(), getAliasTable(Document.class) + ".dossier", TypeEgalite.CONTIENT));
-        return page(rechercheModel.getRequete(), pageable, Document.class);
+                .addCondition(toCondition(criteria.getSearsh(), getAliasTable(Document.class) + ".nom", TypeEgalite.CONTIENT));
+                return page(rechercheModel.getRequete(), pageable, Document.class);
     }
     @GetMapping("dossier/{dossierId}")
     public List<Document> getDoument(@PathVariable Long dossierId, Pageable pageable){
         return abstractService.getDocumentByDossier(dossierId, pageable);
     }
 
+    @PutMapping("add-corbeille/{id}")
+    public void addInCorbeille(@PathVariable Long id) {
+        abstractService.addInCorbeille(id);
+    }
+
+    @PutMapping("restaurer/{id}")
+    public void restaurer(@PathVariable Long id){
+        abstractService.restaurer(id);
+    }
 }

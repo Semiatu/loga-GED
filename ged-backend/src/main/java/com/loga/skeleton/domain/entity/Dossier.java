@@ -1,5 +1,6 @@
 package com.loga.skeleton.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.loga.bebase.entity.AbstractEntity;
 import lombok.AllArgsConstructor;
@@ -11,11 +12,12 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @EqualsAndHashCode(callSuper = false)
-@Data
 @Entity
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "dossier")
 public class Dossier extends AbstractEntity {
 
@@ -25,20 +27,16 @@ public class Dossier extends AbstractEntity {
     @Column(name = "taille")
     private Long taille;
 
+    @Column(name = "etat_suppression")
+    private boolean etatSuppression = false;
+
+    @Column(name = "est_dans_corbeille")
+    private boolean estDansCorbeille = false;
+
+    @Column(name = "afficher_contenu")
+    private boolean displayContent = true;
+
     @ManyToOne
     private Dossier dossierParent;
-
-    private boolean leaf;
-
-   /* @OneToMany(mappedBy = "dossier")
-    private List<Raccourci> raccourcis;*/
-
-   /* @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "dossier")
-    private List<Document> documents;*/
-
-    /*@OneToMany(mappedBy = "dossier")
-    private List<Privilege> privileges;
-*/
 
 }

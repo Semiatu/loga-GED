@@ -114,11 +114,15 @@ export class RaccourciGenericFormComponent implements OnInit {
         this.dialogRef.close(event.node);
         console.log(event);
     }
-
+    // charger un raccourci
     loadNode(event) {
         console.log(event);
-        if(event.node) {
+        if(event.node && ! this.data.deplacer) {
             this.dossierService.getTreeContent(event.node.data).toPromise().then(nodes => event.node.children = nodes);
+        }
+        // charger un deplacement
+        if(event.node && this.data.deplacer) {
+            this.dossierService.getDossierTreeContent(event.node.data).toPromise().then(nodes => event.node.children = nodes);
         }
     }
 

@@ -1,0 +1,124 @@
+<div id="components" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+             fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon *ngIf="dossierID != 0" class="logo-icon s-32 mr-16"
+                          [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" style="cursor: pointer">
+                    arrow_back
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    Corbeille
+                </span>
+            </div>
+
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="{{ 'APP.DOSSIER.SEARCH_TITLE' | translate }}">
+                </div>
+            </div>
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CORBEILLE CARD -->
+        <div class="corbeille-card">
+
+            <mat-table class="components-table" #table [dataSource]="myDataSource" matSort
+                       [@animateStagger]="{value:'50'}" fusePerfectScrollbar>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+                    <mat-cell *matCellDef="let component">
+                        <p class="text-truncate">{{ component.id }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- nom Column -->
+                <ng-container matColumnDef="nom">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Nom</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm style="align-corbeille: flex-start">
+                        <mat-icon *ngIf="isDocument(component)">description</mat-icon>
+                        <mat-icon *ngIf="isDossier(component)">folder</mat-icon>
+                        <mat-icon *ngIf="isRaccourci(component)">exit_to_app</mat-icon>
+                        <p class="text-truncate">{{ component.nom }}</p>
+                    </mat-cell>
+                </ng-container>
+
+
+                <!-- type Column -->
+                <ng-container matColumnDef="type">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Type</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate" *ngIf="isDocument(component)">{{ component.typeDocument.nom }}</p>
+                        <p class="text-truncate" *ngIf="isDossier(component)">Dossier</p>
+                        <p class="text-truncate" *ngIf="isRaccourci(component)">Raccourci</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- lastModifiedDate Column -->
+                <ng-container matColumnDef="lastModifiedDate">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Date de suppression
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
+                        <p class="text-truncate">{{ component.lastModifiedDate | date: 'dd/MM/yyyy' }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Buttons Column -->
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                    <mat-cell *matCellDef="let component">
+                        <div fxFlex="row" fxLayoutAlign="end center">
+
+                            <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More"
+                                    (click)="$event.stopPropagation();">
+                                <mat-icon class="secondary-text">more_vert</mat-icon>
+                            </button>
+
+                            <mat-menu #moreMenu="matMenu">
+
+                                <button mat-menu-item aria-label="edit" (click)="restaurer(component)">
+                                    <mat-icon>send</mat-icon>
+                                    <span>Restaurer</span>
+                                </button>
+
+                                <button mat-menu-item aria-label="remove" (click)="delete(component)">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>{{ 'APP.DELETE_BTN' | translate }}</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"
+                                style="height: 15px ;align-corbeille: flex-start"></mat-header-row>
+                <mat-row *matRowDef="let component; columns: displayedColumns;"
+                         class="component"
+                         style="height: 15px ;align-corbeille: flex-start"
+                         matRipple>
+                </mat-row>
+
+            </mat-table>
+
+        </div>
+        <!-- / CORBEILLE CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

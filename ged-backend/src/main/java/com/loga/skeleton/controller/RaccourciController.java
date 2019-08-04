@@ -14,11 +14,7 @@ import com.loga.skeleton.domain.criteria.RaccourciSearchCriteria;
 import com.loga.skeleton.domain.entity.Raccourci;
 import com.loga.skeleton.service.RaccourciService;
 
-import java.util.List;
-
 import static ml.smk.common.util.EntitesUtilitaire.getAliasTable;
-import static org.springframework.http.ResponseEntity.ok;
-
 
 @RestController
 @RequestMapping("raccourcis")
@@ -39,6 +35,16 @@ public class RaccourciController extends AbstractController<Raccourci, Long, Rac
     @PostMapping("cree-raccourci-de-raccourci/{id}")
     public ResponseEntity creerRaccourciPourRacourcisave(@RequestBody Raccourci raccourci, @PathVariable  Long id){
         return responseExact(abstractService.creerRaccourciPourRacourcisave(raccourci,id));
+    }
+
+    @PutMapping("add-corbeille/{id}")
+    public void addInCorbeille(@PathVariable Long id) {
+        abstractService.addInCorbeille(id);
+    }
+
+    @PutMapping("restaurer/{id}")
+    public void restaurer(@PathVariable Long id){
+        abstractService.restaurer(id);
     }
 
 }

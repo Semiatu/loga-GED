@@ -63,6 +63,16 @@ export const navigation: ExtendedFuseNavigation[] = [
             url: Paths.join(Paths.configurationPath('dossiers'), 'content/0'),
             role: 'squeleton'
         },
+        {
+            id: 'Dossiers',
+            title: 'Corbeille',
+            translate: 'Corbeille',
+            type: 'item',
+            icon: 'delete',
+            url: Paths.configurationPath('corbeille'),
+            role: 'squeleton'
+        },
+
         /* {
             id: 'Documents',
             title: 'Document',

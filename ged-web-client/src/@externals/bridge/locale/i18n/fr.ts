@@ -61,6 +61,15 @@ export const locale = {
             'CONTENTS': 'Contenus',
             'CONTENT': 'Contenu',
         },
+        'CORBEILLE': {
+            'TITLE': 'Corbeille',
+            'SEARCH_TITLE': 'Chercher un dossier',
+            'ADD_TITLE': 'Nouveau dossier',
+            'EDIT_TITLE': 'Editer le dossier',
+            'LIST_TITLE': 'Liste des dossiers',
+            'CONTENTS': 'Contenus',
+            'CONTENT': 'Contenu',
+        },
         'DOCUMENT': {
             'TITLE': 'Documents',
             'TITLES': 'Documents',

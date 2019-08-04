@@ -1,10 +1,13 @@
 package com.loga.skeleton.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.loga.bebase.entity.AbstractEntity;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+
+import static java.util.Objects.isNull;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -24,6 +27,9 @@ public class Document extends AbstractEntity {
     @Column(name = "taille")
     private String taille;
 
+    @Column(name = "est_dans_corbeille")
+    private boolean estDansCorbeille = false;
+
     @Column(name = "format")
     private String format;
 
@@ -35,6 +41,9 @@ public class Document extends AbstractEntity {
 
     @Column(name = "url")
     private String url;
+
+    @Column(name = "etat_suppression")
+    private boolean etatSuppression = false;
 
     @ManyToOne
     @JoinColumn(name = "categorie")
@@ -54,9 +63,5 @@ public class Document extends AbstractEntity {
 
     @ManyToOne
     private Dossier dossier;
-
-   /* @OneToMany(mappedBy = "document", fetch =FetchType.EAGER)
-    private List<Privilege> privileges;
-*/
 
 }

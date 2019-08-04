@@ -25,6 +25,8 @@ import {DocumentDisplayResolver} from "./_resolver/document/document.display.res
 import {ContentListComponent} from "./_component/dossier/content-list/content-list.component";
 import {RaccourciFormComponent} from "./_component/dossier/raccourci-form/raccourci-form.component";
 import {RaccourciFormResolver} from "./_resolver/dossier/raccourci.form.resolver";
+import {CorbeilleListComponent} from "./_component/corbeille-list/corbeille-list.component";
+import {CorbeilleListResolver} from "./_resolver/dossier/corbeille.list.resolver";
 
 const configurationRoutes: Routes = [
   { path: '', redirectTo: '/dossiers/content/0', pathMatch: 'full' },
@@ -74,6 +76,13 @@ const configurationRoutes: Routes = [
         children: [
             {path: ':id', component: RaccourciFormComponent, resolve: {data: RaccourciFormResolver}},
             {path: 'new', component: RaccourciFormComponent, resolve: {data: RaccourciFormResolver}}
+        ]
+    },
+
+    {
+        path: 'corbeille',
+        children: [
+            {path: '', component: CorbeilleListComponent, resolve: {data: CorbeilleListResolver}}
         ]
     },
 ];

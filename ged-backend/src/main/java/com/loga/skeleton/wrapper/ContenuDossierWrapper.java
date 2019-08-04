@@ -19,12 +19,6 @@ public class ContenuDossierWrapper {
     Dossier dossier;
     List<Raccourci> raccourcis  = new ArrayList<>();
 
-    public ContenuDossierWrapper(List<Document> documents, List<Dossier> dossiers, Dossier dossier) {
-        this.documents = documents;
-        this.dossiers = dossiers;
-        this.dossier = dossier;
-    }
-
     public static ContenuDossierWrapper of( List<Document> documents, List<Dossier> dossiers,List<Raccourci> raccourcis ,Dossier dossier){
         return new ContenuDossierWrapper(documents, dossiers, dossier, raccourcis);
     }

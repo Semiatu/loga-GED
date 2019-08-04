@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AbstractService} from 'src/@externals/loga/_abstract/abstract.service';
-import {Raccourci} from 'src/app/main/skeleton/configuration/_model';
+import {Document, Raccourci} from 'src/app/main/skeleton/configuration/_model';
 import {catchError} from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { HttpEvent } from '@angular/common/http';
@@ -26,8 +26,19 @@ export class RaccourciService extends AbstractService<Raccourci, number> {
             .pipe(catchError(this.handleError));
     }
 
+    // creation de raccourci d'un raccourci
     public creerRaccourciPourRacourcisave(raccourci: Raccourci, id : number) {
         return this.httpClient.post(encodeURI(this.apiUrl.concat(this.address())) + '/cree-raccourci-de-raccourci/' + id, JSON.stringify(raccourci), this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
+
+    public addInCorbeille(id){
+        return this.httpClient.put<Raccourci[]>(encodeURI(this.apiUrl + this.address() + '/add-corbeille/' + id), this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
+
+    public restaurer(id){
+        return this.httpClient.put<Raccourci[]>(encodeURI(this.apiUrl + this.address() + '/restaurer/' + id), this.baseOption)
             .pipe(catchError(this.handleError));
     }
 }

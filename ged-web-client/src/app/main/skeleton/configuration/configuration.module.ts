@@ -76,6 +76,7 @@ import {DocumentGenericFormComponent} from './_component/document/document-gener
 import { ContentListComponent } from './_component/dossier/content-list/content-list.component';
 import { RaccourciFormComponent } from './_component/dossier/raccourci-form/raccourci-form.component';
 import { RaccourciGenericFormComponent } from './_component/dossier/raccourci-generic-form/raccourci-generic-form.component';
+import { CorbeilleListComponent } from './_component/corbeille-list/corbeille-list.component';
 
 @NgModule({
 
@@ -95,6 +96,7 @@ import { RaccourciGenericFormComponent } from './_component/dossier/raccourci-ge
         ContentListComponent,
         RaccourciFormComponent,
         RaccourciGenericFormComponent,
+        CorbeilleListComponent,
     ],
 
     imports: [

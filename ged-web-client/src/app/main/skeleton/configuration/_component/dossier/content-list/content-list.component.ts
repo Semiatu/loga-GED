@@ -30,7 +30,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 })
 export class ContentListComponent extends GenericListComponent<Dossier, DossierService> implements OnInit, OnDestroy {
 
-    displayedColumns = ['id', 'nom', 'type', 'taille', 'createdDate', 'lastModifiedDate', 'actions'];
+    displayedColumns = ['id', 'nom', 'type', 'createdDate', 'lastModifiedDate', 'actions'];
 
     public myDataSource = new MatTableDataSource<any>();
 
@@ -53,7 +53,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     renomerRaccourci = false;
     currentRaccourci = new Raccourci();
     form: FormGroup;
-    sauvegardeNon: string;
+    sauvegardeNom: string;
 
 
     private _unsubscribeAll: Subject<any>;
@@ -91,7 +91,6 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         this.subscription = this.router.events.subscribe((event) => {
             if (this.activatedRoute.snapshot.params['id'] !== this.dossierID) {
                 this.dossierID = this.activatedRoute.snapshot.params['id'];
-                console.log(this.dossierID);
                 this.getContenus(this.dossierID);
                 this.parentLink = Paths.join(Paths.configurationPath('dossiers'), '/content/' + this.dossierID);
                 this.dossierNewLink = Paths.configurationPath('dossiers') + '/new/' + this.dossierID;
@@ -100,7 +99,6 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     }
 
     ngOnDestroy(): void {
-        console.log('tg');
         this.subscription.unsubscribe();
     }
 
@@ -122,8 +120,9 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         return this.dossierEditLink = Paths.configurationPath('documents') + '/' + id + '/parent/' + this.dossierID;
     }
 
+    // renommer un raccourci
     showRenameDialog(component) {
-        this.sauvegardeNon = component.nom;
+        this.sauvegardeNom = component.nom;
         this.currentRaccourci = component;
         this.renomerRaccourci = true;
     }
@@ -139,16 +138,12 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
 
     }
 
-
     refresh(): void {
         this.criteria = new DossierCriteria();
         this.dataSource = this.initialDataSource;
     }
 
     delete(component): void {
-        console.log(this.isDocument(component))
-        console.log(this.isDossier(component))
-        console.log(this.isRaccourci(component))
         this.showLoading();
         this._translateService.get(['APP.DELETE_CONFIRM', 'APP.SUCCESS', 'APP.DELETE'], {value: 'cet element'})
             .subscribe(values => {
@@ -163,7 +158,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
             });
     }
 
-    // inscrire ma data source
+
     private initData(): void {
         this.myDataSource = new MatTableDataSource<any>();
         console.log(this.contentListResolver.mapwrapper);
@@ -186,17 +181,23 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     }
 
     isRaccourci(object) {
-        return object.hasOwnProperty('emplacement');
+        return !this.isDocument(object) && (object.hasOwnProperty('document') || object.hasOwnProperty('dossier'));
     }
 
     isDossier(object) {
         return !this.isDocument(object) && !this.isRaccourci(object);
     }
 
+    // on recupere le parent de chaque dossier et le met dans le tableau listsParent
     getParent() {
         this.listsParent = [];
         let dossier1 = this.dossier;
         console.log(dossier1);
+        if( Number(this.dossierID) !== 0){
+            this.listsParent.push({dossier: dossier1.nom, id: dossier1.id});
+        } else {
+            this.listsParent.push({dossier:'Racine', id: 0})
+        }
         for (let i = 0; i < 1000; i++) {
 
             if (dossier1 && dossier1.dossierParent && dossier1.dossierParent.nom) {
@@ -236,13 +237,13 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     }
 
     closeRename() {
-        this.currentRaccourci.nom = this.sauvegardeNon;
+        this.currentRaccourci.nom = this.sauvegardeNom;
         this.renomerRaccourci = false;
     }
 
     // delete document
     deleteDocument(component) {
-        this.documentService.delete(component.id).subscribe(value => {
+        this.documentService.addInCorbeille(component.id).subscribe(value => {
             this.getContenus(this.dossierID);
         }, error => {
             this.showError(error);
@@ -251,7 +252,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
 
     // delete dossier
     deleteDossier(component) {
-        this._service.delete(component.id).subscribe(value => {
+        this._service.addInCorbeille(component.id).subscribe(value => {
             this.getContenus(this.dossierID);
         }, error => {
             this.showError(error);
@@ -260,7 +261,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
 
     // delete raccourci
     deleteRaccourci(component) {
-        this._raccourciService.delete(component.id).subscribe(value => {
+        this._raccourciService.addInCorbeille(component.id).subscribe(value => {
             this.getContenus(this.dossierID);
         }, error => {
             this.showError(error);
@@ -283,7 +284,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     }
 
 
-//selectionner un fichier
+    // selectionner le fichier a uploader
     getFileDetails(event) {
         this.file = event.target.files[0];
         sessionStorage.setItem('fileToUpload', JSON.stringify(this.file));
@@ -292,10 +293,8 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
 
     }
 
-// recuperer le contenu d'un dossier
-    protected
-
-    getContenus(idDossier) {
+    // recuperer le contenu d'un dossier
+    protected getContenus(idDossier) {
         this._service.getContent(idDossier)
             .subscribe(response => {
                 const wrapper = Helpers.getOthers(response);
@@ -303,80 +302,80 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
                 console.log(this.dossier)
                 let mapwrapper = [];
 
-                for (let wrapperKey in wrapper.dossiers) {
-                    mapwrapper.push(wrapper.dossiers[wrapperKey])
-                }
-
-                for (let wrapperKey in wrapper.documents) {
-                    mapwrapper.push(wrapper.documents[wrapperKey])
-                }
-
-                for (let wrapperKey in wrapper.raccourcis) {
-                    mapwrapper.push(wrapper.raccourcis[wrapperKey])
-                }
+                mapwrapper.push(...wrapper.dossiers)
+                mapwrapper.push(...wrapper.documents)
+                mapwrapper.push(...wrapper.raccourcis)
 
                 this.myDataSource.data = mapwrapper;
-                console.log(mapwrapper);
                 this.getParent();
             });
     }
 
+    // lien du parent d'un dossier courent
     getParentPath() {
         if (Number(this.dossierID) !== 0 && this.dossier && this.dossier.dossierParent && this.dossier.dossierParent.id)
             return Paths.configurationPath('dossiers') + '/content/' + this.dossier.dossierParent.id;
         return Paths.configurationPath('dossiers') + '/content/0';
     }
 
-    openDialog()
-        :
-        void {
+    // modal du raccourci
+    openDialog(): void {
         this._service.getTreeContent(0).subscribe(value => {
             this.afficheDialog(value);
+        })
+    }
+
+    // modal du deplacement d'un dossier
+    openDialogDeplacer(component): void {
+        this._service.getDossierTreeContent(0).subscribe(value => {
+            this.deplacer(component, value);
         })
     }
 
     afficheDialog(data) {
         const dialogRef = this.dialog.open(RaccourciGenericFormComponent, {
             width: 'auto',
-            data: data
+            data: {data: data, deplacer: false}
         });
 
         dialogRef.afterClosed().subscribe(result => {
+            if (result && result.label) {
+                console.log(result);
+                const raccourci = new Raccourci();
 
-            console.log(result);
-            const raccourci = new Raccourci();
+                raccourci.emplacement = new Dossier();
+                raccourci.emplacement.id = Number(this.dossierID);
+                raccourci.nom = result.label + '-Raccourci';
 
-            raccourci.emplacement = new Dossier();
-            raccourci.emplacement.id = Number(this.dossierID);
-            raccourci.nom = result.label + '-Raccourci';
+                if (result.icon === null) {
+                    raccourci.type = RaccourciType.DOSSIER;
+                    raccourci.dossier = new Dossier();
+                    raccourci.dossier.id = Number(result.data);
+                    this.saveSimpleRacourci(raccourci);
 
+                } else if (result.icon !== null && result.icon === 'fa fa-file-word-o') {
 
-            if (result.icon === null) {
-                raccourci.type = RaccourciType.DOSSIER;
-                raccourci.dossier = new Dossier();
-                raccourci.dossier.id = Number(result.data);
-                this.saveSimpleRacourci(raccourci);
-
-            } else if (result.icon !== null && result.icon === 'fa fa-file-word-o') {
-
-                raccourci.type = RaccourciType.DOCUMENT;
-                raccourci.document = new Document();
-                raccourci.document.id = Number(result.data);
-                this.saveSimpleRacourci(raccourci);
-            } else {
-                this.saveSimpleRacourciOfRaccourci(raccourci, result.data);
+                    raccourci.type = RaccourciType.DOCUMENT;
+                    raccourci.document = new Document();
+                    raccourci.document.id = Number(result.data);
+                    this.saveSimpleRacourci(raccourci);
+                } else {
+                    this.saveSimpleRacourciOfRaccourci(raccourci, result.data);
+                }
             }
 
 
         });
     }
 
+    // enregistrer un raccourci
     saveSimpleRacourci(raccourci) {
         this._raccourciService.save(raccourci).toPromise().then(value => {
             this.getContenus(Number(this.dossierID));
         });
     }
 
+    // enregistrer le raccourci d'un raccourci
     saveSimpleRacourciOfRaccourci(raccourci, id) {
         this._raccourciService.creerRaccourciPourRacourcisave(raccourci, id).toPromise().then(value => {
             this.getContenus(Number(this.dossierID));
@@ -388,6 +387,40 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
             nom: [this.currentRaccourci.nom, [Validators.required]],
         });
     }
+
+    protected deplacer(component, data): void {
+        const dialogRef = this.dialog.open(RaccourciGenericFormComponent, {
+            width: 'auto',
+            data: {data: data, deplacer: true}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && result.data) {
+                if (this.isDocument(component)) {
+                    component.dossier.id = result.data;
+                    this.documentService.save(component).toPromise().then(value => {
+                        this.getContenus(this.dossierID);
+                    });
+                }
+                if (this.isDossier(component)) {
+                    component.dossierParent.id = result.data;
+                    this._service.save(component).toPromise().then(value => {
+                        this.getContenus(this.dossierID);
+                    });
+                }
+                if (this.isRaccourci(component)) {
+                    component.emplacement = new Dossier();
+                    component.emplacement.id = result.data;
+                    this._raccourciService.save(component).toPromise().then(value => {
+                        this.getContenus(this.dossierID);
+                    });
+                }
+            }
+
+        });
+    }
+
+
 }
 
 

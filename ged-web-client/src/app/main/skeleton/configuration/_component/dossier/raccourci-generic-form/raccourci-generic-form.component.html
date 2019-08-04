@@ -78,10 +78,11 @@
 </div>-->
 
 <div fxLayout="row" fxLayoutAlign="center none" >
-    <h1 mat-dialog-title layout-align="center">Creer un raccourci</h1>
+    <h1 mat-dialog-title layout-align="center" *ngIf="data.deplacer">Déplacer vers</h1>
+    <h1 mat-dialog-title layout-align="center" *ngIf="!data.deplacer">Creer un raccourci</h1>
 </div>
 <div mat-dialog-content>
-    <p-tree [value]="data"  [filter]="true" filterMode="strict" selectionMode="single" [(selection)]="selectedFile" (onNodeSelect)="nodeSelect($event)" (onNodeExpand)="loadNode($event)"></p-tree>
+    <p-tree [value]="data.data"  [filter]="true" filterMode="strict" selectionMode="single" [(selection)]="selectedFile" (onNodeSelect)="nodeSelect($event)" (onNodeExpand)="loadNode($event)"></p-tree>
 </div>
 <div mat-dialog-actions>
     <button mat-button style="width: 100%; background-color: dimgray; color: #F5F5F5;" mat-button (click)="onNoClick()">Fermer</button>
