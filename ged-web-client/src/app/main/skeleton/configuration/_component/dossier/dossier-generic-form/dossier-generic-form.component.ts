@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {GenericPersistenceComponent} from "../../../../../../../@externals/loga/_abstract";
 import {Dossier} from "../../../_model";
 import {DossierService} from "../../../_service";
@@ -7,8 +7,8 @@ import {SnackBarService} from "../../../../../../../@externals/loga/snack-bar/sn
 import {TranslateService} from "@ngx-translate/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {DossierFormResolver} from "../../../_resolver";
 import {DossierDisplayResolver} from "../../../_resolver/dossier/dossier.display.resolver";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 @Component({
     selector: 'dossier-generic-form',
@@ -18,27 +18,12 @@ import {DossierDisplayResolver} from "../../../_resolver/dossier/dossier.display
 })
 export class DossierGenericFormComponent extends GenericPersistenceComponent<Dossier, number, DossierService> implements OnInit {
 
-    @Input()
-    action: string;
 
-    @Input()
-    dossier: Dossier;
+    dossier: Dossier = new Dossier();
 
-    @Output()
-    save: EventEmitter<Dossier> = new EventEmitter();
-
-    @Output()
-    update: EventEmitter<Dossier> = new EventEmitter();
 
     icon = 'extension';
-    componentName;
-    passwordConfirm = null;
-    hcp = true;
-    hp = true;
-    contentId: any;
-    contentLink : any;
     form: FormGroup;
-    baseLink = Paths.configurationPath('dossiers');
 
     constructor(
         protected _notificationService: SnackBarService,
@@ -46,53 +31,36 @@ export class DossierGenericFormComponent extends GenericPersistenceComponent<Dos
         protected _translateService: TranslateService,
         protected _router: Router,
         protected _formBuilder: FormBuilder,
-        protected dossierResolver: DossierFormResolver,
-        protected clientResolver:  DossierDisplayResolver,
+        protected clientResolver: DossierDisplayResolver,
         private activatedRoute: ActivatedRoute,
         private formBuilder: FormBuilder,
+        public dialogRef: MatDialogRef<DossierGenericFormComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any
     ) {
         super(_notificationService, null, _translateService, _service, _router);
     }
 
-
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
 
     ngOnInit(): void {
-        this.contentId = this.activatedRoute.snapshot.params['idDossier'];
-        console.log(this.contentId);
-        this.dossier= this.clientResolver.dossier;
 
-        const key = this.action === 'edit' ? 'EDIT_TITLE' : 'ADD_TITLE';
-        this._translateService.get('APP.USER.' + key).subscribe(title => {
-            this.componentName = title;
-        });
-        if (!this.dossier) {
-            this.dossier = new Dossier();
-            this.dossier.dossierParent = new Dossier();
-            if (this.contentId !== 0) this.dossier.dossierParent.id =  this.contentId;
-            if (this.contentId === 0) this.dossier.dossierParent.id =  null;
-
-        }
+        this.dossier = this.data.dossier;
 
         this.buildForm();
         this.setFormData(this.dossier);
         this.subscribe();
 
-
-    }
-
-    getContentLink() {
-        return this.contentLink =Paths.configurationPath('dossiers')  + '/content/'  + this.contentId;
     }
 
     private setFormData(dossier: Dossier): void {
         this.ctrlSetValue('nom', dossier.nom);
-        this.ctrlSetValue('taille', dossier.taille);
-       }
+    }
 
     protected buildForm(): void {
         this.form = this._formBuilder.group({
             nom: [this.dossier.nom, [Validators.required]],
-            taille: [this.dossier.taille],
         });
     }
 
@@ -101,14 +69,13 @@ export class DossierGenericFormComponent extends GenericPersistenceComponent<Dos
             this.buildForm();
         }
         this.subCtrlVC('nom', value => this.dossier.nom = value);
-        this.subCtrlVC('taille', value => this.dossier.taille = value);
-        }
-
-    _save(): void {
-        this.save.emit(this.dossier);
     }
 
-    _update(): void {
-        this.update.emit(this.dossier);
+    _save(): void {
+        this.dossier.dossierParent = new Dossier();
+        this.dossier.dossierParent.id = this.data.idParent;
+        this._service.save(this.dossier).subscribe(value => {
+            this.dialogRef.close(value);
+        });
     }
 }

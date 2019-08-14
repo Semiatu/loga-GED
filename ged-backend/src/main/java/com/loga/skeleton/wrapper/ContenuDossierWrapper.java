@@ -16,7 +16,7 @@ import java.util.List;
 public class ContenuDossierWrapper {
     List<Document> documents = new ArrayList<>();
     List<Dossier> dossiers  = new ArrayList<>();
-    Dossier dossier;
+    Dossier dossier = new Dossier();
     List<Raccourci> raccourcis  = new ArrayList<>();
 
     public static ContenuDossierWrapper of( List<Document> documents, List<Dossier> dossiers,List<Raccourci> raccourcis ,Dossier dossier){

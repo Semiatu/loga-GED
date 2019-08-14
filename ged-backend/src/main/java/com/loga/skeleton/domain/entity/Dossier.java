@@ -1,18 +1,10 @@
 package com.loga.skeleton.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.loga.bebase.entity.AbstractEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.List;
-
-import static java.util.Objects.isNull;
 
 @EqualsAndHashCode(callSuper = false)
 @Entity
@@ -33,10 +25,10 @@ public class Dossier extends AbstractEntity {
     @Column(name = "est_dans_corbeille")
     private boolean estDansCorbeille = false;
 
-    @Column(name = "afficher_contenu")
-    private boolean displayContent = true;
-
     @ManyToOne
     private Dossier dossierParent;
+
+
+
 
 }

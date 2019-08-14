@@ -4,21 +4,19 @@ import {Helpers} from "../../../../../../@externals/loga/_utility";
 import {fuseAnimations} from "../../../../../../@externals/fuse/@fuse/animations";
 import {GenericListComponent} from "../../../../../../@externals/loga/_abstract";
 import {Document, Dossier, Raccourci} from "../../_model";
-import {DocumentService, DossierService} from "../../_service";
+import {DocumentService, DossierService, UploadService} from "../../_service";
 import {MatDialog, MatTableDataSource} from "@angular/material";
 import {ConfigurationModule} from "../../configuration.module";
 import {DossierCriteria} from "../../_criteria";
-import {Subject, Subscription} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SnackBarService} from "../../../../../../@externals/loga/snack-bar/snack.bar.service";
 import {DialogService} from "../../../../../../@externals/loga/dialog/dialog.service";
 import {TranslateService} from "@ngx-translate/core";
 import {RaccourciService} from "../../_service/raccourci.service";
 import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
-import {DossierDisplayResolver} from "../../_resolver/dossier/dossier.display.resolver";
-import {RaccourciGenericFormComponent} from "../dossier/raccourci-generic-form/raccourci-generic-form.component";
-import {RaccourciType} from "../../_model/RaccourciType";
 import {CorbeilleListResolver} from "../../_resolver/dossier/corbeille.list.resolver";
+import {RaccourciType} from "../../_model/RaccourciType";
+import {SelectionModel} from "@angular/cdk/collections";
+import {ContenuDossierWrapper} from "../../wrapper/contenu-dossier-wrapper";
 
 
 @Component({
@@ -30,15 +28,16 @@ import {CorbeilleListResolver} from "../../_resolver/dossier/corbeille.list.reso
 })
 export class CorbeilleListComponent extends GenericListComponent<Dossier, DossierService> implements OnInit {
 
-    displayedColumns = ['id', 'nom', 'type', 'lastModifiedDate', 'actions'];
+    displayedColumns = ['select','id', 'nom', 'type', 'lastModifiedDate', 'actions'];
 
     public myDataSource = new MatTableDataSource<any>();
+    selection = new SelectionModel<any>(true, []);
 
     conf: ConfigurationModule;
     icon = 'folder';
     criteria: DossierCriteria = new DossierCriteria();
     baseLink = Paths.configurationPath('dossiers');
-
+    contenuDossierWrapper: ContenuDossierWrapper = new ContenuDossierWrapper();
 
     constructor(
         protected _notificationService: SnackBarService,
@@ -49,6 +48,7 @@ export class CorbeilleListComponent extends GenericListComponent<Dossier, Dossie
         private corbeilleListResolver: CorbeilleListResolver,
         private documentService: DocumentService,
         public router: Router,
+        public uploadService: UploadService,
     ) {
         super(_notificationService, _dialogService, _translateService, _service);
     }
@@ -86,6 +86,7 @@ export class CorbeilleListComponent extends GenericListComponent<Dossier, Dossie
     }
 
     delete(component): void {
+        let  documentListSupprimer: Document[] = [];
         this.showLoading();
         this._translateService.get(['APP.DELETE_CONFIRM', 'APP.SUCCESS', 'APP.DELETE'], {value: 'cet element'})
             .subscribe(values => {
@@ -93,6 +94,13 @@ export class CorbeilleListComponent extends GenericListComponent<Dossier, Dossie
                 matDialogRef.afterClosed().subscribe(response => {
                     if (response) {
                         this.getService(component).delete(component.id).subscribe(value => {
+                            if (this.isDossier(component)) {
+                                documentListSupprimer =  Helpers.getOthers(value);
+                                documentListSupprimer.forEach(document => this.uploadService.deleteFileUpload(document));
+                            }
+                            if (this.isDocument(component)) {
+                               this.uploadService.deleteFileUpload(component)
+                            }
                             this._notificationService.open(values['APP.SUCCESS'], values['APP.DELETE']);
                             this.getCorbeilleContent();
                         }, error => {
@@ -103,13 +111,15 @@ export class CorbeilleListComponent extends GenericListComponent<Dossier, Dossie
             });
     }
 
+    deleteFirbaseDocument(document): void {
+        this.uploadService.deleteFileUpload(document);
+    }
 
     private initData(): void {
         this.myDataSource = new MatTableDataSource<any>();
         this.myDataSource.data = this.corbeilleListResolver.mapwrapper;
     }
 
-    // si url dans document alors document sinon dossier
     isDocument(object) {
         return object.hasOwnProperty('url');
     }
@@ -120,6 +130,13 @@ export class CorbeilleListComponent extends GenericListComponent<Dossier, Dossie
 
     isDossier(object) {
         return !this.isDocument(object) && !this.isRaccourci(object);
+    }
+    isRaccourciOfDocument(object){
+        return this.isRaccourci(object) && object.type === RaccourciType.DOCUMENT;
+    }
+
+    isRaccourciOfDossier(object) {
+        return this.isRaccourci(object) && object.type === RaccourciType.DOSSIER;
     }
 
     // recuperer le contenu de la corbeille
@@ -133,6 +150,75 @@ export class CorbeilleListComponent extends GenericListComponent<Dossier, Dossie
                 mapwrapper.push(...wrapper.raccourcis)
                 this.myDataSource.data = mapwrapper;
             });
+    }
+
+    //Si le nombre d'éléments sélectionnés correspond au nombre total de lignes.
+    isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.myDataSource.data.length;
+        return numSelected == numRows;
+    }
+
+    // Sélectionne toutes les lignes si elles ne sont pas toutes sélectionnées. sinon, libere la selection.
+    masterToggle() {
+        this.isAllSelected() ?
+            this.selection.clear() :
+            this.myDataSource.data.forEach(row => this.selection.select(row));
+    }
+    // Le libellé de la case à cocher sur la ligne passée.
+    checkboxLabel(row?: any): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+        }
+
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+    }
+
+    // supprimer tout les element cochés
+    public restaureAllSelected() {
+
+        console.log('ok');
+        this.selection.selected.forEach(value => {
+            if (this.isDossier(value)) {
+                this.contenuDossierWrapper.dossiers.push(value);
+            }
+            if (this.isDocument(value)) {
+                this.contenuDossierWrapper.documents.push(value);
+            }
+            if (this.isRaccourci(value)) {
+                this.contenuDossierWrapper.raccourcis.push(value);
+            }
+        });
+
+        this._service.restaureAllSelected(this.contenuDossierWrapper).subscribe(response => {
+            this.getCorbeilleContent();
+            this.selection.clear();
+        });
+    }
+
+    public addToWrapper() {
+        this.contenuDossierWrapper = new ContenuDossierWrapper();
+        this.selection.selected.forEach(value => {
+            if (this.isDossier(value)) {
+                this.contenuDossierWrapper.dossiers.push(value);
+            }
+            if (this.isDocument(value)) {
+                this.contenuDossierWrapper.documents.push(value);
+            }
+            if (this.isRaccourci(value)) {
+                this.contenuDossierWrapper.raccourcis.push(value);
+            }
+        });
+    }
+
+    public deleteAll(){
+        this.addToWrapper();
+        this._service.deleteAll(this.contenuDossierWrapper).subscribe(value => {
+            let documents = [];
+             documents = Helpers.getListOthers(value);
+            documents.forEach(value1 => this.deleteFirbaseDocument(value1));
+
+        })
     }
 }
 

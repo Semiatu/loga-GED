@@ -77,6 +77,7 @@ import { ContentListComponent } from './_component/dossier/content-list/content-
 import { RaccourciFormComponent } from './_component/dossier/raccourci-form/raccourci-form.component';
 import { RaccourciGenericFormComponent } from './_component/dossier/raccourci-generic-form/raccourci-generic-form.component';
 import { CorbeilleListComponent } from './_component/corbeille-list/corbeille-list.component';
+import {PdfViewerModule} from "ng2-pdf-viewer";
 
 @NgModule({
 
@@ -151,6 +152,7 @@ import { CorbeilleListComponent } from './_component/corbeille-list/corbeille-li
         MatProgressBarModule,
         TreeModule,
         DialogModule,
+        PdfViewerModule,
     ],
 
     providers: [
@@ -158,7 +160,10 @@ import { CorbeilleListComponent } from './_component/corbeille-list/corbeille-li
         DummyFormResolver,
         DummyDisplayResolver,
     ],
-    entryComponents: [RaccourciGenericFormComponent],
+    entryComponents: [
+        RaccourciGenericFormComponent,
+        DossierGenericFormComponent
+    ],
 
 
 })

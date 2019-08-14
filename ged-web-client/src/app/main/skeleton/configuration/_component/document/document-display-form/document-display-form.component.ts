@@ -35,6 +35,7 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
     dossierID : string;
     parentLink : any;
     documentEditLink: any;
+    pdfSrc: string;
 
     @ViewChild('paginator')
     paginator: MatPaginator;
@@ -45,7 +46,9 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
     @ViewChild(MatSort)
     sort: MatSort;
 
+    src = "https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf";
     private DEFAULT = 'Non renseigné';
+
 
     constructor(
         protected _notificationService: SnackBarService,
@@ -63,8 +66,9 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
 
     ngOnInit(): void {
         this.dossierID = this.activatedRoute.snapshot.params['idDossier'];
-        this. document = this.clientResolver.document;
+        this.document = this.clientResolver.document;
         this. documentEditLink = '/' + Paths.configurationPath('documents/' + this. document.id);
+       this.pdfSrc = this.clientResolver.document.url;
     }
 
 

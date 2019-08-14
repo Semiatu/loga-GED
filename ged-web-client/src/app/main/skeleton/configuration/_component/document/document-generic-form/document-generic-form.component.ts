@@ -155,14 +155,12 @@ export class DocumentGenericFormComponent extends GenericPersistenceComponent<Do
         );
     }
 
-
-   _save(): void {
+  /* _save(): void {
         this.saveIndb()
-    }
+    }*/
 
    // uploder et enregistrement du fichier
-  /*  _save(): void {
-        console.log(this.document)
+    _save(): void {
         this.showProgress = true;
         let uploadTask = this.uploadService.pushDocument(this.document);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
@@ -189,8 +187,7 @@ export class DocumentGenericFormComponent extends GenericPersistenceComponent<Do
                     this.saveIndb();
                 });
             });
-    }*/
-
+    }
     updateIndb(): void {
         this.addSub(
             this._service.update( this.document.id, this.document).subscribe(value => {

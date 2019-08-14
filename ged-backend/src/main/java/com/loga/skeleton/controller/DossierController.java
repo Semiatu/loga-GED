@@ -52,9 +52,6 @@ public class DossierController extends AbstractController<Dossier, Long, Dossier
 
     @GetMapping("get-corbeille-content")
     public ResponseEntity<ContenuDossierWrapper> getCorbeilleContent() {
-        if (!findAllSupport()) {
-            return error();
-        }
         return ok(abstractService.getCorbeilleContent().getEntity());
     }
 
@@ -63,9 +60,9 @@ public class DossierController extends AbstractController<Dossier, Long, Dossier
         return ok(abstractService.getTreeData(idDossier).getEntity());
     }
 
-    @GetMapping("get-dossier-tree-data/{idDossier}")
-    public ResponseEntity<List<TreeDataWrapper>> getDossierTreeData(@PathVariable Long idDossier) {
-        return ok(abstractService.getDossierTreeData(idDossier).getEntity());
+    @PostMapping("get-dossier-tree-data/{idParent}")
+    public ResponseEntity<List<TreeDataWrapper>> getDossierTreeData(@PathVariable Long idParent,@RequestBody List<Long> notIds) {
+        return ok(abstractService.getDossierTreeData(idParent, notIds ).getEntity());
     }
 
     @GetMapping("check/{idDossier}")
@@ -83,9 +80,25 @@ public class DossierController extends AbstractController<Dossier, Long, Dossier
         abstractService.restaurer(id);
     }
 
-    @DeleteMapping("delete-all/{id}")
-    public List<Document> deleteAll(@PathVariable Long id) {
-        return abstractService.deleteAll(id);
+    @DeleteMapping("delete-dossier/{id}")
+    public List<Document> deleteDossier(@PathVariable Long id) { return abstractService.deleteDossier(id); }
+
+    @PutMapping("delete-all")
+    public List<Document> deleteAll(@RequestBody ContenuDossierWrapper contenuDossierWrapper) { return abstractService.deleteAll(contenuDossierWrapper); }
+
+    @PostMapping("add-all-in-corbeille")
+    public void addAllSelectedInCorbeille(@RequestBody ContenuDossierWrapper contenuDossierWrapper){
+        this.abstractService.addAllSelectedInCorbeille(contenuDossierWrapper);
+    }
+
+    @PostMapping("restaure-all-selected")
+    public void restaureAllSelected(@RequestBody ContenuDossierWrapper contenuDossierWrapper){
+        this.abstractService.restaureAllSelected(contenuDossierWrapper);
+    }
+
+    @PostMapping("deplace-all-selected")
+    public void deplaceAllSelected(@RequestBody ContenuDossierWrapper contenuDossierWrapper){
+        this.abstractService.deplaceAllSelected(contenuDossierWrapper);
     }
 
 }

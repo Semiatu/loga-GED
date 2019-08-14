@@ -174,7 +174,7 @@
 
                     <div class="button-item" *ngIf="action === 'edit'">
                         <button mat-raised-button class="edit" matTooltip="{{ 'APP.UPDATE_BTN' | translate }}"
-                                (click)="_update()" [disabled]="!form.valid">
+                                (click)="updateIndb()" [disabled]="!form.valid">
                             {{ 'APP.UPDATE_BTN' | translate }} <i class="material-icons">check</i>
                         </button>
                     </div>

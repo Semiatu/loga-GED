@@ -21,14 +21,18 @@ public interface DossierRepository  extends AbstractRepository<Dossier, Long> {
     //Recuperer les dossiers qui sont dans la corbeille
     List<Dossier> findByEstDansCorbeilleIsTrue();
 
+
+    @Query("select dossier from Dossier dossier where dossier.dossierParent =: idParent and dossier.id not in : ids")
+    List<Dossier> findByDossierParentAndIdNotIn(@Param("idParent") long idParent, @Param("ids") List<Long> ids);
+
+
     @Modifying
     @Query("update Dossier dossier set dossier.etatSuppression = true, dossier.estDansCorbeille = true where dossier.id = :id ")
-    int modifierSuppression(@Param("id") long id);
+    int modifierEtatSuppression(@Param("id") long id);
 
     @Modifying
     @Query("update Dossier dossier set dossier.etatSuppression = false , dossier.estDansCorbeille = false where dossier.id = :id ")
     int restaurer(@Param("id") long id);
-
 
     @Modifying
     @Query("update Dossier dossier set dossier.etatSuppression = true where dossier.id in :ids")

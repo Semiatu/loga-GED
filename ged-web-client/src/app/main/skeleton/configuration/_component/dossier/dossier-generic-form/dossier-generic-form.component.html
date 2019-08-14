@@ -1,16 +1,17 @@
+<!--
 <div id="components" class="page-layout carded fullwidth inner-scroll">
 
-    <!-- TOP BACKGROUND -->
+    &lt;!&ndash; TOP BACKGROUND &ndash;&gt;
     <div class="top-bg accent"></div>
-    <!-- / TOP BACKGROUND -->
+    &lt;!&ndash; / TOP BACKGROUND &ndash;&gt;
 
-    <!-- CENTER -->
+    &lt;!&ndash; CENTER &ndash;&gt;
     <div class="center">
 
-        <!-- HEADER -->
+        &lt;!&ndash; HEADER &ndash;&gt;
         <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
 
-            <!-- APP TITLE -->
+            &lt;!&ndash; APP TITLE &ndash;&gt;
             <div fxLayout="row" fxLayoutAlign="start center">
 
                 <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="getContentLink()">
@@ -27,15 +28,15 @@
                     </div>
                 </div>
              </div>
-            <!-- / APP TITLE -->
+            &lt;!&ndash; / APP TITLE &ndash;&gt;
         </div>
-        <!-- / HEADER -->
+        &lt;!&ndash; / HEADER &ndash;&gt;
 
-        <!-- CONTENT CARD -->
+        &lt;!&ndash; CONTENT CARD &ndash;&gt;
         <div class="content-card">
-            <!-- CONTENT FROM -->
+            &lt;!&ndash; CONTENT FROM &ndash;&gt;
             <form id="contentForm" [formGroup]="form">
-                <!-- NOM -->
+                &lt;!&ndash; NOM &ndash;&gt;
                 <mat-form-field appearance="outline">
                     <mat-label>Nom</mat-label>
                     <mat-icon matSuffix class="secondary-text">label</mat-icon>
@@ -46,12 +47,12 @@
                     </mat-error>
                 </mat-form-field>
 
-               <!-- &lt;!&ndash; Taille &ndash;&gt;
+               &lt;!&ndash; &lt;!&ndash; Taille &ndash;&gt;
                 <mat-form-field appearance="outline">
                     <mat-label>Taille</mat-label>
                     <mat-icon matSuffix class="secondary-text">label</mat-icon>
                     <input type="number" name="taille" formControlName="taille" matInput>
-                </mat-form-field>-->
+                </mat-form-field>&ndash;&gt;
 
                 <div id="action-button-wrapper">
                     <div class="button-item" *ngIf="action === 'add' || !action">
@@ -70,7 +71,46 @@
                 </div>
             </form>
         </div>
-        <!-- / CONTENT CARD -->
+        &lt;!&ndash; / CONTENT CARD &ndash;&gt;
     </div>
-    <!-- / CENTER -->
+    &lt;!&ndash; / CENTER &ndash;&gt;
+</div>-->
+<div fxLayout="row" fxLayoutAlign="center none" >
+    <h1 mat-dialog-title layout-align="center" >Nouveau dossier</h1>
 </div>
+
+<div mat-dialog-content>
+    <div class="content-card">
+        <form id="contentForm" [formGroup]="form">
+            <mat-form-field appearance="outline">
+                <mat-label>Nom</mat-label>
+                <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                <input name="nom" formControlName="nom" matInput required>
+                <mat-error *ngIf="!form.controls['nom'].valid && form.controls['nom'].dirty &&
+          form.controls['nom'].errors['required']">
+                    Le champ est requis
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <button mat-raised-button align="left" style="background-color: dimgray; color: #F5F5F5;" mat-button (click)="onNoClick()">Annuler</button>
+        <div  *ngIf="data.action === 'add'" style="margin-left: 5%">
+
+            <button mat-raised-button  color="accent" class="add" matTooltip="{{ 'APP.ADD_BTN' | translate }}"
+                    (click)="_save()" [disabled]="!form.valid">
+                {{ 'APP.ADD_BTN' | translate }} <i class="material-icons">check</i>
+            </button>
+            </div>
+        <div class="button-item" *ngIf="data.action === 'edit'" style="margin-left: 5%">
+            <button mat-raised-button color="accent" matTooltip="{{ 'APP.UPDATE_BTN' | translate }}"
+                    (click)="_save()" [disabled]="!form.valid">
+                {{ 'APP.UPDATE_BTN' | translate }} <i class="material-icons">check</i>
+            </button>
+        </div>
+    </div>
+</div>
+

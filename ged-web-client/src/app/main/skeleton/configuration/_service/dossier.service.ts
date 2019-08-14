@@ -50,8 +50,8 @@ export class DossierService extends AbstractService<Dossier, number> {
     }
 
     // deplacement d'un contenu
-    getDossierTreeContent(idDossier) {
-        return this.httpClient.get<any>(encodeURI(this.apiUrl + this.address() + '/get-dossier-tree-data/' + idDossier), this.baseOption)
+    getDossierTreeContent(idDossier, ids) {
+        return this.httpClient.post<any>(encodeURI(this.apiUrl + this.address() + '/get-dossier-tree-data/' + idDossier), ids , this.baseOption)
             .pipe(catchError(this.handleError));
     }
 
@@ -61,15 +61,32 @@ export class DossierService extends AbstractService<Dossier, number> {
     }
 
     public delete(id: number) {
-        return this.httpClient.delete(encodeURI(this.apiUrl + this.address() + '/delete-all/' + id), this.baseOption)
+        return this.httpClient.delete(encodeURI(this.apiUrl + this.address() + '/delete-dossier/' + id), this.baseOption)
             .pipe(catchError(this.handleError));
     }
 
+    public deleteAll(contenuDossierWrapper:ContenuDossierWrapper) {
+        return this.httpClient.put(encodeURI(this.apiUrl + this.address() + '/delete-all/'), contenuDossierWrapper , this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
 
     public restaurer(id) {
         return this.httpClient.put<Raccourci[]>(encodeURI(this.apiUrl + this.address() + '/restaurer/' + id), this.baseOption)
             .pipe(catchError(this.handleError));
     }
 
+    public addAllSelectedCorbeille(contenuDossierWrapper) {
+        return this.httpClient.post(encodeURI(this.apiUrl + this.address() + '/add-all-in-corbeille/'),contenuDossierWrapper,  this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
 
+    public restaureAllSelected(contenuDossierWrapper) {
+        return this.httpClient.post(encodeURI(this.apiUrl + this.address() + '/restaure-all-selected/'),contenuDossierWrapper,  this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
+
+    public deplaceAllSelected(contenuDossierWrapper) {
+        return this.httpClient.post(encodeURI(this.apiUrl + this.address() + '/deplace-all-selected/'),contenuDossierWrapper,  this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
 }

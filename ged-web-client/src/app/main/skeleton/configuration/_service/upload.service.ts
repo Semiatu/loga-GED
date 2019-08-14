@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {AngularFireDatabase, AngularFireList} from "@angular/fire/database";
 import * as firebase from 'firebase';
 import {Document} from "../_model";
+import {FirebaseListObservable} from "@angular/fire/database-deprecated";
+
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +14,8 @@ export class UploadService {
     private documentTask: firebase.storage.UploadTask;
      docRef : AngularFireList<Document>;
     name: string;
+    x = document.getElementById("demo");
+    documents: FirebaseListObservable<any[]>;
 
 
     constructor(protected db: AngularFireDatabase) {
@@ -24,37 +28,34 @@ export class UploadService {
     pushDocument(document: Document) {
         let storageRef = firebase.storage().ref();
         return  storageRef.child(this.basePath + '/' + document.nom).put(document.file);
-
     }
+
     private saveFileData(document: Document) {
         this.db.list(`${this.basePath}/`).push(document);
     }
 
-    //delete file
-    deleteDocument(document: Document) {
-        this.deleteFileData(document.$key)
+    //supprimer le document uploader
+    deleteFileUpload(document: Document) {
+        /*this.deleteFileData(document.$key)
             .then(() => {
                 this.deleteFileStorage(document.nom)
             })
             .catch(error =>
-                console.log(error))
+                console.log(error))*/
+        this.deleteFileStorage(document.nom);
+
     }
 
-
-    // Deletes the file details from the realtime db
-    private deleteFileData(key: string) {
-        return this.db.list(`${this.basePath}/`).remove(key);
-    }
-    // update the file details from the realtime db
-    private updateFileData(key: string) {
-        return this.db.list(`${this.basePath}/`).update(key,document);
+    // supprimer le document dans Firedatabase
+    private deleteFileData($key: string) {
+        return this.db.list(this.basePath + '/').remove($key);
     }
 
     // Firebase files must have unique names in their respective storage dir
     // So the name serves as a unique key
-    private deleteFileStorage(name: string) {
+    private deleteFileStorage(nom: string) {
         let storageRef = firebase.storage().ref();
-        storageRef.child(`${this.basePath}/${name}`).delete()
+        storageRef.child(this.basePath + '/' + nom).delete();
     }
 
     /*public updateFileStorage(ancienNom: string, nouveauNom:  string ) {
@@ -66,4 +67,21 @@ export class UploadService {
         };
         return storageRef.updateMetadata(newStorageRef)
     }*/
+
+    // update the file details from the realtime db
+    private updateFileData(key: string) {
+        return this.db.list(`${this.basePath}/`).update(key,document);
+    }
+
+    /*listDocument(document: Document) {
+        let storageRef = firebase.storage().ref();
+        let listRef = storageRef.child('files/uid');
+        listRef.listAll().then(function(res){
+            res.prefixes.forEach(function(storageRef) {
+            });
+            res.items.forEach(function (itemRef) {
+            })
+        });
+    }*/
+
 }

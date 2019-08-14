@@ -2,11 +2,34 @@
 @import "../../../../../../component-table";
 @import "../../../../../../column-n";
 
-document-display-form{
+document-display-form {
     @import '../../../../../component-generic';
 
     mat-form-field {
         width: 100%;
+    }
+
+    .wrapper {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .buttons {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        margin-bottom: 15px;
+    }
+
+    .pdf-container {
+        width: 80%;
+    }
+
+    pdf-viewer {
+        display: block;
     }
 
     .pb-16 {

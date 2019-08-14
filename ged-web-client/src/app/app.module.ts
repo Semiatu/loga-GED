@@ -54,6 +54,7 @@ import {AppRoutingModule} from './app.routing.module';
 import {AngularFireModule} from "@angular/fire";
 import {AngularFireStorageModule} from "@angular/fire/storage";
 import {AngularFireDatabase} from "@angular/fire/database";
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
     declarations: [
@@ -65,7 +66,7 @@ import {AngularFireDatabase} from "@angular/fire/database";
         BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
-
+        PdfViewerModule,
 
         // Loading
         NgxLoadingModule.forRoot({

@@ -110,9 +110,32 @@ export class RaccourciGenericFormComponent implements OnInit {
         ];
     }
 
+    permitSave(event){
+        return !(this.data.ids && this.idExste(event));
+    }
+
+    idExste(event): boolean{
+        console.log(this.data.ids)
+        let returnData = false;
+        this.data.ids.forEach( id => {
+            console.log(id);
+            console.log(event.node.data);
+            console.log((Number(event.node.data) === Number(id)));
+           if (Number(event.node.data) === Number(id)) {
+               returnData = true;
+               return true;
+           }
+        });
+        console.log(returnData)
+        return returnData;
+    }
+
     nodeSelect(event) {
-        this.dialogRef.close(event.node);
+        if (this.permitSave(event)) {
+            this.dialogRef.close(event.node);
+        }
         console.log(event);
+        console.log(this.permitSave(event));
     }
     // charger un raccourci
     loadNode(event) {
@@ -122,7 +145,7 @@ export class RaccourciGenericFormComponent implements OnInit {
         }
         // charger un deplacement
         if(event.node && this.data.deplacer) {
-            this.dossierService.getDossierTreeContent(event.node.data).toPromise().then(nodes => event.node.children = nodes);
+            this.dossierService.getDossierTreeContent(event.node.data,this.data.param).toPromise().then(nodes => event.node.children = nodes);
         }
     }
 
