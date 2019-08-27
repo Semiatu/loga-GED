@@ -5,3 +5,5 @@ export * from './document/document.list.resolver';
 export * from './dossier/dossier.form.resolver';
 export * from './dossier/dossier.list.resolver';
 export * from './dossier/content.list.resolver';
+export * from './categorie/categorie.form.resolver';
+export * from './categorie/categorie.list.resolver';

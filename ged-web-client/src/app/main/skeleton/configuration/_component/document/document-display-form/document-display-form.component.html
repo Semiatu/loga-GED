@@ -1,163 +1,180 @@
-<!--
-&lt;!&ndash; gere les apparemces &ndash;&gt;
-<div fusePerfectScrollbar id="components" class="page-layout carded fullwidth inner-scroll">
+<!--information  document-->
+<div mat-dialog-content *ngIf="showInformation">
+    <div fusePerfectScrollbar id="components" class="page-layout carded fullwidth inner-scroll">
 
-    &lt;!&ndash; TOP BACKGROUND &ndash;&gt;
-    <div class="top-bg accent"></div>
-    &lt;!&ndash; / TOP BACKGROUND &ndash;&gt;
+        <!-- TOP BACKGROUND -->
+        <div class="top-bg accent"></div>
+        <!-- / TOP BACKGROUND -->
 
-    &lt;!&ndash; CENTER &ndash;&gt;
-    <div class="center">
+        <!-- CENTER -->
+        <div class="center">
 
-        &lt;!&ndash; HEADER &ndash;&gt;
-        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+            <!-- HEADER -->
+            <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
 
-            &lt;!&ndash; APP TITLE &ndash;&gt;
-            <div fxLayout="row" fxLayoutAlign="start center">
+                <!-- APP TITLE -->
+                <div fxLayout="row" fxLayoutAlign="start center">
 
-                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="getParentLInk()">
-                    <mat-icon>arrow_back</mat-icon>
-                </button>
-
-                <div fxLayout="column" fxLayoutAlign="start start"
-                     [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
-                    <div class="subtitle secondary-text">
-                        <span class="logo-text h1">{{ componentName }}</span>
-                    </div>
-                </div>
-            </div>
-
-            &lt;!&ndash; ADD AND REFRESH BUTTON &ndash;&gt;
-            <div>
-                <a [href]="document.url" target="_blank" style="margin-right: 10px">
-&lt;!&ndash;                    <button (click)="dowload()" class="add-product-button fuse-white mt-24 mt-md-0"&ndash;&gt;
-                    <button class="add-product-button fuse-white mt-24 mt-md-0"
-                            mat-raised-button matTooltip="{{ 'Telecharger' }}">
-                        <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">cloud_download</i>&nbsp;
-                        <span style="text-transform: uppercase" class="pr-20">{{ 'DOWNLOAD' | translate }}</span>
+                    <button mat-icon-button class="mr-0 mr-sm-16" (click)="activeShowDocument()">
+                        <mat-icon>arrow_back</mat-icon>
                     </button>
-                </a>
 
-                <button style="margin-right: 10px" [routerLink]="documentEditLink" class="add-product-button fuse-white mt-24 mt-md-0"
-                        mat-raised-button matTooltip="{{ 'MODIFIER' }}">
-                    <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">edit</i>&nbsp;
-                    <span style="text-transform: uppercase">{{ 'modifier' | translate }}</span>
-                </button>
-
-                <button (click)="delete()" class="add-product-button fuse-white mt-24 mt-md-0" mat-raised-button
-                        matTooltip="{{ 'SUPPRIMER' }}">
-                    <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">delete</i>&nbsp;
-                    <span style="text-transform: uppercase">{{ 'supprimer' | translate }}</span>
-                </button>
-                &nbsp;
-            </div>
-            &lt;!&ndash; / APP TITLE &ndash;&gt;
-
-        </div>
-        &lt;!&ndash; / HEADER &ndash;&gt;
-
-        &lt;!&ndash; CONTENT CARD &ndash;&gt;
-        <div class="content-card">
-            &lt;!&ndash; CONTENT FROM &ndash;&gt;
-            <div class="content">
-                <div class="tab-content" fusePerfectScrollbar>
-
-                    <div class="pb-16" fxLayout="row" fxLayoutAlign="start center">
-                        <mat-icon class="m-0 mr-16 secondary-text">account_box</mat-icon>
-                        <div class="h2 secondary-text">Information</div>
-                    </div>
-
-                   &lt;!&ndash; <div class="card">
-                        <mat-card>
-                            &lt;!&ndash; nom &ndash;&gt;
-                            <mat-form-field appearance="outline">
-                                <mat-label>Nom</mat-label>
-                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
-                                <input name="nom" [value]="document?.nom" matInput readonly>
-                            </mat-form-field>
-
-                            &lt;!&ndash; description &ndash;&gt;
-                            <mat-form-field appearance="outline">
-                                <mat-label>Description</mat-label>
-                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
-                                <input name="description" [value]="document?.description" matInput readonly>
-                            </mat-form-field>
-
-                            &lt;!&ndash; taille &ndash;&gt;
-                            <mat-form-field appearance="outline">
-                                <mat-label>Taille</mat-label>
-                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
-                                <input name="taille" [value]="document?.taille" matInput readonly>
-                            </mat-form-field>
-
-                            &lt;!&ndash; auteur &ndash;&gt;
-                            <mat-form-field appearance="outline">
-                                <mat-label>Auteur</mat-label>
-                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
-                                <input name="auteur" [value]="document?.auteur" matInput readonly>
-                            </mat-form-field>
-
-                            &lt;!&ndash; format &ndash;&gt;
-                            <mat-form-field appearance="outline">
-                                <mat-label>Format</mat-label>
-                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
-                                <input name="format" [value]="document?.format" matInput readonly>
-                            </mat-form-field>
-
-                            &lt;!&ndash; version &ndash;&gt;
-                            <mat-form-field appearance="outline">
-                                <mat-label>Version</mat-label>
-                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
-                                <input name="version" [value]="document?.version" matInput readonly>
-                            </mat-form-field>
-
-                            &lt;!&ndash; url &ndash;&gt;
-                            <mat-form-field appearance="outline">
-                                <mat-label>url</mat-label>
-                                <mat-icon matSuffix class="secondary-text">label</mat-icon>
-                                <input name="url" [value]="document?.url" matInput readonly>
-                            </mat-form-field>
-
-                        </mat-card>
-                    </div>&ndash;&gt;
-                    &lt;!&ndash; PDF VIEWER &ndash;&gt;
-
-
-                    &lt;!&ndash; / PDF VIEWER &ndash;&gt;
                 </div>
+
+                <!-- ADD AND REFRESH BUTTON -->
+                <!--<div>
+                    <a [href]="document.url" target="_blank" style="margin-right: 10px">
+    &lt;!&ndash;                    <button (click)="dowload()" class="add-product-button fuse-white mt-24 mt-md-0"&ndash;&gt;
+                        <button class="add-product-button fuse-white mt-24 mt-md-0"
+                                mat-raised-button matTooltip="{{ 'Telecharger' }}">
+                            <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">cloud_download</i>&nbsp;
+                            <span style="text-transform: uppercase" class="pr-20">{{ 'DOWNLOAD' | translate }}</span>
+                        </button>
+                    </a>
+
+                    <button style="margin-right: 10px" [routerLink]="documentEditLink" class="add-product-button fuse-white mt-24 mt-md-0"
+                            mat-raised-button matTooltip="{{ 'MODIFIER' }}">
+                        <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">edit</i>&nbsp;
+                        <span style="text-transform: uppercase">{{ 'modifier' | translate }}</span>
+                    </button>
+
+                    <button (click)="delete()" class="add-product-button fuse-white mt-24 mt-md-0" mat-raised-button
+                            matTooltip="{{ 'SUPPRIMER' }}">
+                        <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">delete</i>&nbsp;
+                        <span style="text-transform: uppercase">{{ 'supprimer' | translate }}</span>
+                    </button>
+                    &nbsp;
+                </div>-->
+                <!-- / APP TITLE -->
+
             </div>
-            &lt;!&ndash; / CONTENT CARD &ndash;&gt;
+            <!-- / HEADER -->
+
+            <!-- CONTENT CARD -->
+            <div class="content-card">
+                <!-- CONTENT FROM -->
+                <div class="content">
+                    <div class="tab-content" fusePerfectScrollbar>
+
+                        <div class="pb-16" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-icon class="m-0 mr-16 secondary-text" >info</mat-icon>
+                            <div class="h2 secondary-text">Information</div>
+                        </div>
+
+                        <div class="card">
+                            <mat-card>
+                                <!-- nom -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Nom</mat-label>
+                                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                    <input name="nom" [value]="document?.nom" matInput readonly>
+                                </mat-form-field>
+
+                                <!-- taille -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Taille</mat-label>
+                                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                    <input name="taille" [value]="document?.taille" matInput readonly>
+                                </mat-form-field>
+
+                                <!-- auteur -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Auteur</mat-label>
+                                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                    <input name="auteur" [value]="document?.auteur" matInput readonly>
+                                </mat-form-field>
+
+                                <!-- &lt;!&ndash; format &ndash;&gt;
+                                 <mat-form-field appearance="outline">
+                                     <mat-label>Format</mat-label>
+                                     <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                     <input name="format" [value]="document?.format" matInput readonly>
+                                 </mat-form-field>-->
+
+                                <!-- version -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Version</mat-label>
+                                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                    <input name="version" [value]="document?.version" matInput readonly>
+                                </mat-form-field>
+
+                                <!-- description -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Description</mat-label>
+                                    <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                    <input name="description" [value]="document?.description" matInput readonly>
+                                </mat-form-field>
+
+                                <!-- &lt;!&ndash; url &ndash;&gt;
+                                 <mat-form-field appearance="outline">
+                                     <mat-label>url</mat-label>
+                                     <mat-icon matSuffix class="secondary-text">label</mat-icon>
+                                     <input name="url" [value]="document?.url" matInput readonly>
+                                 </mat-form-field>-->
+
+                            </mat-card>
+                        </div>
+                    </div>
+                </div>
+                <!-- / CONTENT CARD -->
+            </div>
+        </div>
+        <!-- / CENTER -->
+    </div>
+</div>
+<!--/information  document-->
+
+
+<!--afficher document-->
+<div class="wrapper" *ngIf="showDocument">
+
+    <div class="buttons">
+        <div fxLayout="row" fxLayoutAlign="start star">
+
+            <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="getParentLInk()">
+                <mat-icon style="color: #0B60A9">arrow_back</mat-icon>
+            </button>
+
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end center">
+
+            <button (click)="openDisplayDialogue()" class="add-product-button fuse-white mt-24 mt-md-0"
+                    mat-raised-button matTooltip="{{ 'Afficher les informations à propos du document' }}">
+                <i class="material-icons" style="color: #0B60A9">info</i>
+                <span style="text-transform: uppercase" class="pr-20">{{ 'INFORMATION' | translate }}</span>
+            </button>&nbsp;
+
+            <button (click)="downloadDocument()" class="add-product-button fuse-white mt-24 mt-md-0"
+                    mat-raised-button matTooltip="{{ 'Telecharger le document' }}">
+                <i class="material-icons" style="color: #0B60A9">cloud_download</i>
+                <span style="text-transform: uppercase" class="pr-20">{{ 'DOWNLOAD' | translate }}</span>
+            </button>
         </div>
     </div>
-    &lt;!&ndash; / CENTER &ndash;&gt;
-</div>
--->
 
-
-<div class="wrapper">
-    <div class="buttons">
-        <a [href]="document.url" target="_blank">
-            <button class="add-product-button fuse-white mt-24 mt-md-0"
-                    mat-raised-button matTooltip="{{ 'Telecharger' }}">
-                <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">cloud_download</i>
-                <span style="text-transform: uppercase" class="pr-20">{{ 'DOWNLOAD' | translate }}</span>
-            </button>
-        </a>&nbsp;
-
-        <a [href]="document.url" target="_blank">
-            <button class="add-product-button fuse-white mt-24 mt-md-0"
-                    mat-raised-button matTooltip="{{ 'Telecharger' }}">
-                <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">cloud_download</i>
-                <span style="text-transform: uppercase" class="pr-20">{{ 'DOWNLOAD' | translate }}</span>
-            </button>
-        </a>
-
-    </div>
-
-    <div class="pdf-container">
-        <pdf-viewer [src]="clientResolver.document.url"
+    <!--pdf viewer-->
+    <div class="viewer-container" *ngIf="document.typeDocument.nom.includes('pdf')">
+        <pdf-viewer [src]="this.fileViewerUrl"
                     [original-size]="false"
-                    style="width: 100%"
-        ></pdf-viewer>
+                    style="width: 100%">
+        </pdf-viewer>
+    </div>
+
+    <div class="viewer-container" *ngIf="document.typeDocument.nom.includes('vnd')">
+        <ngx-doc-viewer [url]="this.fileViewerUrl"
+                        viewer="google"
+                        style="width:100%;
+                        height:77vh;">
+        </ngx-doc-viewer>
+    </div>
+
+    <!--image viewer-->
+    <div class="viewer-container" *ngIf="document.typeDocument.nom.includes('image')">
+        <app-image-viewer
+            [images]="[this.fileViewerUrl]"
+            [idContainer]="'idOnHTML'"
+            [loadOnInit]="true">
+        </app-image-viewer>
     </div>
 </div>
+<!--/afficher document-->

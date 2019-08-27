@@ -20,6 +20,10 @@
                 <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
                     {{ dossier?.nom }}
                 </span>
+
+                <span *ngIf="dossierID == 0" class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    {{ 'GED'}}
+                </span>
             </div>
 
             <!-- / APP TITLE -->
@@ -58,7 +62,8 @@
                     <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">cloud_upload</i>&nbsp;
                     <span style="text-transform: uppercase">{{ '' | translate }}</span>
                 </button>
-                <input hidden id="file" type="file" name="file" #fileInput accept="image/*,.pdf,.doc" [multiple]="true"
+                <input hidden id="file" type="file" name="file" #fileInput accept="image/png,image/jpeg,image/jpg,.pdf,.doc,.ppt,.pptx,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                application/excel,application/vnd.ms-excel,application/x-excel,application/x-msexcel,.xlsx" [multiple]="true"
                        (change)="getFileDetails($event)">
             </div>
         </div>
@@ -129,19 +134,39 @@
                 </ng-container>
 
                 <!-- nom Column -->
+                <ng-container matColumnDef="icon">
+
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm></mat-header-cell>
+
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm style="align-content: flex-start">
+
+                        <fa-icon style="font-size: 1.57em; color:#EF5350" [icon]="faFilePdf" *ngIf="isDocument(component) && component.typeDocument.nom.includes('pdf')"></fa-icon>
+
+                        <fa-icon style="font-size: 1.57em; color: #0B60A9" [icon]="faImage" *ngIf="isDocument(component) && component.typeDocument.nom.includes('image')"></fa-icon>
+
+                        <fa-icon style="font-size: 1.57em; color: #268BD2" [icon]="faFileWord" *ngIf="isDocument(component) && component.nom.includes('doc' || 'docx')"></fa-icon>
+
+                        <fa-icon style="font-size: 1.57em; color: coral" [icon]="faFilePowerpoint" *ngIf="isDocument(component) && component.nom.includes('ppt' || 'pptx')"></fa-icon>
+
+                        <fa-icon style="font-size: 1.57em; color: #2E7D32" [icon]="faFileExcel" *ngIf="isDocument(component) && component.nom.includes('xls')"></fa-icon>
+
+                        <fa-icon style="font-size: 1.57em; color: burlywood" [icon]="faFolder" *ngIf="isDossier(component)"></fa-icon>
+
+                        <!-- raccourci icon -->
+
+                        <fa-icon style="font-size: 1.57em; color: burlywood" [icon]="faFolder" *ngIf="isRaccourciOfDossier(component)"></fa-icon>
+                        <mat-icon style="margin-bottom: -10px; margin-left: -20px; color: #82AAFF" *ngIf="isRaccourciOfDossier(component)">reply</mat-icon>
+
+                        <mat-icon style="color:#03A9F4" *ngIf="isRaccourciOfDocument(component)">description</mat-icon>
+                        <mat-icon style="margin-bottom: -10px; margin-left: -20px ; color:#82AAFF" *ngIf="isRaccourciOfDocument(component)">reply</mat-icon>
+
+                    </mat-cell>
+                </ng-container>
+
+
                 <ng-container matColumnDef="nom">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Nom</mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm style="align-content: flex-start">
-                        <mat-icon style="color:#03A9F4" *ngIf="isDocument(component)">description</mat-icon>
-                        <mat-icon style="color: burlywood" *ngIf="isDossier(component)">folder</mat-icon>
-                        <mat-icon style="color: burlywood" *ngIf="isRaccourciOfDossier(component)">folder</mat-icon>
-                        <mat-icon style="margin-bottom: -10px; margin-left: -20px; color: burlywood"
-                                  *ngIf="isRaccourciOfDossier(component)">reply
-                        </mat-icon>
-                        <mat-icon style="color:#03A9F4" *ngIf="isRaccourciOfDocument(component)">description</mat-icon>
-                        <mat-icon style="margin-bottom: -10px; margin-left: -20px ; color:#82AAFF"
-                                  *ngIf="isRaccourciOfDocument(component)">reply
-                        </mat-icon>
                         <p class="text-truncate">{{ component.nom }}</p>
                     </mat-cell>
                 </ng-container>
@@ -261,7 +286,7 @@
     <!-- / CENTER -->
 </div>
 
-<div>
+<div class="header accent" fxLayout="row" fxLayoutAlign="center">
     <p-dialog header="Renommer" [(visible)]="renomerRaccourci" (onHide)="closeRename()">
 
         <div [formGroup]="form">
@@ -277,10 +302,8 @@
         </div>
 
         <p-footer>
-            <div fxLayout="row" fxLayoutAlign="center none">
-                <button color="accent" mat-raised-button (click)="closeRename()">Fermer</button>
-                <button color="accent" mat-raised-button (click)="updateRaccourci()" [disabled]="form.invalid">Valider
-                </button>
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <button color="accent" mat-raised-button (click)="updateRaccourci()" [disabled]="form.invalid">Valider</button>
             </div>
         </p-footer>
     </p-dialog>

@@ -2,6 +2,7 @@ package com.loga.skeleton.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.loga.bebase.entity.AbstractEntity;
+import com.loga.skeleton.domain.enumeration.Privilege;
 import lombok.*;
 
 import javax.persistence.*;
@@ -63,5 +64,8 @@ public class Document extends AbstractEntity {
 
     @ManyToOne
     private Dossier dossier;
+
+    @Transient
+    private Privilege privilege;
 
 }

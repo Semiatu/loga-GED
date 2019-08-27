@@ -55,6 +55,9 @@ import {AngularFireModule} from "@angular/fire";
 import {AngularFireStorageModule} from "@angular/fire/storage";
 import {AngularFireDatabase} from "@angular/fire/database";
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import {NgxDocViewerModule} from "ngx-doc-viewer";
+import {ImageViewerModule} from "ng2-image-viewer";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 @NgModule({
     declarations: [
@@ -62,11 +65,14 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
         ConfirmDialogComponent,
     ],
     imports: [
+        FontAwesomeModule,
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
         PdfViewerModule,
+        NgxDocViewerModule,
+        ImageViewerModule,
 
         // Loading
         NgxLoadingModule.forRoot({

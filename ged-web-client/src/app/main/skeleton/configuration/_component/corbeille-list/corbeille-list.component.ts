@@ -217,7 +217,8 @@ export class CorbeilleListComponent extends GenericListComponent<Dossier, Dossie
             let documents = [];
              documents = Helpers.getListOthers(value);
             documents.forEach(value1 => this.deleteFirbaseDocument(value1));
-
+            this.getCorbeilleContent();
+            this.selection.clear();
         })
     }
 }

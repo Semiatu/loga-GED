@@ -1,14 +1,19 @@
 package com.loga.skeleton.service;
 
+import com.loga.as.entity.User;
+import com.loga.as.service.UserService;
 import com.loga.bebase.service.AbstractLongService;
 import com.loga.bebase.wrapper.ResponseWrapper;
+import com.loga.skeleton.domain.entity.Authorisation;
 import com.loga.skeleton.domain.entity.Document;
 import com.loga.skeleton.domain.entity.Dossier;
 import com.loga.skeleton.domain.entity.Raccourci;
+import com.loga.skeleton.domain.enumeration.Privilege;
 import com.loga.skeleton.repository.DocumentRepository;
 import com.loga.skeleton.repository.DossierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +32,10 @@ public class DocumentService extends AbstractLongService<Document, DocumentRepos
     DossierRepository dossierRepository;
     @Autowired
     RaccourciService raccourciService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    AuthorisationService authorisationService;
 
     public DocumentService(DocumentRepository documentRepository) {
 
@@ -44,12 +53,23 @@ public class DocumentService extends AbstractLongService<Document, DocumentRepos
     }
 
     // recuperer le nom du typeDoc
-    @Override
-    public ResponseWrapper<Document> save(Document document) {
+    public ResponseWrapper<Document> save(Document document, Authentication authentication) {
         if (document.getTypeDocument() == null || document.getTypeDocument().getNom() == null)
             return ResponseWrapper.of("erreur de retrouver le type du document!");
+        if (document.getDossier().getId() == 0L) document.setDossier(null);
         document.setTypeDocument(this.typeDocumentService.getTypeDocumentByNom(document.getTypeDocument()));
-        return super.save(document);
+        ResponseWrapper<Document> responseWrapper = super.save(document);
+
+        if (responseWrapper.isValid()){
+            User user = this.userService.findByUsername(authentication.getName());
+            Authorisation authorisation = new Authorisation();
+            authorisation.setDocument(responseWrapper.getEntity());
+            authorisation.setUser(user);
+            authorisation.setPrivilege(Privilege.SUPPRIMER);
+            this.authorisationService.save(authorisation);
+        }
+
+        return responseWrapper;
     }
 
     @Transactional

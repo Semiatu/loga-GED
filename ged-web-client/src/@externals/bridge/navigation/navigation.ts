@@ -56,8 +56,8 @@ export const navigation: ExtendedFuseNavigation[] = [
       },*/
         {
             id: 'Dossiers',
-            title: 'Dossier',
-            translate: 'Dossier',
+            title: 'ged',
+            translate: 'Gestion des documents',
             type: 'item',
             icon: 'folder',
             url: Paths.join(Paths.configurationPath('dossiers'), 'content/0'),

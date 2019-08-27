@@ -76,14 +76,15 @@
     </div>
     &lt;!&ndash; / CENTER &ndash;&gt;
 </div>-->
-
-<div fxLayout="row" fxLayoutAlign="center none" >
+<div class="header accent" fxLayout="row" fxLayoutAlign="center">
     <h1 mat-dialog-title layout-align="center" *ngIf="data.deplacer">Déplacer vers</h1>
     <h1 mat-dialog-title layout-align="center" *ngIf="!data.deplacer">Creer un raccourci</h1>
 </div>
 <div mat-dialog-content>
     <p-tree [value]="data.data"  [filter]="true" filterMode="strict" selectionMode="single" [(selection)]="selectedFile" (onNodeSelect)="nodeSelect($event)" (onNodeExpand)="loadNode($event)"></p-tree>
 </div>
-<div mat-dialog-actions>
-    <button mat-button style="width: 100%; background-color: dimgray; color: #F5F5F5;" mat-button (click)="onNoClick()">Fermer</button>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="center">
+    <button mat-button  style="width: 50%; background-color: #1E2129; color: #F5F5F5" mat-button (click)="onNoClick()"> Annuler
+        <mat-icon matSuffix class="secondary-text" color="accent">clear</mat-icon>
+    </button>
 </div>

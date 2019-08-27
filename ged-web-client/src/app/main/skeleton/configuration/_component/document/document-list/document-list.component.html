@@ -33,14 +33,14 @@
             <!-- / SEARCH -->
 
             <!-- Select bouton-->
-            <button mat-raised-button (click)="fileInput.click()"
+            <button mat-raised-button
                     matTooltip="{{ 'APP.DOCUMENT.ADD_TITLE' | translate }}"
                     class="add-product-button fuse-white mt-24 mt-md-0">
                 <i class="material-icons" style="color: rgba(0, 0, 0, 0.87);">cloud_upload</i>&nbsp;
                 <span style="text-transform: uppercase">{{ 'APP.DOCUMENT.ADD_TITLE' | translate }}</span>
             </button>
-            <input hidden id="file" type="file"  name = "file"  #fileInput [multiple]="false" (change)="getFileDetails($event)"
-                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,text/comma-separated-values, text/csv, application/csv,.pdf,.docx,.doc,.xls,.xlsx">
+<!--   (click)="fileInput.click()"         <input id="file" type="file"  name="file"  #fileInput [multiple]="false" (change)="getFileDetails($event)"-->
+<!--                accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">-->
         </div>
         <!-- / HEADER -->
 

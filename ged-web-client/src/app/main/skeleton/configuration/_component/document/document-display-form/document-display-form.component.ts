@@ -1,5 +1,5 @@
 // MAIN
-import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Inject, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 // ABSTRACT AND UTILITY
@@ -11,7 +11,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {SnackBarService} from 'src/@externals/loga/snack-bar/snack.bar.service';
 // RESOLVER
 
-import {MatPaginator, MatSort} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSort} from '@angular/material';
 import {fuseAnimations} from '../../../../../../../@externals/fuse/@fuse/animations';
 import {DialogService} from '../../../../../../../@externals/loga/dialog/dialog.service';
 import { DocumentService} from '../../../_service';
@@ -35,7 +35,10 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
     dossierID : string;
     parentLink : any;
     documentEditLink: any;
-    pdfSrc: string;
+    fileViewerUrl: string;
+    isDocumentDisplay = true;
+    showDocument = true;
+    showInformation = false;
 
     @ViewChild('paginator')
     paginator: MatPaginator;
@@ -45,9 +48,6 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
 
     @ViewChild(MatSort)
     sort: MatSort;
-
-    src = "https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf";
-    private DEFAULT = 'Non renseigné';
 
 
     constructor(
@@ -59,6 +59,7 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
         protected _formBuilder: FormBuilder,
         protected clientResolver:  DocumentDisplayResolver,
         private activatedRoute: ActivatedRoute,
+        public dialog: MatDialog,
     ) {
         super(_notificationService, dialogService, _translateService, _service, _router);
     }
@@ -68,7 +69,7 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
         this.dossierID = this.activatedRoute.snapshot.params['idDossier'];
         this.document = this.clientResolver.document;
         this. documentEditLink = '/' + Paths.configurationPath('documents/' + this. document.id);
-       this.pdfSrc = this.clientResolver.document.url;
+       this.fileViewerUrl = this.clientResolver.document.url;
     }
 
 
@@ -125,6 +126,19 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
                 });
             });
     }
+// telecharger document
+   public downloadDocument(){
+       this._service.downloadFile(this.document);
+   }
 
+    openDisplayDialogue(){
+        this.showDocument = false;
+        this.showInformation = true;
+    }
+
+    activeShowDocument(){
+        this.showDocument = true;
+        this.showInformation = false;
+    }
 
 }

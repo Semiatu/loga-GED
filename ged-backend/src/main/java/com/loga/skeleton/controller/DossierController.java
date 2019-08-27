@@ -13,6 +13,7 @@ import ml.smk.common.util.recherche.TypeEgalite;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -99,6 +100,11 @@ public class DossierController extends AbstractController<Dossier, Long, Dossier
     @PostMapping("deplace-all-selected")
     public void deplaceAllSelected(@RequestBody ContenuDossierWrapper contenuDossierWrapper){
         this.abstractService.deplaceAllSelected(contenuDossierWrapper);
+    }
+
+    @PostMapping("create")
+    public ResponseEntity create(@RequestBody Dossier entity, Authentication authentication) {
+        return responseExact(abstractService.save(entity,authentication));
     }
 
 }

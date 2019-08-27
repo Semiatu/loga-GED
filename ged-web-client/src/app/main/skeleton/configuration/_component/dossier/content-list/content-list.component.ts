@@ -22,6 +22,15 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SelectionModel} from "@angular/cdk/collections";
 import {ContenuDossierWrapper} from "../../../wrapper/contenu-dossier-wrapper";
 import {DossierGenericFormComponent} from "../dossier-generic-form/dossier-generic-form.component";
+import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import { faFile} from "@fortawesome/free-solid-svg-icons";
+import { faFilePdf} from "@fortawesome/free-solid-svg-icons/faFilePdf";
+import { faFileWord} from "@fortawesome/free-solid-svg-icons";
+import { faFilePowerpoint} from "@fortawesome/free-solid-svg-icons";
+import { faFileExcel} from "@fortawesome/free-solid-svg-icons";
+import { faFolder} from "@fortawesome/free-solid-svg-icons";
+import { faFileImage} from "@fortawesome/free-solid-svg-icons";
+import { faImage } from "@fortawesome/free-solid-svg-icons";
 
 
 @Component({
@@ -33,7 +42,7 @@ import {DossierGenericFormComponent} from "../dossier-generic-form/dossier-gener
 })
 export class ContentListComponent extends GenericListComponent<Dossier, DossierService> implements OnInit, OnDestroy {
 
-    displayedColumns: string[] = ['select', 'id', 'nom', 'type', 'lastModifiedDate', 'actions'];
+    displayedColumns: string[] = ['select', 'id', 'icon' ,'nom', 'type', 'lastModifiedDate', 'actions'];
     public myDataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
 
@@ -58,6 +67,15 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     form: FormGroup;
     sauvegardeNom: string;
     contenuDossierWrapper: ContenuDossierWrapper = new ContenuDossierWrapper();
+
+    faCoffee = faCoffee;
+    faFilePdf = faFilePdf;
+    faFileWord = faFileWord;
+    faFilePowerpoint = faFilePowerpoint;
+    faFileExcel = faFileExcel;
+    faFolder = faFolder;
+    faFileImage = faFileImage;
+    faImage = faImage;
 
 
     private _unsubscribeAll: Subject<any>;
@@ -287,7 +305,8 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         if (component.dossier && component.dossier.id) {
             return this.baseLink + '/content/' + component.dossier.id;
         } else if (component.document && component.document.id) {
-            return this.documentLink + '/' + component.document.id + '/dossier/' + component.document.dossier.id + '/display';
+            // return this.documentLink + '/' + component.document.id + '/dossier/' + component.document.dossier.id + '/display';
+            return this.documentLink + '/' + component.document.id + '/dossier/3/display';
         }
 
     }

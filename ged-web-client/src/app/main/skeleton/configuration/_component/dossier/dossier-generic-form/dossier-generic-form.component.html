@@ -75,8 +75,17 @@
     </div>
     &lt;!&ndash; / CENTER &ndash;&gt;
 </div>-->
-<div fxLayout="row" fxLayoutAlign="center none" >
+
+<div fxLayout="row" fxLayoutAlign="end" style="color: #0B60A9">
+    <div  style="width: 5%; color: #F5F5F5"  fxLayout="row" fxLayoutAlign="end start">
+        <mat-icon matSuffix class="secondary-text" color="primary" (click)="onNoClick()" style="cursor: pointer">clear</mat-icon>
+    </div>
+</div>
+
+<div class="" fxLayout="row" fxLayoutAlign="center" >
+
     <h1 mat-dialog-title layout-align="center" >Nouveau dossier</h1>
+
 </div>
 
 <div mat-dialog-content>
@@ -92,15 +101,14 @@
                 </mat-error>
             </mat-form-field>
         </form>
+
     </div>
 </div>
 
-<div mat-dialog-actions>
-    <div fxLayout="row" fxLayoutAlign="center center" >
-        <button mat-raised-button align="left" style="background-color: dimgray; color: #F5F5F5;" mat-button (click)="onNoClick()">Annuler</button>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="center">
+    <div>
         <div  *ngIf="data.action === 'add'" style="margin-left: 5%">
-
-            <button mat-raised-button  color="accent" class="add" matTooltip="{{ 'APP.ADD_BTN' | translate }}"
+            <button  mat-raised-button  color="accent" class="add" matTooltip="{{ 'APP.ADD_BTN' | translate }}"
                     (click)="_save()" [disabled]="!form.valid">
                 {{ 'APP.ADD_BTN' | translate }} <i class="material-icons">check</i>
             </button>

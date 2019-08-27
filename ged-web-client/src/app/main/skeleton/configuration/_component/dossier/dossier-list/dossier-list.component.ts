@@ -15,7 +15,6 @@ import {Helpers} from "../../../../../../../@externals/loga/_utility";
 import {DossierDatasource} from "../../../_datasource";
 import {fuseAnimations} from "../../../../../../../@externals/fuse/@fuse/animations";
 import {ActivatedRoute} from "@angular/router";
-import {DocumentDisplayResolver} from "../../../_resolver/document/document.display.resolver";
 import {DossierDisplayResolver} from "../../../_resolver/dossier/dossier.display.resolver";
 
 @Component({

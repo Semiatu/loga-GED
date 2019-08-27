@@ -8,6 +8,7 @@ import ml.smk.common.util.recherche.TypeEgalite;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.loga.skeleton.domain.criteria.RaccourciSearchCriteria;
@@ -33,8 +34,8 @@ public class RaccourciController extends AbstractController<Raccourci, Long, Rac
     }
 
     @PostMapping("cree-raccourci-de-raccourci/{id}")
-    public ResponseEntity creerRaccourciPourRacourcisave(@RequestBody Raccourci raccourci, @PathVariable  Long id){
-        return responseExact(abstractService.creerRaccourciPourRacourcisave(raccourci,id));
+    public ResponseEntity creerRaccourciPourRacourcisave(@RequestBody Raccourci raccourci, @PathVariable Long id) {
+        return responseExact(abstractService.creerRaccourciPourRacourcisave(raccourci, id));
     }
 
     @PutMapping("add-corbeille/{id}")
@@ -43,7 +44,8 @@ public class RaccourciController extends AbstractController<Raccourci, Long, Rac
     }
 
     @PutMapping("restaurer/{id}")
-    public void restaurer(@PathVariable Long id){
+    public void restaurer(@PathVariable Long id, Authentication authentication) {
+        System.out.println("authentication = " + authentication.getName());
         abstractService.restaurer(id);
     }
 

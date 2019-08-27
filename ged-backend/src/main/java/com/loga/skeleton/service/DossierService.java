@@ -1,14 +1,19 @@
 package com.loga.skeleton.service;
 
+import com.loga.as.entity.User;
+import com.loga.as.service.UserService;
 import com.loga.bebase.service.AbstractLongService;
 import com.loga.bebase.wrapper.ResponseWrapper;
+import com.loga.skeleton.domain.entity.Authorisation;
 import com.loga.skeleton.domain.entity.Document;
 import com.loga.skeleton.domain.entity.Dossier;
 import com.loga.skeleton.domain.entity.Raccourci;
+import com.loga.skeleton.domain.enumeration.Privilege;
 import com.loga.skeleton.repository.DossierRepository;
 import com.loga.skeleton.wrapper.ContenuDossierWrapper;
 import com.loga.skeleton.wrapper.TreeDataWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
@@ -29,6 +34,10 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
     DocumentService documentService;
     @Autowired
     RaccourciService raccourciService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    AuthorisationService authorisationService;
 
     private List<Long> idDossiers = new ArrayList<>();
     private List<Long> idRacourcis = new ArrayList<>();
@@ -54,10 +63,37 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
         }
     }
 
-    @Override
-    public ResponseWrapper<Dossier> save(Dossier entity) {
+    public ResponseWrapper<Authorisation> partager(Long idDossier, Authentication authentication){
+        Optional<Dossier> optionalDossier = this.repositoryManager.findById(idDossier);
+
+        if (!optionalDossier.isPresent()) return ResponseWrapper.of(null);
+
+        User user = this.userService.findByUsername(authentication.getName());
+        Optional<Authorisation> optionalAuthorisation = this.authorisationService.getRepository().findByDossierIdAndUserUsername(idDossier, user.getUsername());
+
+        if (!optionalAuthorisation.isPresent()) return ResponseWrapper.of(null);
+
+        if (optionalAuthorisation.get().getPrivilege() == Privilege.LIRE) return ResponseWrapper.of(" Vous n'avez pas l'autorisaton de partager ce document!");
+
+        return ResponseWrapper.of(null);
+
+    }
+
+    public ResponseWrapper<Dossier> save(Dossier entity, Authentication authentication) {
         if (isNull(entity.getDossierParent()) || entity.getDossierParent().getId() == 0) entity.setDossierParent(null);
-        return super.save(entity);
+
+        ResponseWrapper<Dossier> responseWrapper = super.save(entity);
+
+        if (responseWrapper.isValid()){
+            User user = this.userService.findByUsername(authentication.getName());
+            Authorisation authorisation = new Authorisation();
+            authorisation.setDossier(responseWrapper.getEntity());
+            authorisation.setUser(user);
+            authorisation.setPrivilege(Privilege.SUPPRIMER);
+            this.authorisationService.save(authorisation);
+        }
+
+        return responseWrapper;
     }
 
     @Override
@@ -447,6 +483,19 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
 
     }
 
+    private Privilege getPrivilege(Dossier dossier, String usernane){
+        Optional<Authorisation> authorisation =
+                this.authorisationService.getRepository().findByDossierIdAndUserUsername(dossier.getId(), usernane);
+        if (authorisation.isPresent()) return authorisation.get().getPrivilege();
+        return null;
+    }
+
+    private Privilege getPrivilege(Document document, String usernane){
+        Optional<Authorisation> authorisation =
+                this.authorisationService.getRepository().findByDocumentIdAndUserUsername(document.getId(), usernane);
+        if (authorisation.isPresent()) return authorisation.get().getPrivilege();
+        return null;
+    }
 
     @Transactional
     public void deplaceAllSelected(ContenuDossierWrapper contenuDossierWrapper) {

@@ -10,6 +10,8 @@ import ml.smk.common.util.recherche.RechercheSimpleModel;
 import ml.smk.common.util.recherche.TypeEgalite;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,5 +44,10 @@ public class DocumentController extends AbstractController<Document, Long , Docu
     @PutMapping("restaurer/{id}")
     public void restaurer(@PathVariable Long id){
         abstractService.restaurer(id);
+    }
+
+    @PostMapping("create")
+    public ResponseEntity create(@RequestBody Document entity, Authentication authentication) {
+        return responseExact(abstractService.save(entity,authentication));
     }
 }

@@ -89,4 +89,10 @@ export class DossierService extends AbstractService<Dossier, number> {
         return this.httpClient.post(encodeURI(this.apiUrl + this.address() + '/deplace-all-selected/'),contenuDossierWrapper,  this.baseOption)
             .pipe(catchError(this.handleError));
     }
+
+    public save(entity: Dossier) {
+        return this.httpClient.post(encodeURI(this.apiUrl.concat(this.address() + '/create')), JSON.stringify(entity), this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
+
 }

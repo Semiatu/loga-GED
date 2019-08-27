@@ -78,6 +78,13 @@ import { RaccourciFormComponent } from './_component/dossier/raccourci-form/racc
 import { RaccourciGenericFormComponent } from './_component/dossier/raccourci-generic-form/raccourci-generic-form.component';
 import { CorbeilleListComponent } from './_component/corbeille-list/corbeille-list.component';
 import {PdfViewerModule} from "ng2-pdf-viewer";
+import {NgxDocViewerModule} from "ngx-doc-viewer";
+import {ImageViewerModule} from "ng2-image-viewer";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import { CategorieListComponent } from './_component/categorie/categorie-list/categorie-list.component';
+import { CategorieFormComponent } from './_component/categorie/categorie-form/categorie-form.component';
+import { CategorieGenericFormComponent } from './_component/categorie/categorie-generic-form/categorie-generic-form.component';
+import { CategorieDisplayFormComponent } from './_component/categorie/categorie-display-form/categorie-display-form.component';
 
 @NgModule({
 
@@ -98,6 +105,10 @@ import {PdfViewerModule} from "ng2-pdf-viewer";
         RaccourciFormComponent,
         RaccourciGenericFormComponent,
         CorbeilleListComponent,
+        CategorieListComponent,
+        CategorieFormComponent,
+        CategorieGenericFormComponent,
+        CategorieDisplayFormComponent,
     ],
 
     imports: [
@@ -153,6 +164,9 @@ import {PdfViewerModule} from "ng2-pdf-viewer";
         TreeModule,
         DialogModule,
         PdfViewerModule,
+        NgxDocViewerModule,
+        ImageViewerModule,
+        FontAwesomeModule,
     ],
 
     providers: [

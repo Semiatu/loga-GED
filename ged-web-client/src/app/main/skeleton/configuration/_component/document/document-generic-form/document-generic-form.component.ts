@@ -10,8 +10,6 @@ import {fuseAnimations} from "../../../../../../../@externals/fuse/@fuse/animati
 import * as firebase from 'firebase';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
-import {UploadTask} from "@angular/fire/storage/interfaces";
-import {AngularFireStorage} from "@angular/fire/storage";
 import {DossierDisplayResolver} from "../../../_resolver/dossier/dossier.display.resolver";
 
 @Component({

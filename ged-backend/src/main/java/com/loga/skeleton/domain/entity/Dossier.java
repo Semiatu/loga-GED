@@ -1,6 +1,7 @@
 package com.loga.skeleton.domain.entity;
 
 import com.loga.bebase.entity.AbstractEntity;
+import com.loga.skeleton.domain.enumeration.Privilege;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,9 @@ public class Dossier extends AbstractEntity {
 
     @ManyToOne
     private Dossier dossierParent;
+
+    @Transient
+    private Privilege privilege;
 
 
 
