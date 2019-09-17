@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AbstractService} from 'src/@externals/loga/_abstract/abstract.service';
-import {Document, Dossier, Raccourci} from 'src/app/main/skeleton/configuration/_model';
+import {Authorisation, Document, Dossier, Raccourci} from 'src/app/main/skeleton/configuration/_model';
 import {DossierCriteria} from "../_criteria";
 import {Observable} from "rxjs";
 import {HttpEvent} from "@angular/common/http";
@@ -31,8 +31,8 @@ export class DossierService extends AbstractService<Dossier, number> {
     }
 
     //contenu d'un dossier
-    getContent(idDossier) {
-        return this.httpClient.get<ContenuDossierWrapper>(encodeURI(this.apiUrl + this.address() + '/get-content/' + idDossier), this.baseOption)
+    getContent(idDossier){
+        return this.httpClient.get<Authorisation[]>(encodeURI(this.apiUrl + this.address() + '/get-content/' + idDossier), this.baseOption)
             .pipe(catchError(this.handleError));
     }
 
@@ -90,7 +90,7 @@ export class DossierService extends AbstractService<Dossier, number> {
             .pipe(catchError(this.handleError));
     }
 
-    public save(entity: Dossier) {
+    public save(entity) {
         return this.httpClient.post(encodeURI(this.apiUrl.concat(this.address() + '/create')), JSON.stringify(entity), this.baseOption)
             .pipe(catchError(this.handleError));
     }

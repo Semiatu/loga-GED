@@ -14,7 +14,7 @@ import {SnackBarService} from 'src/@externals/loga/snack-bar/snack.bar.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSort} from '@angular/material';
 import {fuseAnimations} from '../../../../../../../@externals/fuse/@fuse/animations';
 import {DialogService} from '../../../../../../../@externals/loga/dialog/dialog.service';
-import { DocumentService} from '../../../_service';
+import {DocumentService, UploadService} from '../../../_service';
 import {DocumentDisplayResolver} from "../../../_resolver/document/document.display.resolver";
 import {DocumentGenericFormComponent} from "../document-generic-form/document-generic-form.component";
 
@@ -54,6 +54,7 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
         protected _notificationService: SnackBarService,
         protected dialogService: DialogService,
         protected _service:  DocumentService,
+        protected uploadService:  UploadService,
         protected _translateService: TranslateService,
         protected _router: Router,
         protected _formBuilder: FormBuilder,
@@ -128,7 +129,7 @@ export class  DocumentDisplayFormComponent extends GenericPersistenceComponent< 
     }
 // telecharger document
    public downloadDocument(){
-       this._service.downloadFile(this.document);
+       this.uploadService.downloadFile(this.document);
    }
 
     openDisplayDialogue(){

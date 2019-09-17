@@ -45,5 +45,5 @@ public class LogaSkeletonApplication {
     public LogInterface getLogInterface() {
         return new LoggerImpl();
     }
-    
+
 }

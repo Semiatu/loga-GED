@@ -44,11 +44,11 @@ public class DossierController extends AbstractController<Dossier, Long, Dossier
     }
 
     @GetMapping("get-content/{idDossier}")
-    public ResponseEntity<ContenuDossierWrapper> getContent(@PathVariable Long idDossier) {
+    public ResponseEntity getContent(@PathVariable Long idDossier, Authentication authentication) {
         if (!findAllSupport()) {
             return error();
         }
-        return ok(abstractService.getContent(idDossier).getEntity());
+        return ok(abstractService.getContent(idDossier, authentication).getEntity());
     }
 
     @GetMapping("get-corbeille-content")
@@ -57,8 +57,8 @@ public class DossierController extends AbstractController<Dossier, Long, Dossier
     }
 
     @GetMapping("get-tree-data/{idDossier}")
-    public ResponseEntity<List<TreeDataWrapper>> getTreeData(@PathVariable Long idDossier) {
-        return ok(abstractService.getTreeData(idDossier).getEntity());
+    public ResponseEntity<List<TreeDataWrapper>> getTreeData(@PathVariable Long idDossier, Authentication authentication) {
+        return ok(abstractService.getTreeData(idDossier, authentication).getEntity());
     }
 
     @PostMapping("get-dossier-tree-data/{idParent}")

@@ -86,18 +86,78 @@
                 </ng-container>
 
                 <!-- nom Column -->
-                <ng-container matColumnDef="nom">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Nom</mat-header-cell>
-                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm style="align-corbeille: flex-start">
-                        <mat-icon style="color:#03A9F4" *ngIf="isDocument(component)">description</mat-icon>
-                        <mat-icon style="color: burlywood" *ngIf="isDossier(component)">folder</mat-icon>
-                        <mat-icon style="color: burlywood" *ngIf="isRaccourciOfDossier(component)">folder</mat-icon>
-                        <mat-icon style="margin-bottom: -10px; margin-left: -20px; color: burlywood" *ngIf="isRaccourciOfDossier(component)">reply</mat-icon>
-                        <mat-icon style="color: #03A9F4" *ngIf="isRaccourciOfDocument(component)">description</mat-icon>
-                        <mat-icon style="margin-bottom: -10px; color:#03A9F4 ; margin-left: -20px" *ngIf="isRaccourciOfDocument(component)">reply</mat-icon>
-                        <p class="text-truncate">{{ component.nom }}</p>
+                <ng-container matColumnDef="icon">
+
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm></mat-header-cell>
+
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm style="align-content: flex-start">
+
+                        <fa-icon style="font-size: 1.57em; color:#EF5350" [icon]="faFilePdf"
+                                 *ngIf="isDocument(component) && component.document.typeDocument.nom.includes('pdf')"></fa-icon>
+
+                        <fa-icon style="font-size: 1.52em; color: #268BD2" [icon]="faImage"
+                                 *ngIf="isDocument(component) && component.document.typeDocument.nom.includes('image')"></fa-icon>
+
+                        <fa-icon style="font-size: 1.57em; color: #268BD2" [icon]="faFileWord"
+                                 *ngIf="isDocument(component) && component.document.nom.includes('doc' || 'docx')"></fa-icon>
+
+                        <fa-icon style="font-size: 1.57em; color: coral" [icon]="faFilePowerpoint"
+                                 *ngIf="isDocument(component) && component.document.nom.includes('ppt' || 'pptx')"></fa-icon>
+
+                        <fa-icon style="font-size: 1.57em; color: #2E7D32" [icon]="faFileExcel"
+                                 *ngIf="isDocument(component) && component.document.nom.includes('xls')"></fa-icon>
+
+                        <fa-icon style="font-size: 1.57em; color: burlywood" [icon]="faFolder"
+                                 *ngIf="isDossier(component)"></fa-icon>
+
+                        <!-- raccourci icon -->
+
+                        <!-- raccourciOfDossier -->
+                        <fa-icon style="font-size: 1.57em; color: burlywood" [icon]="faFolder"
+                                 *ngIf="isRaccourciOfDossier(component)"></fa-icon>
+                        <mat-icon style="margin-bottom: -14px; margin-left: -12px ; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDossier(component)">reply
+                        </mat-icon>
+                        <!-- raccourciOfDocumentPdf -->
+                        <fa-icon style="font-size: 1.57em; color: #EF5350" [icon]="faFilePdf"
+                                 *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.typeDocument.nom.includes('pdf')"></fa-icon>
+                        <mat-icon style="margin-bottom: -19px; margin-left: -11px; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.nom.includes('pdf')">reply
+                        </mat-icon>
+                        <!-- raccourciOfImage -->
+                        <fa-icon style="font-size: 1.52em; color: #268BD2" [icon]="faImage"
+                                 *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.typeDocument.nom.includes('image')"></fa-icon>
+                        <mat-icon style="margin-bottom: -12px; margin-left: -12px; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.typeDocument.nom.includes('image')">reply
+                        </mat-icon>
+                        <!-- raccourciOfDocumentWord -->
+                        <fa-icon style="font-size: 1.57em; color: #268BD2" [icon]="faFileWord"
+                                 *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.nom.includes('doc' || 'docx')"></fa-icon>
+                        <mat-icon style="margin-bottom: -19px; margin-left: -11px; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDocument(component)  && component.raccourci.document.nom.includes('doc' || 'docx')">reply
+                        </mat-icon>
+                        <!-- raccourciOfDocumentPPT -->
+                        <fa-icon style="font-size: 1.57em; color: coral" [icon]="faFilePowerpoint"
+                                 *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.nom.includes('ppt' || 'pptx')"></fa-icon>
+                        <mat-icon style="margin-bottom: -19px; margin-left: -11px; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.nom.includes('ppt' || 'pptx')">reply
+                        </mat-icon>
+                        <!-- raccourciOfDocumentExcel -->
+                        <fa-icon style="font-size: 1.57em; color: #2E7D32" [icon]="faFileExcel"
+                                 *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.nom.includes('xls')"></fa-icon>
+                        <mat-icon style="margin-bottom: -19px; margin-left: -11px; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDocument(component)&& component.raccourci.document.nom.includes('xls')">reply
+                        </mat-icon>
                     </mat-cell>
                 </ng-container>
+
+                <ng-container matColumnDef="nom">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Nom</mat-header-cell>
+                    <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm style="align-content: flex-start">
+                        <p class="text-truncate">{{ getName(component) }}</p>
+                    </mat-cell>
+                </ng-container>
+
 
                 <!-- type Column -->
                 <ng-container matColumnDef="type">

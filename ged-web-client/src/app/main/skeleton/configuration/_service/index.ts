@@ -3,3 +3,4 @@ export * from './document.service';
 export * from './dossier.service';
 export * from './upload.service';
 export * from './categorie.service';
+export * from './revision.service';

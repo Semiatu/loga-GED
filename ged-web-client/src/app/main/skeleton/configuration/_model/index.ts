@@ -3,3 +3,8 @@ export * from './document';
 export * from './dossier';
 export * from './typeDocument';
 export * from './raccourci';
+export * from './categorie';
+export * from './revision';
+export * from './authorisation';
+export * from './privilege';
+export * from './langue';

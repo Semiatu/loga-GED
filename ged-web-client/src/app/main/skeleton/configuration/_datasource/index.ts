@@ -5,3 +5,5 @@ export * from './typeDocument.datasource';
 export * from './content.wrapper.datasource';
 export * from './raccourci.datasource';
 export * from './categorie.datasource';
+export * from './revision.datasource';
+export * from './langue.datasource';

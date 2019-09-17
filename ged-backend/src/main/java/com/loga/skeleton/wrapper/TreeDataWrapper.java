@@ -1,5 +1,6 @@
 package com.loga.skeleton.wrapper;
 
+import com.loga.skeleton.domain.entity.Authorisation;
 import com.loga.skeleton.domain.entity.Document;
 import com.loga.skeleton.domain.entity.Dossier;
 import com.loga.skeleton.domain.entity.Raccourci;
@@ -8,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
+import static java.util.Objects.nonNull;
 
 @Data
 @NoArgsConstructor
@@ -58,6 +61,14 @@ public class TreeDataWrapper {
     public static TreeDataWrapper ofFichier(String label, String data, TreeEnumeration type) {
         return new TreeDataWrapper(label,data,type);
     }*/
+
+
+
+    public static TreeDataWrapper mapAuthentification(Authorisation authorisation) {
+        if (nonNull(authorisation.getDossier()) && nonNull(authorisation.getDossier().getId())) return mapDossier(authorisation.getDossier());
+        if (nonNull(authorisation.getDocument()) && nonNull(authorisation.getDocument().getId())) return mapDocument(authorisation.getDocument());
+        return mapRacourci(authorisation.getRaccourci());
+    }
 
     public static TreeDataWrapper mapDocument(Document document) {
         return new TreeDataWrapper(document.getNom(),String.valueOf(document.getId()), TreeEnumeration.DOCUMENT);

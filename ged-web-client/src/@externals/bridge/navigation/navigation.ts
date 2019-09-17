@@ -57,7 +57,7 @@ export const navigation: ExtendedFuseNavigation[] = [
         {
             id: 'Dossiers',
             title: 'ged',
-            translate: 'Gestion des documents',
+            translate: 'Dossier',
             type: 'item',
             icon: 'folder',
             url: Paths.join(Paths.configurationPath('dossiers'), 'content/0'),
@@ -72,7 +72,24 @@ export const navigation: ExtendedFuseNavigation[] = [
             url: Paths.configurationPath('corbeille'),
             role: 'squeleton'
         },
-
+      /*  {
+            id: 'Categories',
+            title: 'Categorie',
+            translate: 'Categorie',
+            type: 'item',
+            icon: 'library_books',
+            url: Paths.configurationPath('categories'),
+            role: 'squeleton'
+        },
+        {
+            id: 'Langues',
+            title: 'Langue',
+            translate: 'Langue',
+            type: 'item',
+            icon: 'language',
+            url: Paths.configurationPath('langues'),
+            role: 'squeleton'
+        },*/
         /* {
             id: 'Documents',
             title: 'Document',

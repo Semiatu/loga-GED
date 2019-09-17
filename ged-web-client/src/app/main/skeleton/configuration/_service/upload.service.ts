@@ -4,7 +4,6 @@ import * as firebase from 'firebase';
 import {Document} from "../_model";
 import {FirebaseListObservable} from "@angular/fire/database-deprecated";
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -12,10 +11,11 @@ export class UploadService {
 
     private basePath: string = '/documents';
     private documentTask: firebase.storage.UploadTask;
-     docRef : AngularFireList<Document>;
+    docRef : AngularFireList<Document>;
     name: string;
     x = document.getElementById("demo");
     documents: FirebaseListObservable<any[]>;
+
 
 
     constructor(protected db: AngularFireDatabase) {
@@ -28,13 +28,45 @@ export class UploadService {
     pushDocument(document: Document) {
         let storageRef = firebase.storage().ref();
         return  storageRef.child(this.basePath + '/' + document.nom).put(document.file);
+
+    }
+
+    public downloadFile(document1: Document): void{
+           const url = document1.url;
+            // This can be downloaded directly:
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = function(event) {
+                const blob = xhr.response;
+                console.log(blob);
+
+                let binaryData = [];
+                binaryData.push(blob);
+                let downloadLink = document.createElement('a');
+                downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, {type: document1.typeDocument.nom}));
+                downloadLink.setAttribute('download', document1.nom);
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+            };
+            xhr.open('GET', url);
+            xhr.send();
+
+    }
+
+
+
+    // la reference du document
+    documentRef(document: Document) {
+        let storage = firebase.storage();
+        let pathReference = storage.ref( this.basePath + '/' + document.nom);
+        let gsReference = storage.refFromURL('gs://bucket' + this.basePath + '/' + document.nom);
     }
 
     private saveFileData(document: Document) {
         this.db.list(`${this.basePath}/`).push(document);
     }
 
-    //supprimer le document uploader
+    //supprimer le document uploade
     deleteFileUpload(document: Document) {
         /*this.deleteFileData(document.$key)
             .then(() => {

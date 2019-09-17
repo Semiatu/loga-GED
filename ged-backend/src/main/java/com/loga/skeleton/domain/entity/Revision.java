@@ -15,15 +15,8 @@ import java.util.Date;
 @Table(name = "revision")
 public class Revision extends AbstractEntity {
 
-    @Column(name = "nom")
-    private double nom;
-
     @Column(name = "versionPrecedente")
-    private String versionPrecedente;
-
-    @Column(name = "dateRevision")
-    @Temporal(TemporalType.DATE)
-    private Date dateRevision;
+    private double versionPrecedente;
 
     @ManyToOne
     private Document document;

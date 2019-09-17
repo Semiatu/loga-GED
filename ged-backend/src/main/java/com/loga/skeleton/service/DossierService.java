@@ -11,6 +11,7 @@ import com.loga.skeleton.domain.entity.Raccourci;
 import com.loga.skeleton.domain.enumeration.Privilege;
 import com.loga.skeleton.repository.DossierRepository;
 import com.loga.skeleton.wrapper.ContenuDossierWrapper;
+import com.loga.skeleton.wrapper.SharedWrapper;
 import com.loga.skeleton.wrapper.TreeDataWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -63,19 +64,27 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
         }
     }
 
-    public ResponseWrapper<Authorisation> partager(Long idDossier, Authentication authentication){
-        Optional<Dossier> optionalDossier = this.repositoryManager.findById(idDossier);
+    public ResponseWrapper<Authorisation> partager(SharedWrapper sharedWrapper, Authentication authentication) {
+        Optional<Dossier> optionalDossier = this.repositoryManager.findById(sharedWrapper.getIdEntity());
 
-        if (!optionalDossier.isPresent()) return ResponseWrapper.of(null);
+        if (!optionalDossier.isPresent()) return ResponseWrapper.of("Information non trouvée");
 
         User user = this.userService.findByUsername(authentication.getName());
-        Optional<Authorisation> optionalAuthorisation = this.authorisationService.getRepository().findByDossierIdAndUserUsername(idDossier, user.getUsername());
+        Optional<Authorisation> optionalAuthorisation = this.authorisationService.getRepository().findByDossierIdAndUserUsername(sharedWrapper.getIdEntity(), user.getUsername());
 
-        if (!optionalAuthorisation.isPresent()) return ResponseWrapper.of(null);
+        if (!optionalAuthorisation.isPresent()) return ResponseWrapper.of("Information non trouvée");
 
-        if (optionalAuthorisation.get().getPrivilege() == Privilege.LIRE) return ResponseWrapper.of(" Vous n'avez pas l'autorisaton de partager ce document!");
+        if (optionalAuthorisation.get().getPrivilege() == Privilege.LIRE)
+            return ResponseWrapper.of(" Vous n'avez pas l'autorisaton de partager ce document!");
 
-        return ResponseWrapper.of(null);
+        Optional<User> optionalUser = this.userService.getRepository().findById(sharedWrapper.getUserId());
+        if (!optionalUser.isPresent()) return ResponseWrapper.of("utilisateur non trouvé");
+
+        Authorisation authorisation = new Authorisation();
+        authorisation.setUser(optionalUser.get());
+        authorisation.setDossier(optionalDossier.get());
+        authorisation.setPrivilege(sharedWrapper.getPrivilege());
+        return this.authorisationService.save(authorisation);
 
     }
 
@@ -84,7 +93,7 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
 
         ResponseWrapper<Dossier> responseWrapper = super.save(entity);
 
-        if (responseWrapper.isValid()){
+        if (responseWrapper.isValid()) {
             User user = this.userService.findByUsername(authentication.getName());
             Authorisation authorisation = new Authorisation();
             authorisation.setDossier(responseWrapper.getEntity());
@@ -98,12 +107,103 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
 
     @Override
     public ResponseWrapper<Dossier> update(Long id, Dossier entity) {
-        if (entity.getDossierParent().getId() == 0) entity.setDossierParent(null);
+        if (nonNull(entity.getDossierParent()) && entity.getDossierParent().getId() == 0) entity.setDossierParent(null);
         return super.update(id, entity);
     }
 
     public List<Dossier> findByDossierParentIsNull(Pageable pageable) {
         return this.repositoryManager.findByDossierParentIsNullAndEtatSuppressionIsFalse(pageable);
+    }
+
+
+    public ResponseWrapper<List<Authorisation>> getIdNullAuthorisation(Authentication authentication) {
+
+        List<Authorisation> returnList = new ArrayList<>();
+
+        List<Authorisation> authorisationsDocument = this.authorisationService.getRepository().findByUserUsernameAndDocumentNotNull(authentication.getName());
+
+        System.out.println("authorisationsDocument.size() = " + authorisationsDocument.size());
+        for (Authorisation authorisation : authorisationsDocument) {
+
+            if (!this.dossierParentExiste(authorisation.getDocument().getDossier(), authentication))
+                returnList.add(authorisation);
+        }
+
+        List<Authorisation> authorisationsDossier = this.authorisationService.getRepository().findByUserUsernameAndDossierIsNotNull(authentication.getName());
+
+        System.out.println("authorisationsDossier.size() = " + authorisationsDossier.size());
+
+        List<Authorisation> authorisationsRaccourci = this.authorisationService.getRepository().findByRaccourciIsNotNullAndRaccourciEmplacementIsNullAndUserUsername(authentication.getName());
+
+        System.out.println("authorisationsRaccourci.size() = " + authorisationsRaccourci.size());
+        returnList.addAll(authorisationsRaccourci);
+
+        for (Authorisation authorisation : authorisationsDossier) {
+
+            System.out.println("this.authorisationParentExiste(authorisation, authentication) = " + this.authorisationParentExiste(authorisation, authentication));
+            if (!this.authorisationParentExiste(authorisation, authentication)) returnList.add(authorisation);
+        }
+
+        return ResponseWrapper.of(returnList);
+    }
+
+
+    public ResponseWrapper<List<Authorisation>> getIdNotNullAuthorisation(Long idDossier, Authentication authentication) {
+
+        List<Authorisation> returnList = new ArrayList<>();
+
+        returnList.addAll(this.authorisationService.getRepository().findByDocumentDossierIdAndUserUsername(idDossier, authentication.getName()));
+
+
+        returnList.addAll(this.authorisationService.getRepository().findByDossierDossierParentIdAndUserUsername(idDossier, authentication.getName()));
+        returnList.addAll(this.authorisationService.getRepository().findByRaccourciEmplacementIdAndUserUsername(idDossier, authentication.getName()));
+
+        return ResponseWrapper.of(returnList);
+    }
+
+    public ResponseWrapper<List<Authorisation>> getContent(Long idDossier, Authentication authentication) {
+
+        if (idDossier == 0) {
+            return this.getIdNullAuthorisation(authentication);
+        }
+
+        return this.getIdNotNullAuthorisation(idDossier, authentication);
+
+    }
+
+    public boolean authorisationParentExiste(Authorisation authorisation, Authentication authentication) {
+
+        if (nonNull(authorisation.getDossier()))
+            return this.dossierParentExiste(authorisation.getDossier().getDossierParent(), authentication);
+        return false;
+
+    }
+
+    public boolean dossierParentExiste(Dossier dossier, Authentication authentication) {
+
+        if (dossier == null) return false;
+        List<Long> ids = new ArrayList<>();
+
+        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            ids.add(dossier.getId());
+            if (nonNull(dossier.getDossierParent())) {
+                dossier = dossier.getDossierParent();
+            } else {
+                break;
+            }
+
+            System.out.println("i = " + i);
+        }
+        if (ids.size() > 0)
+            return this.authorisationService.getRepository().findByUserNameAndIds(authentication.getName(), ids).size() > 0;
+        return false;
+
+    }
+
+
+    public Authorisation setParent(Authorisation authorisation, Authentication authentication) {
+
+        return null;
     }
 
 
@@ -134,7 +234,7 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
     }
 
 
-    public ResponseWrapper<List<TreeDataWrapper>> getTreeData(Long idDossier) {
+    public ResponseWrapper<List<TreeDataWrapper>> getTreeData2(Long idDossier) {
         List<TreeDataWrapper> dataWrapperList = new ArrayList<>();
 
         ResponseWrapper<ContenuDossierWrapper> contenuDossierWrapper = this.getContent(idDossier);
@@ -161,7 +261,32 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
         return ResponseWrapper.of(dataWrapperList);
     }
 
+
+    public ResponseWrapper<List<TreeDataWrapper>> getTreeData(Long idDossier, Authentication authentication) {
+        List<TreeDataWrapper> dataWrapperList = new ArrayList<>();
+
+        ResponseWrapper<List<Authorisation>> listResponseWrapper = this.getContent(idDossier, authentication);
+
+
+        if (!listResponseWrapper.isValid()) return ResponseWrapper.of(listResponseWrapper.getMessage());
+
+        listResponseWrapper.getEntity()
+                .stream()
+                .map(TreeDataWrapper::mapAuthentification)
+                .map(this::setLeaf)
+                .peek(treeDataWrapper -> dataWrapperList.add(treeDataWrapper))
+                .count();
+        return ResponseWrapper.of(dataWrapperList);
+    }
+
+
     public TreeDataWrapper setLeaf(TreeDataWrapper treeDataWrapper) {
+        if (nonNull(treeDataWrapper.getExpandedIcon())) return this.setLeaf2(treeDataWrapper);
+        return treeDataWrapper;
+    }
+
+
+    public TreeDataWrapper setLeaf2(TreeDataWrapper treeDataWrapper) {
         Dossier dossier = this.repositoryManager.getOne(Long.valueOf(treeDataWrapper.getData()));
         List<Dossier> dossiers = this.getRepository().findByDossierParentAndEtatSuppressionIsFalse(dossier);
 
@@ -189,7 +314,6 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
 
         }
 
-
         dossierList
                 .stream()
                 .filter(dossier -> filterData(dossier, ids))
@@ -203,7 +327,7 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
     }
 
     public boolean filterData(Dossier dossier, List<Long> ids) {
-        for (Long id: ids ) {
+        for (Long id : ids) {
             if ((dossier.getId().equals(id))) return false;
         }
 
@@ -408,7 +532,7 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
         });
 
         contenuDossierWrapper.getDocuments().forEach(document -> this.documentService.delete(document.getId()));
-        contenuDossierWrapper.getRaccourcis().forEach( raccourci -> this.raccourciService.delete(raccourci.getId()));
+        contenuDossierWrapper.getRaccourcis().forEach(raccourci -> this.raccourciService.delete(raccourci.getId()));
         this.documentList.addAll(contenuDossierWrapper.getDocuments());
         return documentList;
     }
@@ -483,14 +607,14 @@ public class DossierService extends AbstractLongService<Dossier, DossierReposito
 
     }
 
-    private Privilege getPrivilege(Dossier dossier, String usernane){
+    private Privilege getPrivilege(Dossier dossier, String usernane) {
         Optional<Authorisation> authorisation =
                 this.authorisationService.getRepository().findByDossierIdAndUserUsername(dossier.getId(), usernane);
         if (authorisation.isPresent()) return authorisation.get().getPrivilege();
         return null;
     }
 
-    private Privilege getPrivilege(Document document, String usernane){
+    private Privilege getPrivilege(Document document, String usernane) {
         Optional<Authorisation> authorisation =
                 this.authorisationService.getRepository().findByDocumentIdAndUserUsername(document.getId(), usernane);
         if (authorisation.isPresent()) return authorisation.get().getPrivilege();

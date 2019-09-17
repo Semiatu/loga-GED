@@ -9,11 +9,12 @@ import { DummyDisplayFormComponent } from './_component/dummy/dummy-display-form
 import { DummyDisplayResolver } from './_resolver/dummy/dummy.display.resolver';
 import {DossierListComponent} from "./_component/dossier/dossier-list/dossier-list.component";
 import {
+    CategorieFormResolver, CategorieListResolver,
     ContentListResolver,
     DocumentFormResolver,
     DocumentListResolver,
     DossierFormResolver,
-    DossierListResolver
+    DossierListResolver, LangueFormResolver, LangueListResolver
 } from "./_resolver";
 import {DossierFormComponent} from "./_component/dossier/dossier-form/dossier-form.component";
 import {DossierDisplayFormComponent} from "./_component/dossier/dossier-display-form/dossier-display-form.component";
@@ -27,6 +28,14 @@ import {RaccourciFormComponent} from "./_component/dossier/raccourci-form/raccou
 import {RaccourciFormResolver} from "./_resolver/dossier/raccourci.form.resolver";
 import {CorbeilleListComponent} from "./_component/corbeille-list/corbeille-list.component";
 import {CorbeilleListResolver} from "./_resolver/dossier/corbeille.list.resolver";
+import {CategorieFormComponent} from "./_component/categorie/categorie-form/categorie-form.component";
+import {CategorieListComponent} from "./_component/categorie/categorie-list/categorie-list.component";
+import {CategorieDisplayResolver} from "./_resolver/categorie/categorie.display.resolver";
+import {CategorieDisplayFormComponent} from "./_component/categorie/categorie-display-form/categorie-display-form.component";
+import {LangueFormComponent} from "./_component/langue/langue-form/langue-form.component";
+import {LangueDisplayResolver} from "./_resolver/langue/langue.display.resolver";
+import {LangueDisplayFormComponent} from "./_component/langue/langue-display-form/langue-display-form.component";
+import {LangueListComponent} from "./_component/langue/langue-list/langue-list.component";
 
 const configurationRoutes: Routes = [
   { path: '', redirectTo: '/dossiers/content/0', pathMatch: 'full' },
@@ -39,6 +48,24 @@ const configurationRoutes: Routes = [
             {path: ':id', component: DummyFormComponent, resolve: {data: DummyFormResolver}},
             {path: ':id/display', component: DummyDisplayFormComponent, resolve: {data: DummyDisplayResolver}},
             {path: 'new', component: DummyFormComponent, resolve: {data: DummyFormResolver}}
+        ]
+    },
+    {
+        path: 'categories',
+        children: [
+            {path: '', component: CategorieListComponent, resolve: {data: CategorieListResolver}},
+            {path: ':id', component: CategorieFormComponent, resolve: {data: CategorieFormResolver}},
+            {path: ':id/display', component: CategorieDisplayFormComponent, resolve: {data: CategorieDisplayResolver}},
+            {path: 'new', component: CategorieFormComponent, resolve: {data: CategorieFormResolver}}
+        ]
+    },
+    {
+        path: 'langues',
+        children: [
+            {path: '', component: LangueListComponent, resolve: {data: LangueListResolver}},
+            {path: ':id', component: LangueFormComponent, resolve: {data: LangueFormResolver}},
+            {path: ':id/display', component: LangueDisplayFormComponent, resolve: {data: LangueDisplayResolver}},
+            {path: 'new', component: LangueFormComponent, resolve: {data: LangueFormResolver}}
         ]
     },
     {

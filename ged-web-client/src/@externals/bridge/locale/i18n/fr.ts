@@ -52,8 +52,22 @@ export const locale = {
         'EDIT_TITLE': 'Editer la maquette',
         'LIST_TITLE': 'Liste des maquettes',
       },
+        'CATEGORIE': {
+            'TITLE': 'Categorie',
+            'SEARCH_TITLE': 'Chercher une categorie',
+            'ADD_TITLE': 'Nouvelle categorie',
+            'EDIT_TITLE': 'Editer la categorie',
+            'LIST_TITLE': 'Liste des categories',
+        },
+        'LANGUE': {
+            'TITLE': 'Langue',
+            'SEARCH_TITLE': 'Chercher une langue',
+            'ADD_TITLE': 'Nouvelle langue',
+            'EDIT_TITLE': 'Editer la langue',
+            'LIST_TITLE': 'Liste des langues',
+        },
         'DOSSIER': {
-            'TITLE': 'Gestion des documents',
+            'TITLE': 'Dossier',
             'SEARCH_TITLE': 'Chercher un dossier',
             'ADD_TITLE': 'Nouveau dossier',
             'EDIT_TITLE': 'Editer le dossier',

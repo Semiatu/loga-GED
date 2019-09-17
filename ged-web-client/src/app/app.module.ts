@@ -54,10 +54,12 @@ import {AppRoutingModule} from './app.routing.module';
 import {AngularFireModule} from "@angular/fire";
 import {AngularFireStorageModule} from "@angular/fire/storage";
 import {AngularFireDatabase} from "@angular/fire/database";
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+import {PdfViewerModule } from 'ng2-pdf-viewer';
 import {NgxDocViewerModule} from "ngx-doc-viewer";
 import {ImageViewerModule} from "ng2-image-viewer";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {DropdownModule} from 'primeng/dropdown';
+import {InputTextModule} from 'primeng/inputtext';
 
 @NgModule({
     declarations: [
@@ -73,6 +75,8 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
         PdfViewerModule,
         NgxDocViewerModule,
         ImageViewerModule,
+        DropdownModule,
+        InputTextModule,
 
         // Loading
         NgxLoadingModule.forRoot({

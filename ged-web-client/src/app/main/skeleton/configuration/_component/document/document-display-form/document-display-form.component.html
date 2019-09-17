@@ -160,6 +160,7 @@
         </pdf-viewer>
     </div>
 
+    <!--doc viewer-->
     <div class="viewer-container" *ngIf="document.typeDocument.nom.includes('vnd')">
         <ngx-doc-viewer [url]="this.fileViewerUrl"
                         viewer="google"

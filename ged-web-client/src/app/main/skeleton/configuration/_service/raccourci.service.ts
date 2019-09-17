@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AbstractService} from 'src/@externals/loga/_abstract/abstract.service';
-import {Document, Raccourci} from 'src/app/main/skeleton/configuration/_model';
+import {Document, Dossier, Raccourci} from 'src/app/main/skeleton/configuration/_model';
 import {catchError} from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { HttpEvent } from '@angular/common/http';
@@ -39,6 +39,11 @@ export class RaccourciService extends AbstractService<Raccourci, number> {
 
     public restaurer(id){
         return this.httpClient.put<Raccourci[]>(encodeURI(this.apiUrl + this.address() + '/restaurer/' + id), this.baseOption)
+            .pipe(catchError(this.handleError));
+    }
+
+    public save(entity) {
+        return this.httpClient.post(encodeURI(this.apiUrl.concat(this.address() + '/create')), JSON.stringify(entity), this.baseOption)
             .pipe(catchError(this.handleError));
     }
 }

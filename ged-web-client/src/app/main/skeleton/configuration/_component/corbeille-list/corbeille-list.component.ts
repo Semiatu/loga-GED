@@ -17,6 +17,15 @@ import {CorbeilleListResolver} from "../../_resolver/dossier/corbeille.list.reso
 import {RaccourciType} from "../../_model/RaccourciType";
 import {SelectionModel} from "@angular/cdk/collections";
 import {ContenuDossierWrapper} from "../../wrapper/contenu-dossier-wrapper";
+import {
+    faFile,
+    faFilePdf,
+    faFileExcel,
+    faFilePowerpoint,
+    faFileWord,
+    faFolder,
+    faImage
+} from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -38,6 +47,14 @@ export class CorbeilleListComponent extends GenericListComponent<Dossier, Dossie
     criteria: DossierCriteria = new DossierCriteria();
     baseLink = Paths.configurationPath('dossiers');
     contenuDossierWrapper: ContenuDossierWrapper = new ContenuDossierWrapper();
+
+    faFilePdf = faFilePdf;
+    faFileWord = faFileWord;
+    faFilePowerpoint = faFilePowerpoint;
+    faFileExcel = faFileExcel;
+    faFolder = faFolder;
+    faImage = faImage;
+    faFile = faFile;
 
     constructor(
         protected _notificationService: SnackBarService,

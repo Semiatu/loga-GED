@@ -2,7 +2,6 @@ import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewEncapsulatio
 import {GenericPersistenceComponent} from "../../../../../../../@externals/loga/_abstract";
 import {Dossier} from "../../../_model";
 import {DossierService} from "../../../_service";
-import {Paths} from "../../../../../../../environments/paths";
 import {SnackBarService} from "../../../../../../../@externals/loga/snack-bar/snack.bar.service";
 import {TranslateService} from "@ngx-translate/core";
 import {ActivatedRoute, Router} from "@angular/router";

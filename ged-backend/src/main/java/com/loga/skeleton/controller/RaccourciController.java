@@ -49,4 +49,9 @@ public class RaccourciController extends AbstractController<Raccourci, Long, Rac
         abstractService.restaurer(id);
     }
 
+    @PostMapping("create")
+    public ResponseEntity create(@RequestBody Raccourci entity, Authentication authentication) {
+        return responseExact(abstractService.save(entity,authentication));
+    }
+
 }

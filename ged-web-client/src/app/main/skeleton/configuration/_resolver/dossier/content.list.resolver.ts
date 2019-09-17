@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ActivatedRoute, ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {DocumentService, DossierService} from 'src/app/main/skeleton/configuration/_service';
-import { AbstractListResolver } from 'src/@externals/loga/_abstract';
-import { Helpers } from 'src/@externals/loga/_utility';
-import {Dossier} from "../../_model";
+import {AbstractListResolver} from 'src/@externals/loga/_abstract';
+import {Helpers} from 'src/@externals/loga/_utility';
+import {Authorisation, Dossier} from "../../_model";
 
-@Injectable({ providedIn: "root"})
+@Injectable({providedIn: "root"})
 export class ContentListResolver extends AbstractListResolver implements Resolve<any> {
 
-    wrapper: any;
-    dossier: Dossier;
+    authorisations: Authorisation[];
+    dossier: Dossier = null;
     mapwrapper: any[] = [];
     idDossier: any;
     onContenusChanged: BehaviorSubject<any>;
@@ -23,7 +23,7 @@ export class ContentListResolver extends AbstractListResolver implements Resolve
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
-         this.idDossier = route.params.id ? route.params.id : 0 ;
+        this.idDossier = route.params.id ? route.params.id : 0;
         return new Promise((resolve, reject) => {
             Promise.all([
                 this.getContenus(),
@@ -38,26 +38,20 @@ export class ContentListResolver extends AbstractListResolver implements Resolve
 
     protected getContenus(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.dossierService.getContent( this.idDossier)
+            this.dossierService.getContent(this.idDossier)
                 .subscribe(response => {
-                    this.wrapper = Helpers.getOthers(response);
-                    this.dossier = this.wrapper.dossier;
-                    this.mapwrapper = [];
-
-                    for (let wrapperKey in this.wrapper.dossiers) {
-                        this.mapwrapper.push(this.wrapper.dossiers[wrapperKey])
-                    }
-
-                    for (let wrapperKey in this.wrapper.documents) {
-                        this.mapwrapper.push(this.wrapper.documents[wrapperKey])
-                    }
-
-                    for (let wrapperKey in this.wrapper.raccourcis) {
-                        this.mapwrapper.push(this.wrapper.raccourcis[wrapperKey])
-                    }
-                    this.dataSource.next([this.dossier, this.mapwrapper]);
+                    if (Number(this.idDossier) !== 0)
+                        this.getDossier(this.idDossier);
+                    this.authorisations = Helpers.getOthers(response);
+                    this.dataSource.next([this.dossier, this.authorisations]);
                     resolve(response);
                 }, reject);
+        });
+    }
+
+    protected getDossier(id) {
+        this.dossierService.find(id).subscribe(value => {
+            this.dossier = Helpers.getOthers(value);
         });
     }
 

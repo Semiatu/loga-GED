@@ -21,8 +21,9 @@
                     {{ dossier?.nom }}
                 </span>
 
-                <span *ngIf="dossierID == 0" class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
-                    {{ 'GED'}}
+                <span *ngIf="dossierID == 0" class="logo-text h1"
+                      [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    {{ 'Dossier'}}
                 </span>
             </div>
 
@@ -63,7 +64,8 @@
                     <span style="text-transform: uppercase">{{ '' | translate }}</span>
                 </button>
                 <input hidden id="file" type="file" name="file" #fileInput accept="image/png,image/jpeg,image/jpg,.pdf,.doc,.ppt,.pptx,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-                application/excel,application/vnd.ms-excel,application/x-excel,application/x-msexcel,.xlsx" [multiple]="true"
+                application/excel,application/vnd.ms-excel,application/x-excel,application/x-msexcel,.xlsx"
+                       [multiple]="true"
                        (change)="getFileDetails($event)">
             </div>
         </div>
@@ -129,7 +131,7 @@
                 <ng-container matColumnDef="id">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
                     <mat-cell *matCellDef="let component">
-                        <p class="text-truncate">{{ component.id }}</p>
+                        <p class="text-truncate">{{ getId(component) }}</p>
                     </mat-cell>
                 </ng-container>
 
@@ -140,26 +142,67 @@
 
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm style="align-content: flex-start">
 
-                        <fa-icon style="font-size: 1.57em; color:#EF5350" [icon]="faFilePdf" *ngIf="isDocument(component) && component.typeDocument.nom.includes('pdf')"></fa-icon>
+                        <fa-icon style="font-size: 1.57em; color:#EF5350" [icon]="faFilePdf"
+                                 *ngIf="isDocument(component) && component.document.typeDocument.nom.includes('pdf')"></fa-icon>
 
-                        <fa-icon style="font-size: 1.57em; color: #0B60A9" [icon]="faImage" *ngIf="isDocument(component) && component.typeDocument.nom.includes('image')"></fa-icon>
+                        <fa-icon style="font-size: 1.52em; color: #268BD2" [icon]="faImage"
+                                 *ngIf="isDocument(component) && component.document.typeDocument.nom.includes('image')"></fa-icon>
 
-                        <fa-icon style="font-size: 1.57em; color: #268BD2" [icon]="faFileWord" *ngIf="isDocument(component) && component.nom.includes('doc' || 'docx')"></fa-icon>
+                        <fa-icon style="font-size: 1.57em; color: #268BD2" [icon]="faFileWord"
+                                 *ngIf="isDocument(component) && component.document.nom.includes('doc' || 'docx')"></fa-icon>
 
-                        <fa-icon style="font-size: 1.57em; color: coral" [icon]="faFilePowerpoint" *ngIf="isDocument(component) && component.nom.includes('ppt' || 'pptx')"></fa-icon>
+                        <fa-icon style="font-size: 1.57em; color: coral" [icon]="faFilePowerpoint"
+                                 *ngIf="isDocument(component) && component.document.nom.includes('ppt' || 'pptx')"></fa-icon>
 
-                        <fa-icon style="font-size: 1.57em; color: #2E7D32" [icon]="faFileExcel" *ngIf="isDocument(component) && component.nom.includes('xls')"></fa-icon>
+                        <fa-icon style="font-size: 1.57em; color: #2E7D32" [icon]="faFileExcel"
+                                 *ngIf="isDocument(component) && component.document.nom.includes('xls')"></fa-icon>
 
-                        <fa-icon style="font-size: 1.57em; color: burlywood" [icon]="faFolder" *ngIf="isDossier(component)"></fa-icon>
+                        <fa-icon style="font-size: 1.57em; color: burlywood" [icon]="faFolder"
+                                 *ngIf="isDossier(component)"></fa-icon>
 
                         <!-- raccourci icon -->
 
-                        <fa-icon style="font-size: 1.57em; color: burlywood" [icon]="faFolder" *ngIf="isRaccourciOfDossier(component)"></fa-icon>
-                        <mat-icon style="margin-bottom: -10px; margin-left: -20px; color: #82AAFF" *ngIf="isRaccourciOfDossier(component)">reply</mat-icon>
-
-                        <mat-icon style="color:#03A9F4" *ngIf="isRaccourciOfDocument(component)">description</mat-icon>
-                        <mat-icon style="margin-bottom: -10px; margin-left: -20px ; color:#82AAFF" *ngIf="isRaccourciOfDocument(component)">reply</mat-icon>
-
+                        <!-- raccourciOfDossier -->
+                        <fa-icon style="font-size: 1.57em; color: burlywood" [icon]="faFolder"
+                                 *ngIf="isRaccourciOfDossier(component)"></fa-icon>
+                        <mat-icon style="margin-bottom: -14px; margin-left: -12px ; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDossier(component)">reply
+                        </mat-icon>
+                        <!-- raccourciOfDocumentPdf -->
+                        <fa-icon style="font-size: 1.57em; color: #EF5350" [icon]="faFilePdf"
+                                 *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.typeDocument.nom.includes('pdf')"></fa-icon>
+                        <mat-icon style="margin-bottom: -19px; margin-left: -11px; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.nom.includes('pdf')">
+                            reply
+                        </mat-icon>
+                        <!-- raccourciOfImage -->
+                        <fa-icon style="font-size: 1.52em; color: #268BD2" [icon]="faImage"
+                                 *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.typeDocument.nom.includes('image')"></fa-icon>
+                        <mat-icon style="margin-bottom: -14px; margin-left: -12px; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.typeDocument.nom.includes('image')">
+                            reply
+                        </mat-icon>
+                        <!-- raccourciOfDocumentWord -->
+                        <fa-icon style="font-size: 1.57em; color: #268BD2" [icon]="faFileWord"
+                                 *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.nom.includes('doc' || 'docx')"></fa-icon>
+                        <mat-icon style="margin-bottom: -19px; margin-left: -11px; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDocument(component)  && component.raccourci.document.nom.includes('doc' || 'docx')">
+                            reply
+                        </mat-icon>
+                        <!-- raccourciOfDocumentPPT -->
+                        <fa-icon style="font-size: 1.57em; color: coral" [icon]="faFilePowerpoint"
+                                 *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.nom.includes('ppt' || 'pptx')"></fa-icon>
+                        <mat-icon style="margin-bottom: -19px; margin-left: -11px; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.nom.includes('ppt' || 'pptx')">
+                            reply
+                        </mat-icon>
+                        <!-- raccourciOfDocumentExcel -->
+                        <fa-icon style="font-size: 1.57em; color: #2E7D32" [icon]="faFileExcel"
+                                 *ngIf="isRaccourciOfDocument(component) && component.raccourci.document.nom.includes('xls')"></fa-icon>
+                        <mat-icon style="margin-bottom: -19px; margin-left: -11px; font-size: 21px; color:blue"
+                                  *ngIf="isRaccourciOfDocument(component)&& component.raccourci.document.nom.includes('xls')">
+                            reply
+                        </mat-icon>
                     </mat-cell>
                 </ng-container>
 
@@ -167,7 +210,7 @@
                 <ng-container matColumnDef="nom">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Nom</mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm style="align-content: flex-start">
-                        <p class="text-truncate">{{ component.nom }}</p>
+                        <p class="text-truncate">{{ getName(component) }}</p>
                     </mat-cell>
                 </ng-container>
 
@@ -175,7 +218,8 @@
                 <ng-container matColumnDef="type">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Type</mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
-                        <p class="text-truncate" *ngIf="isDocument(component)">{{ component.typeDocument.nom }}</p>
+                        <p class="text-truncate"
+                           *ngIf="isDocument(component)">{{ component.document.typeDocument.nom }}</p>
                         <p class="text-truncate" *ngIf="isDossier(component)">Dossier</p>
                         <p class="text-truncate" *ngIf="isRaccourci(component)">Raccourci</p>
                     </mat-cell>
@@ -203,7 +247,7 @@
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Dernière Modification
                     </mat-header-cell>
                     <mat-cell *matCellDef="let component" fxHide fxShow.gt-sm>
-                        <p class="text-truncate">{{ component.lastModifiedDate | date: 'dd/MM/yyyy' }}</p>
+                        <p class="text-truncate">{{ getLastModifiedDate(component) | date: 'dd/MM/yyyy' }}</p>
                     </mat-cell>
                 </ng-container>
 
@@ -234,33 +278,42 @@
                                     <span>{{ 'APP.DOSSIER.CONTENT' | translate }}</span>
                                 </button>
 -->
-                                <button *ngIf="isDocument(component)" [routerLink]="getUpdateDocumentLink(component.id)"
+                                <button *ngIf="shared(component)"
                                         mat-menu-item aria-label="edit"
-                                        (click)="gotoEditComponent(component)">
+                                        (click)="showShowShared(component)">
+                                    <mat-icon>share</mat-icon>
+                                    <span>Partager</span>
+                                </button>
+
+                                <button *ngIf="isDocument(component)"
+                                        [routerLink]="getUpdateDocumentLink(component.document.id)"
+                                        mat-menu-item aria-label="edit"
+                                        (click)="gotoEditComponent(component.document)">
                                     <mat-icon>edit</mat-icon>
                                     <span>{{ 'APP.UPDATE_BTN' | translate }}</span>
                                 </button>
 
                                 <button *ngIf="isDossier(component)"
                                         mat-menu-item aria-label="edit"
-                                        (click)="afficheDialogueOfEditDossier(component)">
+                                        (click)="afficheDialogueOfEditDossier(component.dossier)">
                                     <mat-icon>edit</mat-icon>
                                     <span>{{ 'APP.UPDATE_BTN' | translate }}</span>
                                 </button>
 
-                                <button mat-menu-item aria-label="edit" (click)="openDialogDeplacer(component)">
+                                <button mat-menu-item aria-label="edit"
+                                        (click)="openDialogDeplacer(getComponent(component))">
                                     <mat-icon>chevron_right</mat-icon>
                                     <span>Déplacer</span>
                                 </button>
 
                                 <button *ngIf="isRaccourci(component)"
                                         mat-menu-item aria-label="edit"
-                                        (click)="showRenameDialog(component)">
+                                        (click)="showRenameDialog(component.raccourci)">
                                     <mat-icon>edit</mat-icon>
                                     <span>{{ 'Renommer' | translate }}</span>
                                 </button>
 
-                                <button mat-menu-item aria-label="remove" (click)="delete(component)">
+                                <button mat-menu-item aria-label="remove" (click)="delete(getComponent(component))">
                                     <mat-icon>delete</mat-icon>
                                     <span>{{ 'APP.DELETE_BTN' | translate }}</span>
                                 </button>
@@ -303,7 +356,51 @@
 
         <p-footer>
             <div fxLayout="row" fxLayoutAlign="center center">
-                <button color="accent" mat-raised-button (click)="updateRaccourci()" [disabled]="form.invalid">Valider</button>
+                <button color="accent" mat-raised-button (click)="updateRaccourci()" [disabled]="form.invalid">Valider
+                </button>
+            </div>
+        </p-footer>
+    </p-dialog>
+</div>
+
+<div class="header accent" fxLayout="row" fxLayoutAlign="center">
+    <p-dialog header="Partager" styleClass="my-style-class" [(visible)]="showShared" (onHide)="closeShowShared()">
+        <div>
+            <div style="width: 100%;">
+                <div appearance="outline" style="width: 100%; color: #0B60A9">
+                    <mat-icon matSuffix class="secondary-text">user</mat-icon>
+                    <p-dropdown [options]="privileges" [(ngModel)]="shareAuthorisation.user.username" placeholder="Sélectionner un privilège">
+                        <mat-option *ngFor="let element of privileges"
+                                    [value]="element.value">
+                            {{ element.value }}
+                        </mat-option>
+                    </p-dropdown>
+                </div>
+            </div>
+            <div>
+                <div appearance="outline" style="width: 100%;">
+                    <mat-icon matSuffix class="secondary-text">user</mat-icon>
+                    <div class="ui-inputgroup" style="color: #0B60A9">
+                        <span class="ui-inputgroup-addon"><fa-icon [icon]="faUser"></fa-icon>
+                            <input id="nom" type="text" pInputText [(ngModel)]="shareUser" placeholder="Utilisateur">
+                        </span>
+                    </div>
+                </div>
+                <!--<div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon"><i class="fa fa-user"></i></span>
+                    <input type="text" pInputText placeholder="Username">
+                </div>-->
+
+                <!--<mat-form-field appearance="outline">
+                    <mat-label>Utilisateur</mat-label>
+                    <mat-icon matSuffix class="secondary-text">user</mat-icon>
+                    <input name="nom" matInput required [(ngModel)]="shareUser">
+                </mat-form-field>-->
+            </div>
+        </div>
+        <p-footer>
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <button color="accent" mat-raised-button (click)="partager()" [disabled]="form.invalid">Valider</button>
             </div>
         </p-footer>
     </p-dialog>

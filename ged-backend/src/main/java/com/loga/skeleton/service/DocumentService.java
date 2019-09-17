@@ -11,6 +11,7 @@ import com.loga.skeleton.domain.entity.Raccourci;
 import com.loga.skeleton.domain.enumeration.Privilege;
 import com.loga.skeleton.repository.DocumentRepository;
 import com.loga.skeleton.repository.DossierRepository;
+import com.loga.skeleton.wrapper.SharedWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -50,6 +51,29 @@ public class DocumentService extends AbstractLongService<Document, DocumentRepos
         } else {
             return new ArrayList<>();
         }
+    }
+
+    public ResponseWrapper<Authorisation> partager(SharedWrapper sharedWrapper, Authentication authentication){
+        Optional<Document> optionalDocument = this.repositoryManager.findById(sharedWrapper.getIdEntity());
+
+        if (!optionalDocument.isPresent()) return ResponseWrapper.of("Information non trouvée");
+
+        User user = this.userService.findByUsername(authentication.getName());
+        Optional<Authorisation> optionalAuthorisation = this.authorisationService.getRepository().findByDocumentIdAndUserUsername(sharedWrapper.getIdEntity(), user.getUsername());
+
+        if (!optionalAuthorisation.isPresent()) return ResponseWrapper.of("Information non trouvée");
+
+        if (optionalAuthorisation.get().getPrivilege() == Privilege.LIRE) return ResponseWrapper.of(" Vous n'avez pas l'autorisaton de partager ce document!");
+
+        Optional<User> optionalUser = this.userService.getRepository().findById(sharedWrapper.getUserId());
+        if (!optionalUser.isPresent()) return ResponseWrapper.of("utilisateur non trouvé");
+
+        Authorisation authorisation = new Authorisation();
+        authorisation.setDocument(optionalDocument.get());
+        authorisation.setUser(optionalUser.get());
+        authorisation.setPrivilege(sharedWrapper.getPrivilege());
+        return this.authorisationService.save(authorisation);
+
     }
 
     // recuperer le nom du typeDoc

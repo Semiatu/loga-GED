@@ -12,7 +12,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ConfigurationRoutingModule} from './configuration.routing.module';
 // PRIME NG
-import {DialogModule, PickListModule, TreeModule} from 'primeng/primeng';
+import {DialogModule, DropdownModule, PickListModule, TreeModule} from 'primeng/primeng';
 import {ToastModule} from 'primeng/toast';
 // MATERIAL DESIGN
 import {MatInputModule} from '@angular/material/input';
@@ -85,6 +85,13 @@ import { CategorieListComponent } from './_component/categorie/categorie-list/ca
 import { CategorieFormComponent } from './_component/categorie/categorie-form/categorie-form.component';
 import { CategorieGenericFormComponent } from './_component/categorie/categorie-generic-form/categorie-generic-form.component';
 import { CategorieDisplayFormComponent } from './_component/categorie/categorie-display-form/categorie-display-form.component';
+import { RevisionListComponent } from './_component/revision/revision-list/revision-list.component';
+import { RevisionFormComponent } from './_component/revision/revision-form/revision-form.component';
+import { RevisionGenericFormComponent } from './_component/revision/revision-generic-form/revision-generic-form.component';
+import { LangueListComponent } from './_component/langue/langue-list/langue-list.component';
+import { LangueFormComponent } from './_component/langue/langue-form/langue-form.component';
+import { LangueGenericFormComponent } from './_component/langue/langue-generic-form/langue-generic-form.component';
+import { LangueDisplayFormComponent } from './_component/langue/langue-display-form/langue-display-form.component';
 
 @NgModule({
 
@@ -109,6 +116,13 @@ import { CategorieDisplayFormComponent } from './_component/categorie/categorie-
         CategorieFormComponent,
         CategorieGenericFormComponent,
         CategorieDisplayFormComponent,
+        RevisionListComponent,
+        RevisionFormComponent,
+        RevisionGenericFormComponent,
+        LangueListComponent,
+        LangueFormComponent,
+        LangueGenericFormComponent,
+        LangueDisplayFormComponent,
     ],
 
     imports: [
@@ -167,6 +181,7 @@ import { CategorieDisplayFormComponent } from './_component/categorie/categorie-
         NgxDocViewerModule,
         ImageViewerModule,
         FontAwesomeModule,
+        DropdownModule,
     ],
 
     providers: [

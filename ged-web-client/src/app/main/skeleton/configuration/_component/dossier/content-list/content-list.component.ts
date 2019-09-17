@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {fuseAnimations} from "../../../../../../../@externals/fuse/@fuse/animations";
 import {GenericListComponent} from "../../../../../../../@externals/loga/_abstract";
-import {Document, Dossier, Raccourci} from "../../../_model";
+import {Authorisation, Document, Dossier, Privilege, Raccourci} from "../../../_model";
 import {DocumentService, DossierService} from "../../../_service";
 import {ConfigurationModule} from "../../../configuration.module";
 import {DossierCriteria} from "../../../_criteria";
@@ -22,15 +22,18 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SelectionModel} from "@angular/cdk/collections";
 import {ContenuDossierWrapper} from "../../../wrapper/contenu-dossier-wrapper";
 import {DossierGenericFormComponent} from "../dossier-generic-form/dossier-generic-form.component";
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
-import { faFile} from "@fortawesome/free-solid-svg-icons";
-import { faFilePdf} from "@fortawesome/free-solid-svg-icons/faFilePdf";
-import { faFileWord} from "@fortawesome/free-solid-svg-icons";
-import { faFilePowerpoint} from "@fortawesome/free-solid-svg-icons";
-import { faFileExcel} from "@fortawesome/free-solid-svg-icons";
-import { faFolder} from "@fortawesome/free-solid-svg-icons";
-import { faFileImage} from "@fortawesome/free-solid-svg-icons";
-import { faImage } from "@fortawesome/free-solid-svg-icons";
+import {
+    faFile,
+    faFilePdf,
+    faFileExcel,
+    faFilePowerpoint,
+    faFileWord,
+    faFolder,
+    faImage,
+    faUser
+} from '@fortawesome/free-solid-svg-icons';
+import {SelectItem} from "primeng/api";
+import {User} from "../../../../../permission/_model";
 
 
 @Component({
@@ -42,7 +45,7 @@ import { faImage } from "@fortawesome/free-solid-svg-icons";
 })
 export class ContentListComponent extends GenericListComponent<Dossier, DossierService> implements OnInit, OnDestroy {
 
-    displayedColumns: string[] = ['select', 'id', 'icon' ,'nom', 'type', 'lastModifiedDate', 'actions'];
+    displayedColumns: string[] = ['select', 'id', 'icon', 'nom', 'type', 'lastModifiedDate', 'actions'];
     public myDataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
 
@@ -67,18 +70,26 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     form: FormGroup;
     sauvegardeNom: string;
     contenuDossierWrapper: ContenuDossierWrapper = new ContenuDossierWrapper();
+    shareUser = '';
 
-    faCoffee = faCoffee;
     faFilePdf = faFilePdf;
     faFileWord = faFileWord;
     faFilePowerpoint = faFilePowerpoint;
     faFileExcel = faFileExcel;
     faFolder = faFolder;
-    faFileImage = faFileImage;
     faImage = faImage;
+    faFile = faFile;
+    faUser = faUser;
+
+
+    showShared = false;
+    currentAuthorisation : Authorisation = new Authorisation();
+    shareAuthorisation : Authorisation = new Authorisation();
+    privileges: SelectItem[] = [];
 
 
     private _unsubscribeAll: Subject<any>;
+    private authorisations: Authorisation [];
 
 
     constructor(
@@ -100,15 +111,16 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     }
 
     ngOnInit(): void {
+        this.shareAuthorisation.user = new User();
+
         this.dossierID = this.activatedRoute.snapshot.params['id'];
         this.dossier = this.clientResolver.dossier;
         this.dossierNewLink = Paths.configurationPath('dossiers') + '/new/' + this.dossierID;
         this.RaccourciFormLink = Paths.configurationPath('raccourcis') + '/new/';
         this.initData();
-        this.myDataSource.data = this.contentListResolver.mapwrapper;
         this.dossier = this.contentListResolver.dossier;
-        console.log(this.contentListResolver.mapwrapper);
         this.buildForm();
+        this.sharedOption();
 
         this.subscription = this.router.events.subscribe((event) => {
             if (this.activatedRoute.snapshot.params['id'] !== this.dossierID) {
@@ -183,8 +195,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
 
     private initData(): void {
         this.myDataSource = new MatTableDataSource<any>();
-        console.log(this.contentListResolver.mapwrapper);
-        this.myDataSource.data = this.contentListResolver.mapwrapper;
+        this.myDataSource.data = this.contentListResolver.authorisations;
         this.dossier = this.contentListResolver.dossier;
 
         /*   this.subscription = this.contentListResolver.data.subscribe(data => {
@@ -193,30 +204,57 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
                console.log(data[1]);
 
            });*/
+        console.log(this.contentListResolver.authorisations)
         console.log(this.dossier)
-        this.getParent();
+        // this.getParent();
     }
 
-    // si url dans document alors document sinon dossier
-    isDocument(object) {
-        return object.hasOwnProperty('url');
+    isDocument(authorisation: Authorisation) {
+        return authorisation.document && authorisation.document.id;
     }
 
-    isRaccourci(object) {
-        return !this.isDocument(object) && (object.hasOwnProperty('document') || object.hasOwnProperty('dossier'));
+    isRaccourci(authorisation: Authorisation) {
+        return authorisation.raccourci && authorisation.raccourci.id;
     }
 
-    isRaccourciOfDocument(object) {
-        return this.isRaccourci(object) && object.type === RaccourciType.DOCUMENT;
+    isRaccourciOfDocument(authorisation: Authorisation) {
+        return this.isRaccourci(authorisation) && authorisation.raccourci.type === RaccourciType.DOCUMENT;
     }
 
-    isRaccourciOfDossier(object) {
-        return this.isRaccourci(object) && object.type === RaccourciType.DOSSIER;
+    isRaccourciOfDossier(authorisation: Authorisation) {
+        return this.isRaccourci(authorisation) && authorisation.raccourci.type === RaccourciType.DOSSIER;
     }
 
-    isDossier(object) {
-        return !this.isDocument(object) && !this.isRaccourci(object);
+    isDossier(authorisation: Authorisation) {
+        return authorisation.dossier && authorisation.dossier.id;
     }
+
+    getName(authorisation: Authorisation) {
+        if (this.isDossier(authorisation)) return authorisation.dossier.nom;
+        if (this.isDocument(authorisation)) return authorisation.document.nom;
+        if (this.isRaccourci(authorisation)) return authorisation.raccourci.nom;
+    }
+
+    getId(authorisation: Authorisation) {
+        if (this.isDossier(authorisation)) return authorisation.dossier.id;
+        if (this.isDocument(authorisation)) return authorisation.document.id;
+        if (this.isRaccourci(authorisation)) return authorisation.raccourci.id;
+    }
+
+
+    getLastModifiedDate(authorisation: Authorisation) {
+        if (this.isDossier(authorisation)) return authorisation.dossier.lastModifiedDate;
+        if (this.isDocument(authorisation)) return authorisation.document.lastModifiedDate;
+        if (this.isRaccourci(authorisation)) return authorisation.raccourci.lastModifiedDate;
+    }
+
+
+    getComponent(authorisation: Authorisation) {
+        if (this.isDossier(authorisation)) return authorisation.dossier;
+        if (this.isDocument(authorisation)) return authorisation.document;
+        if (this.isRaccourci(authorisation)) return authorisation.raccourci;
+    }
+
 
     // on recupere le parent de chaque dossier et le met dans le tableau listsParent
     getParent() {
@@ -296,17 +334,18 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     }
 
     getRoute(component) {
+        console.log(component);
         if (this.isDocument(component)) {
-            return this.documentLink + '/' + component.id + '/dossier/' + this.dossierID + '/display';
+            return this.documentLink + '/' + component.document.id + '/dossier/' + this.dossierID + '/display';
         } else if (this.isDossier(component)) {
-            return this.baseLink + '/content/' + component.id;
+            return this.baseLink + '/content/' + component.dossier.id;
         }
 
-        if (component.dossier && component.dossier.id) {
-            return this.baseLink + '/content/' + component.dossier.id;
+        if (component.raccourci.dossier && component.raccourci.dossier.id) {
+            return this.baseLink + '/content/' + component.raccourci.dossier.id;
         } else if (component.document && component.document.id) {
             // return this.documentLink + '/' + component.document.id + '/dossier/' + component.document.dossier.id + '/display';
-            return this.documentLink + '/' + component.document.id + '/dossier/3/display';
+            return this.documentLink + '/' + component.raccourci.document.id + '/dossier/3/display';
         }
 
     }
@@ -326,15 +365,8 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         this._service.getContent(idDossier)
             .subscribe(response => {
                 const wrapper = Helpers.getOthers(response);
-                this.dossier = wrapper.dossier;
-                console.log(this.dossier)
-                let mapwrapper = [];
-
-                mapwrapper.push(...wrapper.dossiers)
-                mapwrapper.push(...wrapper.documents)
-                mapwrapper.push(...wrapper.raccourcis)
-
-                this.myDataSource.data = mapwrapper;
+                this.authorisations = Helpers.getOthers(response);
+                this.myDataSource.data = this.authorisations;
                 this.getParent();
             });
     }
@@ -367,7 +399,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     }
 
     openDialogDeplacerAll(): void {
-        this._service.getDossierTreeContent(0 , this.getDossierSectionne()).subscribe(value => {
+        this._service.getDossierTreeContent(0, this.getDossierSectionne()).subscribe(value => {
             this.deplaceAll(value);
         })
     }
@@ -432,13 +464,13 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
 
         let idss = [];
         if (this.isDossier(component)) {
-           ids.push(component.id);
-           idss = [component.id];
+            ids.push(component.id);
+            idss = [component.id];
         }
 
         const dialogRef = this.dialog.open(RaccourciGenericFormComponent, {
             width: 'auto',
-            data: {data: data, deplacer: true , ids: ids , param: idss}
+            data: {data: data, deplacer: true, ids: ids, param: idss}
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -502,11 +534,11 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         });
     }
 
-    getDossierSectionne(){
+    getDossierSectionne() {
         let ids = [];
 
         this.selection.selected.forEach(value => {
-            if (this.isDossier(value)){
+            if (this.isDossier(value)) {
                 ids.push(value.id);
             }
         })
@@ -520,7 +552,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
 
         const dialogRef = this.dialog.open(RaccourciGenericFormComponent, {
             width: 'auto',
-            data: {data: data, deplacer: true , ids: ids , param: this.getDossierSectionne()}
+            data: {data: data, deplacer: true, ids: ids, param: this.getDossierSectionne()}
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -541,6 +573,7 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
         this.afficheDialogueOfNewDossier();
 
     }
+
     public afficheDialogueOfNewDossier() {
         this.openDossierDialog('add', new Dossier())
     }
@@ -552,11 +585,11 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
     public openDossierDialog(action, dossier) {
         const dialogRef = this.dialog.open(DossierGenericFormComponent, {
             width: 'auto',
-            data: { action: action, dossier:dossier, idParent: this.dossierID}
+            data: {action: action, dossier: dossier, idParent: this.dossierID}
         });
 
         dialogRef.afterClosed().subscribe(result => {
-           if(result) this.getContenus(this.dossierID);
+            if (result) this.getContenus(this.dossierID);
         });
 
     }
@@ -575,6 +608,33 @@ export class ContentListComponent extends GenericListComponent<Dossier, DossierS
             }
         });
     }
+
+    shared(authorisation: Authorisation) {
+        if (!this.isRaccourci(authorisation) && authorisation.privilege !== Privilege.LIRE) {
+            return true;
+        }
+        return false;
+    }
+
+    closeShowShared() {
+        this.showShared = false;
+    }
+
+    showShowShared(authorisation: Authorisation) {
+        this.currentAuthorisation = authorisation;
+        this.showShared = true;
+    }
+
+    sharedOption() {
+        let key = Object.keys(Privilege);
+        key.forEach(value => this.privileges.push({label: value , value: value}));
+    }
+
+    partager() {
+
+    }
+
+
 
 
 }
