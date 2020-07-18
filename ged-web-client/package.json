@@ -54,7 +54,7 @@
     "hammerjs": "^2.0.8",
     "iv-viewer": "^2.0.1",
     "jquery": "^3.4.1",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "ng2-charts": "^2.3.0",
     "ng2-image-viewer": "^3.0.4",
